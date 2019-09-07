@@ -2,13 +2,15 @@ import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import Paper from '@material-ui/core/Paper';
-import { TextField } from '@material-ui/core';
+import { TextField , MenuItem } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import {loading} from '../../layout/actions'
 import {login} from './actions'
 import { APP_ROUTES } from '../../config';
 import SiteLoader from '../../components/SiteLoader';
 import { protocol, endPoint } from '../../API';
+import Header from '../../layout/header/Header';
+import { NavLink } from "react-router-dom";
 
 class Login extends Component {
 
@@ -19,6 +21,8 @@ class Login extends Component {
             username : "",
             password : ""
         }
+
+        
     }
 
     componentWillMount() {
@@ -40,11 +44,11 @@ class Login extends Component {
         this.props.loading( true, 'login-loader' );
 
         let payload = {
-            username : this.username.props.value,
-            password : this.password.props.value
+            username : this.username.value,
+            password : this.password.value
         };
 
-        console.log('Here');
+        console.log(this.username.value);
         return;
     }
     
@@ -57,8 +61,8 @@ class Login extends Component {
     render() {
         return (
             <div id="login-page">
+                <Header />
                 <SiteLoader id="login-loader" />
-
                 <div id="login-form" elevation={1}>
 
                     <img id="logo" src={`${process.env.PUBLIC_URL}/img/logo.png`} alt="kibo" />
@@ -66,7 +70,7 @@ class Login extends Component {
                     <Paper id="paper" elevation={1}>
                         <form  className="form" >
                             <TextField
-                                ref={(username)=>this.username = username}
+                                inputRef={(username) => this.username = username}
                                 label="User name"
                                 value={this.state.username}
                                 onChange={this.handleChange('username')}
@@ -77,7 +81,7 @@ class Login extends Component {
                                 InputLabelProps={{ shrink: true }}
                             />
                             <TextField
-                                ref={(password)=>this.password = password}
+                                inputRef={(password)=>this.password = password}
                                 label="Password"
                                 value={this.state.password}
                                 onChange={this.handleChange('password')}
@@ -95,6 +99,11 @@ class Login extends Component {
                             </div>
                         </form>
                     </Paper>
+                    <MenuItem>
+						<NavLink activeClassName='selected' to="/test">
+							Test Page
+						</NavLink>
+					</MenuItem>
 
                 </div>
 

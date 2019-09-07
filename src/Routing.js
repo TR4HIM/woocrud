@@ -14,6 +14,7 @@ import {loading} from './layout/actions';
 
 // PAGES 
 import Login from './pages/login/Login';
+import Test from './pages/test/Test';
 
 
 import {APP_PATHS} from './config';
@@ -48,7 +49,7 @@ class Routing extends Component {
             <BrowserRouter>
                 <Switch>
                     <Route exact path={APP_PATHS.HOME} component={withRouter(Login)} />
-                    <Route exact path={APP_PATHS.LOGIN} component={withRouter(Login)} />
+                    <Route exact path="/test" component={withRouter(Test)} />
 
                 </Switch>
             </BrowserRouter>
