@@ -1,13 +1,25 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+// ICON
+@import "./layout/scss/icons/style.scss";
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
-}
+// CONFIG
+@import "./layout/scss/config.scss"; 
+
+// COMMON
+@import "./layout/scss/mixin.scss";
+@import "./layout/scss/typography.scss";
+@import "./layout/scss/button.scss";
+@import "./layout/scss/common.scss";
+@import "./layout/scss/form.scss";
+
+// COMPONENTS
+// @import "./components/scss/kibo-modal.scss";
+// @import "./components/scss/search-bar.scss";
+
+// PAGES
+@import "./layout/footer/footer.scss";
+@import "./layout/header/header.scss";
+@import "./pages/login/scss/login.scss";
+
+
+// Multi-Langauges 
+@import "./layout/scss/rtl.scss";

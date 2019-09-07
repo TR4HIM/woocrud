@@ -1,0 +1,32 @@
+// FONT SMOOTHING
+@mixin font-smoothing(){
+    -webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+@mixin clearfix {
+    &:after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+}
+
+@mixin center() {
+    position: absolute;
+    transform: translateX(-50%) translateY(-50%);
+    top: 50%;
+    left: 50%;
+}   
+
+@mixin arabsettings($center:true,$fontBold:false, $fontSize:16 ) {
+    .kibo-lang-ar & {
+        @if $center {
+            text-align: right;
+        }
+        @if $fontBold {
+            font-weight: bold;
+        }
+        font-family: $font-ar;
+    }
+}

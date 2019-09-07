@@ -1,0 +1,263 @@
+html{
+    min-height: 100%;
+    background: #eee;
+}
+
+body{
+    font-family: $font;
+    font-size: 15px;
+    line-height: 1;
+    color: $gray-dark;
+    min-height: 100%;
+    overflow: auto !important; // ENABLE SCROLL WHEN THE DRAWER IS OPEN
+    padding-right: 0 !important; // FIX MATERIAL MENU SHOWEN
+    @include font-smoothing();
+    -webkit-overflow-scrolling: touch;
+    &.overflow-hidden{
+        overflow: hidden !important;
+    }
+}
+
+button , input , textarea, select{
+    font-family: $font;
+    font-size: 14px;
+    outline: none;
+}
+
+a{
+    text-decoration: none;
+}
+
+#root{
+    height: 100vh;
+    #root-loader{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-top: -14px;
+        margin-left: -14px;
+        z-index: 1;
+        [role="progressbar"]{
+            color : $black !important
+        }
+    }
+}
+
+#layout{
+    height: 100vh;
+}
+
+#container{
+    // min-height: 100vh;
+    padding-bottom: 20px;
+}
+
+#breadcrumb{
+    font-size: 15px;
+    padding: 10px 10px;
+    margin-bottom: 10px;
+    margin-top: 3px;
+    font-family: $font;
+    color: $gray;
+    span{
+        color : #858d92;
+    }
+}
+
+.wrapper{
+    padding: 0 10px;
+    max-width: 100%;
+    margin: 0 auto;
+    @include clearfix();
+}
+
+.editable-text{
+    display: inline-block;
+    vertical-align: top;
+    > span{
+        cursor: pointer;
+        display: block;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        line-height: 28px;
+        // padding-bottom: 3px;
+        &.empty{
+            color: #bfbfbf;
+        }
+    }
+    input{
+        border: none;
+    }
+    > div > div{
+        &:before{
+            background-color: #ccc;
+        }
+        &:after{
+            background-color: $primary;
+        }
+    }
+    .input{
+        width: 100%;
+        &.hide{
+            display: none;
+        }
+    }
+}
+
+.title-box{
+    border-bottom: 1px solid $border;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+
+    .editable-text{
+        
+        font-size: 24px;
+        > span{
+            line-height: 31px;
+        }
+        input{
+            font-size: 23px;
+            min-width: 350px;
+        }
+    }
+}
+
+
+#page-404{
+    min-height: 100vh;
+    #logo{
+        position: absolute;
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        max-width: 90px;
+    }
+    .not-found-inner{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translateX(-50%) translateY(-50%);
+        text-align: center;
+        > span{
+            display: block;
+            font-size: 200px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: $primary;
+            text-shadow: 3px 3px 0 #000;
+        }
+        p{
+            font-size: 22px;
+            margin-bottom: 30px;
+            font-weight: 600;
+            color: $black;
+        }
+    }
+}
+
+#snackbar > div{
+    background: #111;
+    padding-right: 50px;
+    #message-id{
+        color : $danger;
+        font-style: italic;
+    }
+    button{
+        position: absolute;
+        top: 0;
+        right: 8px;
+    }
+}
+
+.rc-pagination{
+    text-align: center;
+    li{
+        display: inline-block;
+        margin: 0 3px;
+        vertical-align: text-bottom;
+        a{
+            display: block;
+            padding: 3px;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            line-height: 28px;
+            background: white;
+            cursor: pointer;
+        }
+        &.rc-pagination-item-active{
+            a{
+                font-weight: 600;
+                background: $primary
+            }
+        }
+        &.rc-pagination-prev{
+            a{
+                position: relative;
+                &:before{
+                    content : "\2039";
+                    font-size: 22px;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    line-height: 31px;
+                    bottom: 0;
+                }
+            }
+        }
+        &.rc-pagination-next{
+            a{
+                position: relative;
+                &:before{
+                    content : "\203A";
+                    font-size: 22px;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    line-height: 31px;
+                    bottom: 0;
+                }
+            }
+        }
+
+        &.rc-pagination-disabled{
+            
+            a{
+                background: $border;
+                cursor: not-allowed
+            }
+        }
+
+        &.rc-pagination-jump-next, &.rc-pagination-jump-prev{
+            a{
+                position: relative;
+                &:before{
+                    content : "...";
+                    font-size: 22px;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    line-height: 23px;
+                    bottom: 0;
+                }
+            }
+        }
+    }
+}
+
+
+
+@media screen and (max-width : 959px){
+    #snackbar{
+        top: 0 !important;
+        > div button{
+            right: 0;
+        }
+    }
+    
+}

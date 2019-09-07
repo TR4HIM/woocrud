@@ -1,0 +1,39 @@
+.btn{
+    font-weight: 700;
+    line-height: 42px;
+    padding-left: 15px;
+    padding-right: 15px;
+    border-radius: 22px;
+    background: #e7e7e7;
+    transition: background .3s ease-out, color .3s ease-out;
+    color: $gray-dark;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+    &:hover{
+        background: $secondary;
+        color: white;
+        transition: background .3s ease-out, color .3s ease-out;
+    }
+    &.primary{
+        background: $primary;
+        &:hover{
+            background: $gray-dark;
+            color: white;
+            transition: background .3s ease-out, color .3s ease-out;
+        }
+    }
+    &.secondary{
+        background: $secondary;
+        color: white;
+        &:hover{
+            background: $gray-dark;
+            color: white;
+            transition: background .3s ease-out, color .3s ease-out;
+        }
+    }
+}
+
+button.btn{
+    line-height: 38px;
+}
