@@ -26,7 +26,6 @@ class Layout extends Component {
                 {/* APP ROUTING */}
                 <Routing />
 
-                <span>Hello</span>
             </div>
         )
     }

@@ -7,9 +7,15 @@ import {
     LOADER
 } from './layout/reducers';
 
+import { createBrowserHistory } from 'history';
+
+
+const history       = createBrowserHistory();
+
 const appReducer = combineReducers({
     AUTHORIZED,
-    LOADER
+    LOADER,
+    router : connectRouter(history)
 });
 
 const rootReducer = ( state, action ) => {
