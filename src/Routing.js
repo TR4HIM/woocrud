@@ -30,20 +30,28 @@ class Routing extends Component {
     }
 
     
-    componentWillReceiveProps(nextProps){
+    // componentWillReceiveProps(nextProps){
 
-        this.setState({
-            readyToRender : true
-        });
+    //     this.setState({
+    //         readyToRender : true
+    //     });
 
+    // }
+
+    // componentWillMount() {
+    //     this.setState({
+    //         readyToRender : true
+    //     })
+    // }
+
+    static getDerivedStateFromProps(props,state) {
+        
+        // if(props.AUTHORIZED){
+        //     // REDIRECT TO PRODUCTS PAGE
+        //     props.history.push(APP_ROUTES.MY_PRODUCTS);
+        // }
+        return { readyToRender : true }
     }
-
-    componentWillMount() {
-        this.setState({
-            readyToRender : true
-        })
-    }
-
     renderRoutes(){
         return(
             <BrowserRouter>
@@ -51,6 +59,10 @@ class Routing extends Component {
                     <Route exact path={APP_PATHS.HOME} component={withRouter(Login)} />
                     <Route exact path="/test" component={withRouter(Test)} />
 
+                    <PrivateRoute exact authed={this.props.AUTHORIZED}  path={APP_PATHS.ADD_PRODUCTS}  component={withRouter(Login)}/>
+
+
+                    {/* <Route component={withRouter(Page404)} /> */}
                 </Switch>
             </BrowserRouter>
         )

@@ -1,6 +1,5 @@
 import {
-    _LOGIN_,
-    _UPDATE_USER_
+    _LOGIN_
 } from './actions';
 
 

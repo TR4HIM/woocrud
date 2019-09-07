@@ -22,39 +22,6 @@ class Test extends Component {
         }
     }
 
-    componentWillMount() {
-        
-        if(this.props.AUTHORIZED){
-            // REDIRECT TO PRODUCTS PAGE
-            this.props.history.push(APP_ROUTES.MY_PRODUCTS);
-        }
-    }
-
-    keyPressHandler(e){
-        if(e.keyCode === 13)
-            this.login();
-    }
-
-    login(){
-
-        // SHOW LOADER
-        this.props.loading( true, 'login-loader' );
-
-        let payload = {
-            username : this.username.props.value,
-            password : this.password.props.value
-        };
-
-        console.log('Here');
-        return;
-    }
-    
-    handleChange = name => event => {
-        this.setState({
-            [name] : event.target.value
-        });
-    };
-
     render() {
         return (
             <div id="login-page">

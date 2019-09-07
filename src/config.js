@@ -21,3 +21,9 @@ export const APP_PATHS = {
     CODE_VALIDATION     : `${process.env.PUBLIC_URL}${APP_ROUTES.CODE_VALIDATION}`,
     REQUESTED_PRODUCT   : `${process.env.PUBLIC_URL}${APP_ROUTES.REQUESTED_PRODUCT}`
 }
+
+
+
+export const SHOP_PAGE_LINK = `${protocol + endPoint}/boutiques`;
+
+export const REGISTER_NEW_VENDOR_URL = `${protocol + endPoint}/?inscription=popup`;

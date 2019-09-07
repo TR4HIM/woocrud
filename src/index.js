@@ -5,15 +5,8 @@ import { createStore , applyMiddleware, compose } from 'redux';
 import { Provider } from 'react-redux';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import thunk  from 'redux-thunk';
-
-import { BrowserRouter } from 'react-router-dom';
-
 import { ConnectedRouter  , routerMiddleware } from 'connected-react-router';
-// import createHistory from 'history/createBrowserHistory';
-
 import { createBrowserHistory } from 'history';
-
-
 
 
 // Import files

@@ -8,7 +8,6 @@ import {loading} from '../../layout/actions'
 import {login} from './actions'
 import { APP_ROUTES } from '../../config';
 import SiteLoader from '../../components/SiteLoader';
-import { protocol, endPoint } from '../../API';
 import Header from '../../layout/header/Header';
 import { NavLink } from "react-router-dom";
 
@@ -25,12 +24,13 @@ class Login extends Component {
         
     }
 
-    componentWillMount() {
+    static getDerivedStateFromProps(props,state) {
         
-        if(this.props.AUTHORIZED){
+        if(props.AUTHORIZED){
             // REDIRECT TO PRODUCTS PAGE
-            this.props.history.push(APP_ROUTES.MY_PRODUCTS);
+            props.history.push(APP_ROUTES.MY_PRODUCTS);
         }
+        return null;
     }
 
     keyPressHandler(e){
@@ -47,6 +47,8 @@ class Login extends Component {
             username : this.username.value,
             password : this.password.value
         };
+
+        localStorage.setItem('woo-app', JSON.stringify(payload));
 
         console.log(this.username.value);
         return;
