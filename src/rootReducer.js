@@ -1,7 +1,11 @@
 import { combineReducers } from 'redux';
 import { connectRouter } from 'connected-react-router'
 
-import {AUTHORIZED} from './pages/login/reducers';
+import {AUTHORIZED , USER} from './pages/login/reducers';
+
+import {
+    WOO_PRODUCTS
+} from './pages/products/reducers';
 
 import {
     LOADER
@@ -14,6 +18,8 @@ const history       = createBrowserHistory();
 
 const appReducer = combineReducers({
     AUTHORIZED,
+    USER,
+    WOO_PRODUCTS,
     LOADER,
     router : connectRouter(history)
 });

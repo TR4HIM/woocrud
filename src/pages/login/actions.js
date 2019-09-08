@@ -1,4 +1,5 @@
 export const _LOGIN_        = "LOGIN";
+export const _STORE_PROFILE_ = "STORE_PROFILE";
 
 
 export const login = (connected)=>{
@@ -8,3 +9,12 @@ export const login = (connected)=>{
     }
 }
 
+
+
+
+export const storeUserData = (payload)=>{
+    return {
+        type : _STORE_PROFILE_,
+        payload
+    }
+}

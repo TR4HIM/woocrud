@@ -4,12 +4,13 @@ import {bindActionCreators} from 'redux';
 import Paper from '@material-ui/core/Paper';
 import { TextField , MenuItem } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
-import {loading} from '../../layout/actions'
-import {login} from './actions'
-import { APP_ROUTES } from '../../config';
+import {loading} from '../../layout/actions';
+import {login , storeUserData} from './actions';
+import { APP_ROUTES , APP_PATHS } from '../../config';
 import SiteLoader from '../../components/SiteLoader';
 import Header from '../../layout/header/Header';
 import { NavLink } from "react-router-dom";
+import API from './server-effect';
 
 class Login extends Component {
 
@@ -17,20 +18,18 @@ class Login extends Component {
         super(props);
 
         this.state = {
-            username : "",
-            password : ""
+            username : "admin",
+            password : "admin"
         }
-
-        
-    }
+    } 
 
     static getDerivedStateFromProps(props,state) {
         
         if(props.AUTHORIZED){
             // REDIRECT TO PRODUCTS PAGE
-            props.history.push(APP_ROUTES.MY_PRODUCTS);
+            props.history.push(APP_ROUTES.PARAMETERS);
         }
-        return null;
+        return state;
     }
 
     keyPressHandler(e){
@@ -48,10 +47,38 @@ class Login extends Component {
             password : this.password.value
         };
 
-        localStorage.setItem('woo-app', JSON.stringify(payload));
 
-        console.log(this.username.value);
-        return;
+         
+
+        API.LOGIN(payload)
+            .then((data)=>{
+                //Store User Category
+
+                localStorage.setItem('woo-app', JSON.stringify(data));
+
+                
+                this.props.login(true);
+
+                //Store User Category
+                this.props.storeUserData(data);
+
+                // HIDE LOADER
+                this.props.loading( false , 'login-loader');
+
+                // REDIRECT TO PRODUCTS PAGE
+                this.props.history.push(APP_ROUTES.MY_PRODUCTS);
+                
+            })
+            .catch((error)=>{
+
+                this.props.dispatch({
+                    type : 'ERROR',
+                    payload : error
+                });
+
+                // HIDE LOADING
+                this.props.loading( false, 'login-loader' );
+            })
     }
     
     handleChange = name => event => {
@@ -102,8 +129,8 @@ class Login extends Component {
                         </form>
                     </Paper>
                     <MenuItem>
-						<NavLink activeClassName='selected' to="/test">
-							Test Page
+						<NavLink activeClassName='selected' to={APP_PATHS.MY_PRODUCTS} >
+							Products List
 						</NavLink>
 					</MenuItem>
 
@@ -124,7 +151,8 @@ const mapDispatchToProps = (dispatch) => {
     return {
         ...bindActionCreators({
             loading,
-            login
+            login,
+            storeUserData
         }, dispatch ),
 
         dispatch

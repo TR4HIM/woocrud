@@ -7,14 +7,14 @@ import {
     withRouter,
     Switch
 } from 'react-router-dom';
-import { Redirect } from 'react-router';
+// import { Redirect } from 'react-router';
 
 import {login} from './pages/login/actions';
 import {loading} from './layout/actions';
 
 // PAGES 
 import Login from './pages/login/Login';
-import Test from './pages/test/Test';
+import Products from './pages/products/Products';
 
 
 import {APP_PATHS} from './config';
@@ -57,9 +57,10 @@ class Routing extends Component {
             <BrowserRouter>
                 <Switch>
                     <Route exact path={APP_PATHS.HOME} component={withRouter(Login)} />
-                    <Route exact path="/test" component={withRouter(Test)} />
+                    {/* <Route exact path={APP_PATHS.LOGIN} component={withRouter(Login)} />  */}
+                    <Route exact path={APP_PATHS.MY_PRODUCTS} component={withRouter(Products)} />
 
-                    <PrivateRoute exact authed={this.props.AUTHORIZED}  path={APP_PATHS.ADD_PRODUCTS}  component={withRouter(Login)}/>
+                    {/* <PrivateRoute exact authed={this.props.AUTHORIZED}  path={APP_PATHS.ADD_PRODUCTS}  component={withRouter(Test)}/> */}
 
 
                     {/* <Route component={withRouter(Page404)} /> */}
@@ -93,13 +94,13 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-const PrivateRoute = ({component: Component, authed, ...rest})=>{
-    return (
-        <Route
-            {...rest}
-            render={(props) => (authed === true) ? <Component {...props} /> : <Redirect to={APP_PATHS.LOGIN} />}
-        />
-    )
-};
+// const PrivateRoute = ({component: Component, authed, ...rest})=>{
+//     return (
+//         <Route
+//             {...rest}
+//             render={(props) => (authed === true) ? <Component {...props} /> : <Redirect to={APP_PATHS.LOGIN} />}
+//         />
+//     )
+// };
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Routing));
