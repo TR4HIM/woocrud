@@ -35,32 +35,33 @@ class Products extends Component {
     } 
 
     componentDidMount(){
-        // GET_WOO_PRODUCTS( this.props.USER.token , 65, this.state.pager, this.state.perPage )
-        //     .then((result)=>{
+        GET_WOO_PRODUCTS( this.props.USER.token , 65, this.state.pager, this.state.perPage )
+            .then((result)=>{
 
-        //         if( result !== undefined ){
+                console.log(result);
+                if( result !== undefined ){
+                    
+                    this.props.storeKiboProducts(result.products);
 
-        //             this.props.storeKiboProducts(result.products);
+                    this.setState({
+                        isLoadingData   : false,
+                        pagesTotal      : result.pages
+                    }, ()=>{
+                        window.scrollTo(0, 0)
+                    });
 
-        //             this.setState({
-        //                 isLoadingData   : false,
-        //                 pagesTotal      : result.pages
-        //             }, ()=>{
-        //                 window.scrollTo(0, 0)
-        //             });
-
-        //             // HIDE LOADER
-        //             this.props.loading(false, "header-loader");
-        //         }
-        //     })
-        //     .catch((error)=>{
-        //         this.props.dispatch({
-        //             type : 'ERROR',
-        //             payload : error
-        //         })
-        //         // HIDE LOADING
-        //         this.props.loading(false, "header-loader");
-        //     })
+                    // HIDE LOADER
+                    this.props.loading(false, "header-loader");
+                }
+            })
+            .catch((error)=>{
+                this.props.dispatch({
+                    type : 'ERROR',
+                    payload : error
+                })
+                // HIDE LOADING
+                this.props.loading(false, "header-loader");
+            })
     }
 
     render(){
@@ -83,7 +84,7 @@ class Products extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        AUTHORIZED : state.AUTHORIZED,
+        AUTHORIZED          : state.AUTHORIZED,
         USER                : state.USER,
     }
 }

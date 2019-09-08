@@ -29,7 +29,7 @@ class Login extends Component {
             // REDIRECT TO PRODUCTS PAGE
             props.history.push(APP_ROUTES.PARAMETERS);
         }
-        return state;
+        return null;
     }
 
     keyPressHandler(e){

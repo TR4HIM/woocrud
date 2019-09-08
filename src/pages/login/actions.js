@@ -1,4 +1,4 @@
-export const _LOGIN_        = "LOGIN";
+export const _LOGIN_         = "LOGIN";
 export const _STORE_PROFILE_ = "STORE_PROFILE";
 
 

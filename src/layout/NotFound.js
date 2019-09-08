@@ -9,7 +9,7 @@ export default class NotFound extends Component {
 
         return (
             <div id="page-404">
-                <img id="logo" src={`${process.env.PUBLIC_URL}/img/kibo.png`} alt="kibo" /> 
+                <img id="logo" src={`${process.env.PUBLIC_URL}/img/logo.png`} alt="kibo" /> 
 
                 <div className="not-found-inner">
                     <span>404</span>
