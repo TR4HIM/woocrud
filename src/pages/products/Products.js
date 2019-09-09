@@ -93,7 +93,12 @@ class Products extends Component {
         console.log(this.props.WOO_PRODUCTS.length);
         return(
             <div id="kibo-products-page" >
-                <Header/>
+                <Header />
+
+                <p id="products-list-label">
+                    All Products
+                </p>  
+
                 <div id="container">
                     { this.props.WOO_PRODUCTS.length ? this.renderProducts() : null}
                 </div>

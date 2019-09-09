@@ -40,7 +40,7 @@ class WooProduct extends Component {
                 id={this.props.data.id} 
             >
                 <div className={`thumbnail ${this.state.visualLoaded ? 'visual-loaded' : ''}`}>
-                    <img className="visual" src={this.props.data.thumbnail} alt="" onLoad={()=>this.setState({ visualLoaded : true })} />
+                    <img className="visual" src={this.props.data.images[0].src} alt="" onLoad={()=>this.setState({ visualLoaded : true })} />
                     <img className="mold" src={`${process.env.PUBLIC_URL}/img/product-image-mold.png`} alt="" />
                 </div>
                 <h3 className="title">{this.props.data.name}</h3>

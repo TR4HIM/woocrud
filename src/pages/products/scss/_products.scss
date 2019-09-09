@@ -58,6 +58,7 @@
             width: 100%;
             margin : 0 auto 10px;
             overflow: hidden;
+            // height: 250px;
             &.visual-loaded{
                 &:after{
                     display: none;
@@ -68,13 +69,14 @@
                 }
             }
             .visual{
-                position: absolute;
+                // position: absolute;
                 width: 100%;
-                left: 0;
-                right: 0;
+                // left: 0;
+                // right: 0;
                 margin: 0 auto;
                 z-index: 2;
                 font-size: 12px;
+                
             }
             .mold{
                 width: 100%;
@@ -82,27 +84,27 @@
                 margin: 0 auto;
                 
             }
-            &:before{
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background: #eee;
-                z-index: 0;
-            }
-            &:after{
-                content : '';
-                position : absolute;
-                top: 0;
-                left: 0;
-                bottom: 0;
-                right: 0;
-                background : linear-gradient(90deg, rgba(0, 0, 0, 0), rgba(187, 187, 187, 0.34), rgba(0, 0, 0, 0));
-                transform : translateX(-100%);
-                animation : loading 1.5s infinite;
-            }
+            // &:before{
+            //     content: '';
+            //     position: absolute;
+            //     top: 0;
+            //     left: 0;
+            //     right: 0;
+            //     bottom: 0;
+            //     background: #eee;
+            //     z-index: 0;
+            // }
+            // &:after{
+            //     content : '';
+            //     position : absolute;
+            //     top: 0;
+            //     left: 0;
+            //     bottom: 0;
+            //     right: 0;
+            //     background : linear-gradient(90deg, rgba(0, 0, 0, 0), rgba(187, 187, 187, 0.34), rgba(0, 0, 0, 0));
+            //     transform : translateX(-100%);
+            //     animation : loading 1.5s infinite;
+            // }
         }
         .title{
             font-size: 12px;
