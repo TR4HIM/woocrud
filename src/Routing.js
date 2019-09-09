@@ -24,14 +24,14 @@ class Routing extends Component {
 
     constructor(props){
         super(props);
-
         this.state = {
             readyToRender   : false
         }
-
+    }
+    
+    componentDidMount (){
         // CHECK IF USER IS ALREADY CONNECTED
         if(localStorage.getItem('woo-app')){
-    
             // SHOW ROOT LOADING
             this.props.loading(true, 'root-loader');
     
@@ -40,13 +40,10 @@ class Routing extends Component {
             API.TOKEN_VALIDATE(token)
                 .then((result)=>{
                     this.props.login(result.data.status === 200);
-    
                     // HIDE ROOT LOADING
                     this.props.loading(false, 'root-loader');
-                    // console.log(result.data.status)
-                    this.setState({
-                        readyToRender : true
-                    });
+
+                    this.setState({ readyToRender   : true });
                 })
                 .catch((error)=>{
                     
@@ -55,25 +52,15 @@ class Routing extends Component {
                         payload : error
                     });
     
-                    this.setState({
-                        readyToRender : true
-                    });
-    
                     // HIDE ROOT LOADING
                     this.props.loading(false, 'root-loader');
-    
+                    this.setState({ readyToRender   : true });
                 })
+        }else{
+            this.setState({ readyToRender   : true });
         }
-        else
-            this.setState({
-                readyToRender : true
-            })
-
- 
     }
-
-    
-
+  
     renderRoutes(){
         return(
             <BrowserRouter>

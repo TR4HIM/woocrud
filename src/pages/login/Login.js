@@ -2,14 +2,12 @@ import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import Paper from '@material-ui/core/Paper';
-import { TextField , MenuItem } from '@material-ui/core';
+import { TextField } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import {loading} from '../../layout/actions';
 import {login , storeUserData} from './actions';
-import { APP_ROUTES , APP_PATHS } from '../../config';
+import { APP_ROUTES } from '../../config';
 import SiteLoader from '../../components/SiteLoader';
-import Header from '../../layout/header/Header';
-import { NavLink } from "react-router-dom";
 import API from './server-effect';
 
 class Login extends Component {
@@ -27,7 +25,7 @@ class Login extends Component {
         
         if(props.AUTHORIZED){
             // REDIRECT TO PRODUCTS PAGE
-            props.history.push(APP_ROUTES.PARAMETERS);
+            props.history.push(APP_ROUTES.MY_PRODUCTS);
         }
         return null;
     }
@@ -90,12 +88,9 @@ class Login extends Component {
     render() {
         return (
             <div id="login-page">
-                <Header />
                 <SiteLoader id="login-loader" />
                 <div id="login-form" elevation={1}>
-
                     <img id="logo" src={`${process.env.PUBLIC_URL}/img/logo.png`} alt="kibo" />
-
                     <Paper id="paper" elevation={1}>
                         <form  className="form" >
                             <TextField
@@ -128,14 +123,7 @@ class Login extends Component {
                             </div>
                         </form>
                     </Paper>
-                    <MenuItem>
-						<NavLink activeClassName='selected' to={APP_PATHS.MY_PRODUCTS} >
-							Products List
-						</NavLink>
-					</MenuItem>
-
                 </div>
-
             </div>
         );
     }
