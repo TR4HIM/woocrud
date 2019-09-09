@@ -2,14 +2,12 @@ import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import Paper from '@material-ui/core/Paper';
-import { TextField , MenuItem } from '@material-ui/core';
-import Button from '@material-ui/core/Button';
 import {loading} from '../../layout/actions';
-import { APP_ROUTES , APP_PATHS } from '../../config';
 import Header from '../../layout/header/Header';
-import { NavLink } from "react-router-dom";
 
 import API_WOO from './server-effect';
+
+import ProductItem from './ProductItem';
 
 import {
     storeWooProducts,
@@ -34,18 +32,28 @@ class Products extends Component {
         }
     } 
 
-    componentDidMount(){
+
+    getWooProducts(){
+
+        // SHOW LOADER
+        this.props.loading(true, "header-loader");
+
+        this.props.clearStoreWooProducts();
+
+        this.setState({
+            isLoadingData   : true
+        });
+
+        
+
         GET_WOO_PRODUCTS( this.props.USER.token , 65, this.state.pager, this.state.perPage )
             .then((result)=>{
-
-                console.log(result);
                 if( result !== undefined ){
                     
-                    this.props.storeKiboProducts(result.products);
+                    this.props.storeWooProducts(result);
 
                     this.setState({
-                        isLoadingData   : false,
-                        pagesTotal      : result.pages
+                        isLoadingData   : false
                     }, ()=>{
                         window.scrollTo(0, 0)
                     });
@@ -62,12 +70,33 @@ class Products extends Component {
                 // HIDE LOADING
                 this.props.loading(false, "header-loader");
             })
+
+    }
+
+    componentDidMount(){
+        this.getWooProducts();
+        
+    }
+
+    renderProducts(){
+
+        let listItems = this.props.WOO_PRODUCTS.map((product, i)=> <ProductItem key={i} data={product} /> );
+        return (
+            <ul id="products-list" className={this.props.WOO_PRODUCTS.length < 3 ? 'few-products' : ''}>
+                {listItems}
+            </ul>
+        ) 
+        
     }
 
     render(){
+        console.log(this.props.WOO_PRODUCTS.length);
         return(
             <div id="kibo-products-page" >
                 <Header/>
+                <div id="container">
+                    { this.props.WOO_PRODUCTS.length ? this.renderProducts() : null}
+                </div>
             </div>
         );
     }
@@ -81,6 +110,7 @@ const mapStateToProps = (state) => {
     return {
         AUTHORIZED          : state.AUTHORIZED,
         USER                : state.USER,
+        WOO_PRODUCTS        : state.WOO_PRODUCTS,
     }
 }
 
@@ -88,7 +118,8 @@ const mapDispatchToProps = (dispatch) => {
     return {
         ...bindActionCreators({
             loading,
-            storeWooProducts
+            storeWooProducts,
+            clearStoreWooProducts
         }, dispatch ),
 
         dispatch
