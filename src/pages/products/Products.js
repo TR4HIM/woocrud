@@ -66,13 +66,8 @@ class Products extends Component {
 
     render(){
         return(
-            <div>
-                <h3>Hello World</h3>
-                <MenuItem>
-                    <NavLink activeClassName='selected' to={APP_PATHS.HOME} >
-                        Home
-                    </NavLink>
-                </MenuItem>
+            <div id="kibo-products-page" >
+                <Header/>
             </div>
         );
     }

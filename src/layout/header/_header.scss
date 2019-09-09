@@ -10,7 +10,7 @@
     margin-bottom: 20px;
     #logo{
         display: inline-block;
-        max-width: 90px;
+        max-width: 45px;
         padding: 1px 0;
         img{
             width: 100%;
@@ -67,7 +67,7 @@
     }
     ul{
         padding: 0 !important;
-        min-width: 190px;
+        min-width: 250px;
     }
     #connected-user{
         padding: 6px 15px !important;
@@ -89,7 +89,7 @@
             color : $black;
             display: block;
             width: 100%;
-            padding: 10px 15px;
+            padding: 10px 40px;
             font-weight: 500;
             font-size: 14px;
             position: relative;
@@ -106,7 +106,7 @@
             button{
                 display: block;
                 width: 100%;
-                padding: 12px 15px;
+                padding: 12px 40px;
                 background: none;
                 border: none;
                 color: $danger;

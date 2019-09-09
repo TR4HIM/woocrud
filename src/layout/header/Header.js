@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import { NavLink } from "react-router-dom";
-import { IconButton } from '@material-ui/core';
+import { IconButton, MenuItem, Drawer } from '@material-ui/core';
 import {login} from '../../pages/login/actions';
 import MenuIcon from '@material-ui/icons/Menu';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
+import SearchIcon from '@material-ui/icons/Search';
+import FilterList from '@material-ui/icons/FilterList';
+import { APP_ROUTES } from '../../config';
+import SiteLoader from '../../components/SiteLoader';
 
 
 class Header extends Component {
@@ -23,8 +24,7 @@ class Header extends Component {
 	logout(){
 
 		// CLEAR THE LOCALSTORAGE
-		localStorage.removeItem('kibo-app');
-		localStorage.removeItem('kibo-app-lang');
+		localStorage.removeItem('woo-app');
 
 		// LOGOUT
 		this.props.login(false);
@@ -37,11 +37,27 @@ class Header extends Component {
 	}
 
 	handleClickMenu(){
+		
 		this.setState({ openDrawer:  true });
 		document.body.classList.add('overflow-hidden');
-		console.log('He');
 	}
-	 
+
+	handleClickSearch(){
+		this.props.showKiboSearchBar(true);
+	}
+
+	handleClickCategory(){
+		(this.props.CHECKED_PRODUCTS.length > 0) ? this.props.showClearSelectedElementsConfirmation(true) : this.props.showKiboCategories(true);
+	}
+	
+	handleClose(){
+		this.setState({ openDrawer: false });
+	}
+	
+	changeTheLanguage(){
+		this.props.changeLanguage( (this.props.language === 'fr') ? 'ar' : 'fr' );
+		this.handleClose();
+	}
 
 	render() {
 
@@ -50,18 +66,44 @@ class Header extends Component {
 		
 		return (
 			<header id="header">
-				<AppBar position="static">
-					<Toolbar variant="dense">
-						<IconButton onClick={this.handleClickMenu.bind(this)} edge="start" className="menu-class" color="inherit" aria-label="menu">
-							<NavLink activeClassName='selected' to="/">
-								<MenuIcon />
-							</NavLink>
-						</IconButton>
-						<Typography variant="h6" color="inherit">
-							Photos
-						</Typography>
-					</Toolbar>
-				</AppBar>
+				<div className="wrapper">
+
+					<IconButton onClick={this.handleClickMenu.bind(this)} id="menu-icon" color="inherit" aria-label="Menu">
+						<MenuIcon />
+					</IconButton>
+
+					<span id="logo" >
+						<img src={`${process.env.PUBLIC_URL}/img/logo.png`} alt="kibo.ma" />
+					</span>
+					
+					
+					{/* LOADER */}
+					<SiteLoader type="linear" id="header-loader" />
+				</div>
+
+				
+				<Drawer
+					id="main-menu" 
+					open={this.state.openDrawer}
+					anchor="right" 
+                    onClose={this.handleClose.bind(this)}
+				>
+					<MenuItem>
+						<span id="connected-user">
+							GREETING , {this.props.USER.user_display_name || this.props.USER.user_nicename}
+						</span>
+					</MenuItem>
+					<MenuItem>
+						<NavLink activeClassName='selected' to={APP_ROUTES.MY_PRODUCTS}>
+							MY PRODUCTS 
+						</NavLink>
+					</MenuItem>
+					<MenuItem className="logout" >
+						<button onClick={this.logout.bind(this)}>
+							SIGN OUT 
+						</button>
+					</MenuItem>
+				</Drawer>
 			</header>
 		)
 	}
@@ -70,15 +112,14 @@ class Header extends Component {
 
 const mapStateToProps = (state) => {
     return {
-		USER 				: state.USER,
-		CHECKED_PRODUCTS 	: state.CHECKED_PRODUCTS,
+		USER 				: state.USER
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
         ...bindActionCreators({
-			login,
+			login
         }, dispatch ),
 
         dispatch
