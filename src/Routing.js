@@ -29,8 +29,6 @@ class Routing extends Component {
             readyToRender   : false
         }
 
-
-
         // CHECK IF USER IS ALREADY CONNECTED
         if(localStorage.getItem('woo-app')){
     
@@ -45,7 +43,7 @@ class Routing extends Component {
     
                     // HIDE ROOT LOADING
                     this.props.loading(false, 'root-loader');
-                    console.log(result.data.status)
+                    // console.log(result.data.status)
                     this.setState({
                         readyToRender : true
                     });
@@ -75,37 +73,6 @@ class Routing extends Component {
     }
 
     
-    componentWillMount() {
-
-        
-        
-    }
-
-    // componentWillReceiveProps(nextProps){
-
-    //     this.setState({
-    //         readyToRender : true
-    //     });
-
-    // }
-
-    // componentWillMount() {
-    //     this.setState({
-    //         readyToRender : true
-    //     })
-    // }
-
-    
-    // static getDerivedStateFromProps(props,state) {
-        
-    //     // if(props.AUTHORIZED){
-    //     //     // REDIRECT TO PRODUCTS PAGE
-    //     //     props.history.push(APP_ROUTES.MY_PRODUCTS);
-    //     // }
-        
-
-         
-    // }
 
     renderRoutes(){
         return(
