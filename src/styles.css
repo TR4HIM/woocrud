@@ -988,7 +988,7 @@ a {
 
 #edit-product .edit-product-inner {
   position: relative;
-  width: 300px;
+  width: 100%;
   padding: 40px 20px 20px; }
   #edit-product .edit-product-inner.short-desc-showen {
     height: 100%;
@@ -1010,7 +1010,8 @@ a {
   #edit-product .edit-product-inner .visual {
     margin: 0 auto 20px;
     text-align: center;
-    position: relative; }
+    position: relative;
+    max-width: 320px; }
     #edit-product .edit-product-inner .visual .product-page-link {
       position: absolute;
       bottom: -10px;

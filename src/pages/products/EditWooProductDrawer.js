@@ -6,13 +6,12 @@ import Drawer from '@material-ui/core/Drawer';
 import CloseIcon from '@material-ui/icons/Close';
 
 import {loading} from '../../layout/actions';
-import {TextField, Button, IconButton } from '@material-ui/core';
+import {TextField} from '@material-ui/core';
 import Switch from '@material-ui/core/Switch';
 import SiteLoader from '../../components/SiteLoader';
 import ToggleDisplay from 'react-toggle-display';
 import {green} from '@material-ui/core/colors';
 import { withStyles } from '@material-ui/core/styles';
-import LaunchIcon from '@material-ui/icons/Launch';
 
 import {
     editWooProduct
@@ -25,18 +24,13 @@ class EditWooProductDrawer extends Component {
         super(props);
         
         this.state = {
-            percentage              : 0,
-            showDeleteConfirmModal   : false,
-            editShortDesc           : false,
-
             // FIELDS
             regularPrice            : 0,
             salePrice            : 0,
             productName             : "",
             productThumbnail        : "",
+            productDescription        : "",
             status                  : false,
-            bargain                 : false,
-            fake                    : false,
             
         }
 
@@ -51,16 +45,13 @@ class EditWooProductDrawer extends Component {
             let regularPrice    = nextProps.EDITING_WOO_PRODUCT.currentProduct.regular_price;
             let salePrice       = nextProps.EDITING_WOO_PRODUCT.currentProduct.sale_price;
             this.setState({
-                percentage      : (regularPrice.length && salePrice.length) ? this.getPercentage(salePrice, regularPrice) : 0,
                 regularPrice    : regularPrice.length ? regularPrice : '',
-                salePrice    : salePrice,
+                salePrice       : salePrice,
                 productName     : nextProps.EDITING_WOO_PRODUCT.currentProduct.name,
+                productDescription     : nextProps.EDITING_WOO_PRODUCT.currentProduct.description,
                 productThumbnail     : nextProps.EDITING_WOO_PRODUCT.currentProduct.images[0].src,
                 status          : (nextProps.EDITING_WOO_PRODUCT.currentProduct.status === 'publish'),
-                bargain         : nextProps.EDITING_WOO_PRODUCT.currentProduct.bargain,
-                fake            : nextProps.EDITING_WOO_PRODUCT.currentProduct.fake
             });
-
 
             // ADD THE OVERFLOW HIDDEN 
             document.body.classList.add('overflow-hidden');
@@ -80,35 +71,14 @@ class EditWooProductDrawer extends Component {
     
     closeDrawer(){
         this.props.editWooProduct(false);
-  
     }
 
-    getPercentage(salePrice, regularPrice){
-        return  (salePrice === 0) ? 0 : Math.ceil( ( 100 - (( salePrice * 100 ) / regularPrice) ));
-    }
-
-    percentageChangeHandler(e){
-        this.setState({
-            percentage : e.target.value
-        });
-        this.updateProduct(e, "sale_price");
-    }
-
-    keyPressHandler(e){
-
-        if(e.keyCode === 13)
-            e.target.blur();
-
-    }
+   
 
     switchChangeHandler(field){
-
         this.setState((prevState)=>({
             [field] : !prevState[field]
-        }), ()=>{
-            // UPDATE PRODUCTS STATUS
-            this.updateProduct(null, field);
-        });
+        }));
     }
 
     
@@ -123,18 +93,12 @@ class EditWooProductDrawer extends Component {
                 
                 <div className="visual">
                     <img src={productImage} alt={product.name}  />
-                    <a href={this.props.EDITING_WOO_PRODUCT.currentProduct.permalink} target="_blank"  rel="noopener noreferrer" className="product-page-link">
-                        <IconButton >
-                            <LaunchIcon />
-                        </IconButton>
-                    </a>
                 </div>
                 
 
-                <ToggleDisplay show={Boolean(!editShortDesc)}>
-
+                <ToggleDisplay>
                     <div id="status">
-                        <label> PUBLISH_A_PRODUCT </label>
+                        <label> Publish Product </label>
                         <Switch
                             className="switch"
                             checked={this.state.status}
@@ -145,38 +109,13 @@ class EditWooProductDrawer extends Component {
                             }}
                         />
                     </div>
-
-                    <div id="bargain">
-                        <label> PRODUCT_IS_BARGAIN </label>
-                        <Switch
-                            className="switch"
-                            checked={this.state.bargain}
-                            onChange={()=>this.switchChangeHandler('bargain')}
-                            color="primary"
-                            
-                        />
-                    </div>
-
-                    <div id="fake">
-                        <label> PRODUCT_IS_FAKE </label>
-                        <Switch
-                            className="switch"
-                            checked={this.state.fake}
-                            onChange={()=>this.switchChangeHandler('fake')}
-                            color="primary"
-                        />
-                    </div>
-
                 </ToggleDisplay>
 
-                <ToggleDisplay show={Boolean(!editShortDesc)}>
+                <ToggleDisplay>
                     <TextField
-                        label='PRODUCT_NAME' 
+                        label='Product Name' 
                         value={this.state.productName}
                         className="title"
-                        onBlur={(e)=>this.updateProduct(e, "name")}
-                        onKeyDown={(e)=>this.keyPressHandler(e)}
-                        onChange={(e)=>this.setState({ productName : e.target.value })}
                         type="text"
                         InputLabelProps={{ shrink: true }}
                         margin="normal"
@@ -184,41 +123,28 @@ class EditWooProductDrawer extends Component {
                         multiline
                         rowsMax={3}
                     />
-                    
-                    <div className="price-box">
-                        <TextField
-                            label='REGULAR_PRICE' 
-                            value={this.state.regularPrice}
-                            className="regular-price"
-                            onBlur={(e)=>this.updateProduct(e, "regular_price")}
-                            onKeyDown={(e)=>this.keyPressHandler(e)}
-                            onChange={(e)=>this.setState({ regularPrice : e.target.value })}
-                            type="number"
-                            InputLabelProps={{ shrink: true }}
-                            margin="normal"
-                            variant="outlined"
-                        />
-                    </div>
+                    <TextField
+                        label='Product Description' 
+                        value={this.state.productDescription}
+                        className="title"
+                        type="text"
+                        InputLabelProps={{ shrink: true }}
+                        margin="normal"
+                        variant="outlined"
+                        multiline
+                        rows="6"
+                    />
 
-                    <div className="price-box">
-                        <TextField
-                            label='Sale Price' 
-                            value={this.state.salePrice}
-                            className="regular-price"
-                            onBlur={(e)=>this.updateProduct(e, "sale_price")}
-                            onKeyDown={(e)=>this.keyPressHandler(e)}
-                            onChange={(e)=>this.setState({ salePrice : e.target.value })}
-                            type="number"
-                            InputLabelProps={{ shrink: true }}
-                            margin="normal"
-                            variant="outlined"
-                        />
-                                
-                    </div> 
-
-                    <Button variant="outlined" id="delete-product" color="secondary" onClick={()=>this.setState({ showDeleteConfirmModal : true})} >
-                         DELETE 
-                    </Button>
+                    <TextField
+                        label='Product Price' 
+                        value={this.state.regularPrice}
+                        className="regular-price"
+                        type="number"
+                        InputLabelProps={{ shrink: true }}
+                        margin="normal"
+                        variant="outlined"
+                    />
+                   
                 </ToggleDisplay>
             </Fragment>
         )
@@ -228,13 +154,16 @@ class EditWooProductDrawer extends Component {
 
         const product       = this.props.EDITING_WOO_PRODUCT.currentProduct;
         const editShortDesc = this.state.editShortDesc;
-
+        const { classes } = this.props;
         return (
             <Drawer 
                 id="edit-product" 
                 anchor="left" 
                 open={this.props.EDITING_WOO_PRODUCT.status} 
                 onClose={this.closeDrawer.bind(this)}
+                classes={{
+                    paper: classes.drawerPaper,
+                }}
             >
 
                 <div className={`edit-product-inner ${editShortDesc ? "short-desc-showen" : "" }`}>
@@ -278,7 +207,10 @@ const styles = () => ({
         },
     },
     colorBar: {},
-    colorChecked: {}
+    colorChecked: {},
+    drawerPaper: {
+        width: '50%',
+    },
 });
 
 
