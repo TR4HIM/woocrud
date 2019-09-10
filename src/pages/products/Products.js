@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import Paper from '@material-ui/core/Paper';
 import {loading} from '../../layout/actions';
 import Header from '../../layout/header/Header';
 
 import API_WOO from './server-effect';
 
 import ProductItem from './ProductItem';
-
+import EditWooProductDrawer from './EditWooProductDrawer'
 import {
     storeWooProducts,
     clearStoreWooProducts
@@ -27,11 +26,10 @@ class Products extends Component {
             isLoadingData           : false,
             pager                   : 1,
             pagesTotal              : null,
-            perPage              : 10,
+            perPage                 : 10,
 
         }
     } 
-
 
     getWooProducts(){
 
@@ -90,18 +88,18 @@ class Products extends Component {
     }
 
     render(){
-        console.log(this.props.WOO_PRODUCTS.length);
+        
         return(
-            <div id="kibo-products-page" >
+            <div id="user-products-page" > 
                 <Header />
-
-                <p id="products-list-label">
-                    All Products
-                </p>  
 
                 <div id="container">
                     { this.props.WOO_PRODUCTS.length ? this.renderProducts() : null}
                 </div>
+
+                <EditWooProductDrawer isSearchResult={this.props.SEARCH_PRODUCTS ? true : false} /> 
+
+               
             </div>
         );
     }
@@ -116,6 +114,7 @@ const mapStateToProps = (state) => {
         AUTHORIZED          : state.AUTHORIZED,
         USER                : state.USER,
         WOO_PRODUCTS        : state.WOO_PRODUCTS,
+        EDITING_WOO_PRODUCT : state.EDITING_WOO_PRODUCT
     }
 }
 

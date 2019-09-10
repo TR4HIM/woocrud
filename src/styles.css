@@ -841,6 +841,289 @@ a {
   #products-list .product {
     width: 146px; } }
 
+#user-products-page .rc-pagination {
+  margin-bottom: 53px; }
+
+#user-products-page #shop-products-count {
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 16px;
+  text-transform: uppercase;
+  padding: 0 10px;
+  line-height: 19px; }
+  #user-products-page #shop-products-count small {
+    display: inline-block;
+    margin-left: 5px;
+    color: #0062bd;
+    vertical-align: middle;
+    position: relative;
+    top: -3px; }
+
+#user-products-page #filter-box {
+  margin-bottom: 20px; }
+  #user-products-page #filter-box:after {
+    content: "";
+    display: table;
+    clear: both; }
+  #user-products-page #filter-box .filter, #user-products-page #filter-box .per-page {
+    display: block;
+    float: right;
+    margin-left: 20px; }
+    #user-products-page #filter-box .filter [role="button"], #user-products-page #filter-box .per-page [role="button"] {
+      padding-top: 13px;
+      padding-bottom: 13px; }
+  #user-products-page #filter-box + .rc-pagination {
+    margin-bottom: 10px; }
+
+#user-products-page #add-products {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  padding: 15px 5px;
+  background: #fad843;
+  color: #333;
+  width: 100%;
+  border-radius: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  transform: translate3d(0, 0, 0);
+  -webkit-overflow-scrolling: touch;
+  will-change: scroll-position; }
+
+#user-products-page #products-list .product {
+  cursor: pointer; }
+  #user-products-page #products-list .product .edit-btn {
+    position: absolute;
+    z-index: 5;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    padding: 11px 10px;
+    border: 1px solid #333;
+    margin: auto;
+    height: 38px;
+    width: 92px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.7);
+    transition: .2s opacity ease-out;
+    opacity: 0; }
+    .kibo-lang-ar #user-products-page #products-list .product .edit-btn {
+      font-family: "Cairo", sans-serif; }
+  #user-products-page #products-list .product:hover .edit-btn {
+    opacity: 1; }
+  #user-products-page #products-list .product .extra-fields-label {
+    position: absolute;
+    top: 11px;
+    left: 11px;
+    color: black;
+    z-index: 3;
+    font-size: 11px;
+    padding: 3px 5px;
+    border-radius: 14px;
+    font-weight: bold; }
+    #user-products-page #products-list .product .extra-fields-label .bargain-icon {
+      display: block;
+      background: rgba(250, 216, 67, 0.75);
+      color: black;
+      z-index: 3;
+      font-size: 11px;
+      padding: 3px 5px;
+      border-radius: 14px;
+      font-weight: bold;
+      margin-bottom: 5px; }
+    #user-products-page #products-list .product .extra-fields-label .fake-icon {
+      display: block;
+      background: rgba(0, 98, 189, 0.6);
+      color: black;
+      z-index: 3;
+      font-size: 11px;
+      padding: 3px 5px;
+      border-radius: 14px;
+      font-weight: bold; }
+  #user-products-page #products-list .product .private-icon {
+    position: absolute;
+    top: 11px;
+    right: 11px;
+    position: absolute;
+    background: rgba(255, 0, 0, 0.9);
+    color: white;
+    z-index: 3;
+    font-size: 11px;
+    padding: 3px 5px;
+    border-radius: 14px;
+    font-weight: bold; }
+  #user-products-page #products-list .product .details {
+    overflow: hidden;
+    padding-top: 10px;
+    text-align: right;
+    display: block; }
+    #user-products-page #products-list .product .details.in-promo .price.regular {
+      text-decoration: line-through;
+      opacity: .5;
+      font-weight: normal; }
+    #user-products-page #products-list .product .details.in-promo .price.promo {
+      margin-left: 10px;
+      display: inline-block;
+      text-decoration: none; }
+    #user-products-page #products-list .product .details .price {
+      font-weight: 700;
+      font-size: 15px;
+      display: inline-block; }
+      #user-products-page #products-list .product .details .price small {
+        font-size: 14px;
+        margin-left: -2px; }
+
+#user-products-page #no-user-products {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateY(-50%) translateX(-50%);
+  font-style: italic;
+  text-align: center;
+  width: 100%; }
+
+#edit-product .edit-product-inner {
+  position: relative;
+  width: 300px;
+  padding: 40px 20px 20px; }
+  #edit-product .edit-product-inner.short-desc-showen {
+    height: 100%;
+    overflow: hidden; }
+    #edit-product .edit-product-inner.short-desc-showen #short-description {
+      height: calc(100vh - 250px); }
+    #edit-product .edit-product-inner.short-desc-showen .visual img {
+      width: auto;
+      height: 130px; }
+    #edit-product .edit-product-inner.short-desc-showen #edit-product-loader > div {
+      background: white; }
+  #edit-product .edit-product-inner #edit-product-loader {
+    position: fixed;
+    top: 7px;
+    right: 6px;
+    background: rgba(255, 255, 255, 0.788235);
+    border-radius: 50%;
+    padding: 3px; }
+  #edit-product .edit-product-inner .visual {
+    margin: 0 auto 20px;
+    text-align: center;
+    position: relative; }
+    #edit-product .edit-product-inner .visual .product-page-link {
+      position: absolute;
+      bottom: -10px;
+      left: -10px;
+      cursor: pointer; }
+      #edit-product .edit-product-inner .visual .product-page-link svg {
+        font-size: 25px; }
+    #edit-product .edit-product-inner .visual img {
+      width: 80%;
+      display: inline-block; }
+    #edit-product .edit-product-inner .visual:hover .product-page-link {
+      display: block; }
+  #edit-product .edit-product-inner #status:after, #edit-product .edit-product-inner #fake:after, #edit-product .edit-product-inner #bargain:after {
+    content: "";
+    display: table;
+    clear: both; }
+  #edit-product .edit-product-inner #status label, #edit-product .edit-product-inner #fake label, #edit-product .edit-product-inner #bargain label {
+    float: left;
+    line-height: 47px;
+    font-style: italic;
+    font-weight: 600; }
+    .kibo-lang-ar #edit-product .edit-product-inner #status label, .kibo-lang-ar #edit-product .edit-product-inner #fake label, .kibo-lang-ar #edit-product .edit-product-inner #bargain label {
+      font-family: "Cairo", sans-serif; }
+  #edit-product .edit-product-inner #status .switch, #edit-product .edit-product-inner #fake .switch, #edit-product .edit-product-inner #bargain .switch {
+    float: right; }
+  #edit-product .edit-product-inner .title {
+    width: 100%; }
+  #edit-product .edit-product-inner .price-box {
+    overflow: hidden;
+    margin-bottom: 20px; }
+    #edit-product .edit-product-inner .price-box > label {
+      float: left;
+      line-height: 22px;
+      font-size: 13px;
+      color: #606060;
+      font-weight: 600; }
+    #edit-product .edit-product-inner .price-box .regular-price {
+      width: 100%; }
+
+#edit-product #short-description {
+  margin: 10px 0 20px;
+  display: block; }
+  #edit-product #short-description button {
+    font-size: 13px;
+    padding: 11px 10px 10px;
+    width: 100%; }
+  #edit-product #short-description .rdw-editor-wrapper {
+    margin-top: 15px;
+    width: 299px;
+    border: 1px solid #ddd;
+    background: #eee;
+    position: relative;
+    height: 100%;
+    left: -20px; }
+    #edit-product #short-description .rdw-editor-wrapper .rdw-editor-main {
+      padding: 0 10px;
+      color: #222; }
+    #edit-product #short-description .rdw-editor-wrapper .rdw-option-wrapper {
+      border: 1px solid #d6d6d6;
+      padding: 8px;
+      height: 28px; }
+      #edit-product #short-description .rdw-editor-wrapper .rdw-option-wrapper.rdw-option-active {
+        border-color: #3F51B5; }
+  #edit-product #short-description #edit-short-description-loader {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    opacity: .3; }
+    #edit-product #short-description #edit-short-description-loader > div {
+      height: 43px; }
+
+#edit-product #close {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  cursor: pointer; }
+  #edit-product #close:hover {
+    opacity: .5; }
+
+#edit-product #delete-product {
+  margin-top: 20px;
+  width: 100%; }
+
+.kibo-lang-ar #menu-status ul li {
+  text-align: right;
+  font-family: "Cairo", sans-serif; }
+
+@media screen and (max-width: 680px) {
+  #products-list .product {
+    max-width: 310px; }
+  #user-products-page #filter-box {
+    margin-bottom: 40px; }
+  #user-products-page #add-products {
+    padding: 10px 5px; } }
+
+@media screen and (max-width: 480px) {
+  #user-products-page #filter-box .filter, #user-products-page #filter-box .per-page {
+    width: 100%;
+    float: none;
+    width: 100%;
+    margin-left: 0;
+    margin-bottom: 15px; }
+    #user-products-page #filter-box .filter > div, #user-products-page #filter-box .per-page > div {
+      width: 100%; }
+  #user-products-page #filter-box {
+    margin-bottom: 10px; }
+  #user-products-page #shop-products-count {
+    font-size: 16px; }
+  #user-products-page #shop-products-count small {
+    font-size: 15px;
+    top: -2px; } }
+
 html[dir="rtl"] body * {
   font-family: "Cairo", sans-serif;
   font-weight: 600; }

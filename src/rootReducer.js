@@ -4,7 +4,8 @@ import { connectRouter } from 'connected-react-router'
 import {AUTHORIZED , USER} from './pages/login/reducers';
 
 import {
-    WOO_PRODUCTS
+    WOO_PRODUCTS,
+    EDITING_WOO_PRODUCT
 } from './pages/products/reducers';
 
 import {
@@ -21,6 +22,7 @@ const appReducer = combineReducers({
     USER,
     WOO_PRODUCTS,
     LOADER,
+    EDITING_WOO_PRODUCT,
     router : connectRouter(history)
 });
 

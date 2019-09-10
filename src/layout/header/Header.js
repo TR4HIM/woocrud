@@ -5,8 +5,6 @@ import { NavLink } from "react-router-dom";
 import { IconButton, MenuItem, Drawer } from '@material-ui/core';
 import {login} from '../../pages/login/actions';
 import MenuIcon from '@material-ui/icons/Menu';
-import SearchIcon from '@material-ui/icons/Search';
-import FilterList from '@material-ui/icons/FilterList';
 import { APP_ROUTES } from '../../config';
 import SiteLoader from '../../components/SiteLoader';
 
