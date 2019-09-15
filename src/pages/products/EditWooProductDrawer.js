@@ -84,7 +84,6 @@ class EditWooProductDrawer extends Component {
     
 
     readyToRender(product){
-        const editShortDesc = this.state.editShortDesc;
         const productImage = this.state.productThumbnail;
         const { classes } = this.props;
          
@@ -202,7 +201,7 @@ const styles = () => ({
         '&$colorChecked': {
             color: green[500],
             '& + $colorBar': {
-                backgroundColor: green[500],
+                backgroundColor: green[500], 
             },
         },
     },

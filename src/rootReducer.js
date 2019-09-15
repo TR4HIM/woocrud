@@ -8,7 +8,7 @@ import {
     EDITING_WOO_PRODUCT
 } from './pages/products/reducers';
 
-import {
+import { 
     LOADER
 } from './layout/reducers';
 
