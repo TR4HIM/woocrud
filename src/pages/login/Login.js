@@ -7,7 +7,6 @@ import {loading , login , storeUserData} from '../../store/actions/';
 import { APP_ROUTES } from '../../config';
 import Loader from '../../components/loader/loader';
 import API from '../../API/';
-
 import { withRouter } from 'react-router-dom';
 
 const Login = ({dispatch, AUTHORIZED , history }) => {
@@ -93,4 +92,4 @@ const Login = ({dispatch, AUTHORIZED , history }) => {
 
 const mapStateToProps = ({ AUTHORIZED }) => ({ AUTHORIZED });
 
-export default withRouter(connect(mapStateToProps)(Login)) ; 
+export default  connect(mapStateToProps)(Login); 

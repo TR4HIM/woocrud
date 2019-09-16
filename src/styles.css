@@ -287,7 +287,11 @@ a {
 #main-footer {
   background: #f8f8f8;
   text-align: center;
-  padding: 15px 0; }
+  padding: 15px 0;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0; }
 
 #newsletter {
   height: 65px;

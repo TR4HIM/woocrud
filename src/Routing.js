@@ -13,7 +13,9 @@ import {login, loading} from './store/actions/';
 // PAGES 
 import Login from './pages/login/Login';
 import Products from './pages/products/Products';
+import AddProduct from './pages/products/AddProduct';
 import Page404 from './pages/not-found/';
+import UserProfile from './pages/user/';
 
 import API from './API/';
 
@@ -60,9 +62,11 @@ const Routing = ( {dispatch , AUTHORIZED} ) => {
         return(
             <BrowserRouter>
                 <Switch>
-                    <Route exact path={APP_PATHS.HOME} component={Login} />
+                    <Route exact path={APP_PATHS.HOME}          component={withRouter(Login)} />
+                    <Route exact path={APP_PATHS.ADD_PRODUCTS}  component={withRouter(AddProduct)} />
+                    <Route exact path={APP_PATHS.PARAMETERS}    component={withRouter(UserProfile)} />
 
-                    <PrivateRoute exact authed={AUTHORIZED}  path={APP_PATHS.MY_PRODUCTS}  component={Products}/>
+                    <PrivateRoute exact authed={AUTHORIZED}     component={withRouter(Products)} path={APP_PATHS.MY_PRODUCTS}  />
 
                     <Route component={withRouter(Page404)} />
                 </Switch>

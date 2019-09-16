@@ -96,6 +96,16 @@ class Header extends Component {
 							MY PRODUCTS 
 						</NavLink>
 					</MenuItem>
+					<MenuItem>
+						<NavLink activeClassName='selected' to={APP_ROUTES.ADD_PRODUCTS}>
+							ADD PRODUCT
+						</NavLink>
+					</MenuItem>
+					<MenuItem>
+						<NavLink activeClassName='selected' to={APP_ROUTES.PARAMETERS}>
+							USER PROFILE
+						</NavLink>
+					</MenuItem>
 					<MenuItem className="logout" >
 						<button onClick={this.logout.bind(this)}>
 							SIGN OUT 
