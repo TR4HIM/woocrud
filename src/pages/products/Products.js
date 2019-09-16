@@ -1,19 +1,17 @@
 import React, { useState , useEffect } from 'react';
 import {connect} from 'react-redux';
-import {loading} from '../../layout/actions';
 import Header from '../../layout/header/Header';
 
-import API_WOO from './server-effect';
 
 import ProductItem from './ProductItem';
 import EditWooProductDrawer from './EditWooProductDrawer'
-import {
-    storeWooProducts,
-    clearStoreWooProducts
-} from './actions';
+ 
+
+import {loading , storeWooProducts , clearStoreWooProducts} from '../../store/actions/';
+import API from '../../API/'; 
 
 
-const GET_WOO_PRODUCTS  = API_WOO.WC_getWooProducts();
+const GET_WOO_PRODUCTS  = API.WC_getWooProducts();
 
 const Products = ({dispatch , USER , WOO_PRODUCTS , EDITING_WOO_PRODUCT }) => {
 

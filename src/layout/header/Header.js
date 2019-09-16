@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import { NavLink } from "react-router-dom";
 import { IconButton, MenuItem, Drawer } from '@material-ui/core';
-import {login} from '../../pages/login/actions';
+import {login} from '../../store/actions/';
 import MenuIcon from '@material-ui/icons/Menu';
 import { APP_ROUTES } from '../../config';
 import SiteLoader from '../../components/SiteLoader';

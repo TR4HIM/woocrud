@@ -1,6 +1,5 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component, Fragment , useState , useEffect } from 'react';
 import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
 import {
     BrowserRouter,
     Route,
@@ -9,65 +8,60 @@ import {
 } from 'react-router-dom';
 import { Redirect } from 'react-router';
 
-import {login} from './pages/login/actions';
-import {loading} from './layout/actions';
+import {login, loading} from './store/actions/';
 
 // PAGES 
 import Login from './pages/login/Login';
 import Products from './pages/products/Products';
 import Page404 from './layout/NotFound';
-import API from './pages/login/server-effect';
+import API from './API/';
 
 import {APP_PATHS} from './config';
 
-class Routing extends Component {
-
-    constructor(props){
-        super(props);
-        this.state = {
-            readyToRender   : false
-        }
-    }
+const Routing = ( {dispatch , AUTHORIZED} ) => {
     
-    componentDidMount (){
+    const [readyToRender,setReadyToRender] = useState(false);
+    
+    useEffect(()=>{
         // CHECK IF USER IS ALREADY CONNECTED
         if(localStorage.getItem('woo-app')){
             // SHOW ROOT LOADING
-            this.props.loading(true, 'root-loader');
+            dispatch(loading(true, 'root-loader'));
     
             let token = JSON.parse(localStorage.getItem('woo-app')).token;
             
             API.TOKEN_VALIDATE(token)
                 .then((result)=>{
-                    this.props.login(result.data.status === 200);
+                    dispatch(login(result.data.status === 200));
                     // HIDE ROOT LOADING
-                    this.props.loading(false, 'root-loader');
-
-                    this.setState({ readyToRender   : true });
+                    dispatch(loading(false, 'root-loader'));
+    
+                    setReadyToRender(true);
                 })
                 .catch((error)=>{
                     
-                    this.props.dispatch({
+                    dispatch({
                         type : 'ERROR',
                         payload : error
                     });
     
                     // HIDE ROOT LOADING
-                    this.props.loading(false, 'root-loader');
-                    this.setState({ readyToRender   : true });
+                    dispatch(loading(false, 'root-loader'));
+                    setReadyToRender(true);
                 })
         }else{
-            this.setState({ readyToRender   : true });
+            setReadyToRender(true);
         }
-    }
-  
-    renderRoutes(){
+        
+    },[]);
+
+    const renderRoutes = () => {
         return(
             <BrowserRouter>
                 <Switch>
                     <Route exact path={APP_PATHS.HOME} component={Login} />
 
-                    <PrivateRoute exact authed={this.props.AUTHORIZED}  path={APP_PATHS.MY_PRODUCTS}  component={Products}/>
+                    <PrivateRoute exact authed={AUTHORIZED}  path={APP_PATHS.MY_PRODUCTS}  component={Products}/>
 
                     <Route component={withRouter(Page404)} />
                 </Switch>
@@ -75,30 +69,14 @@ class Routing extends Component {
         )
     }
 
-    render() {
-        return (
-            <Fragment>
-                {this.state.readyToRender ? this.renderRoutes() : null }
-            </Fragment>
-        )
-    }
+    return (
+        <Fragment>
+            {readyToRender ? renderRoutes() : null }
+        </Fragment>
+    )
 };
 
-const mapStateToProps = (state) => {
-    return {
-        AUTHORIZED  : state.AUTHORIZED
-    }
-}
-const mapDispatchToProps = (dispatch) => {
-    return {
-        ...bindActionCreators({
-            login,
-            loading
-        }, dispatch ),
-
-        dispatch
-    }
-}
+const mapStateToProps = ({AUTHORIZED}) => ({AUTHORIZED});
 
 const PrivateRoute = ({component: Component, authed, ...rest})=>{
     return (
@@ -109,4 +87,4 @@ const PrivateRoute = ({component: Component, authed, ...rest})=>{
     )
 };
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Routing));
+export default withRouter(connect(mapStateToProps)(Routing));

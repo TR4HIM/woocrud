@@ -1,22 +1,16 @@
 import React, { useState, Fragment , useEffect } from 'react';
 import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
-
 import Drawer from '@material-ui/core/Drawer';
 import CloseIcon from '@material-ui/icons/Close';
-
-import {loading} from '../../layout/actions';
 import {TextField} from '@material-ui/core';
 import Switch from '@material-ui/core/Switch';
 import SiteLoader from '../../components/SiteLoader';
 import ToggleDisplay from 'react-toggle-display';
 import {green} from '@material-ui/core/colors';
 import { withStyles } from '@material-ui/core/styles';
+ 
 
-import {
-    editWooProduct
-} from './actions';
-
+import { editWooProduct } from '../../store/actions/';
 
 const EditWooProductDrawer = ({dispatch , classes , EDITING_WOO_PRODUCT}) => {
 
@@ -30,7 +24,6 @@ const EditWooProductDrawer = ({dispatch , classes , EDITING_WOO_PRODUCT}) => {
 
 
     useEffect(() => {
-
         if(EDITING_WOO_PRODUCT.currentProduct){
             let regularPrice    = EDITING_WOO_PRODUCT.currentProduct.regular_price;
             let salePrice       = EDITING_WOO_PRODUCT.currentProduct.sale_price.length ;
@@ -71,7 +64,7 @@ const EditWooProductDrawer = ({dispatch , classes , EDITING_WOO_PRODUCT}) => {
                         <Switch
                             className="switch"
                             checked={status}
-                            onChange={()=> setStatus(!status)}
+                            onChange={(e) => setStatus(!status)}
                             classes={{
                                 switchBase: classes.greenSwitch,
                                 checked: classes.colorChecked,
@@ -91,6 +84,7 @@ const EditWooProductDrawer = ({dispatch , classes , EDITING_WOO_PRODUCT}) => {
                         variant="outlined"
                         multiline
                         rowsMax={3}
+                        onChange={(e) => setProductName(e.target.value)}
                     />
                     <TextField
                         label='Product Description' 
@@ -129,34 +123,28 @@ const EditWooProductDrawer = ({dispatch , classes , EDITING_WOO_PRODUCT}) => {
         )
     }
     
-    const RenderDrawer = () => {
-        const product       = EDITING_WOO_PRODUCT.currentProduct;
+    
+    return (
+        <Drawer 
+            id="edit-product" 
+            anchor="left" 
+            open={EDITING_WOO_PRODUCT.status} 
+            onClose={closeDrawer}
+            classes={{
+                paper: classes.drawerPaper,
+            }}
+        >
 
-        return (
-            <Drawer 
-                id="edit-product" 
-                anchor="left" 
-                open={EDITING_WOO_PRODUCT.status} 
-                onClose={closeDrawer}
-                classes={{
-                    paper: classes.drawerPaper,
-                }}
-            >
-    
-                <div className={`edit-product-inner `}>
-                    <SiteLoader id="edit-product-loader"  size={22} />
-    
-                    <CloseIcon id="close" onClick={ closeDrawer } />
-    
-                    {product ? readyToRender(product) : null}
-                </div>
-            </Drawer>
-        );
+            <div className={`edit-product-inner `}>
+                <SiteLoader id="edit-product-loader"  size={22} />
 
-    }
-    return(
-        <RenderDrawer />
-    )
+                <CloseIcon id="close" onClick={ closeDrawer } />
+
+                {EDITING_WOO_PRODUCT.currentProduct ? readyToRender(EDITING_WOO_PRODUCT.currentProduct) : null}
+            </div>
+        </Drawer>
+    );
+ 
 }
 
 

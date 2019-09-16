@@ -1,55 +1,26 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
 import Routing from '../Routing';
 import SiteLoader from '../components/SiteLoader';
-import { loading } from './actions';
 
 
-class Layout extends Component {
+const Layout = (dispatch,ERROR) => {
 
-    constructor(props) {
-        super(props);
-        
-        this.state = {
-            moldLoaded : false
-        }
+    const [moldLoaded, setMoldLoaded] = useState(false);
 
-    }
+    return (
+        <div id="layout"> 
+            {/* LOADER */}
+            <SiteLoader id="root-loader" />             
+            
+            {/* APP ROUTING */}
+            <Routing />
 
-    render() {
-        return (
-            <div id="layout"> 
-                {/* LOADER */}
-                <SiteLoader id="root-loader" />             
-                
-                {/* APP ROUTING */}
-                <Routing />
-
-            </div>
-        )
-    }
+        </div>
+    )
     
 };
 
+const mapStateToProps = ({ ERROR }) => ({ ERROR })
 
-
-
-const mapStateToProps = (state) => {
-    return {
-        ERROR           : state.ERROR
-    }
-}
-
-const mapDispatchToProps = (dispatch) => {
-    return {
-        ...bindActionCreators({
-            loading
-        }, dispatch ),
-
-        dispatch
-    }
-}
-
-
-export default connect(mapStateToProps, mapDispatchToProps)(Layout);
+export default connect(mapStateToProps)(Layout);

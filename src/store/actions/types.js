@@ -1,0 +1,9 @@
+export default {
+	LOGIN 	                        : 'LOGIN',
+	STORE_PROFILE 				    : 'STORE_PROFILE',
+    STORE_WOO_PRODUCTS 			    : 'STORE_WOO_PRODUCTS',
+    CLEAR_STORE_WOO_PRODUCTS 		: 'CLEAR_STORE_WOO_PRODUCTS',
+	STORE_CHECKED_PRODUCTS 		    : 'STORE_CHECKED_PRODUCTS',
+	EDIT_WOO_PRODUCT  			    : 'EDIT_WOO_PRODUCT',
+	LOADING  			            : 'LOADING'
+};

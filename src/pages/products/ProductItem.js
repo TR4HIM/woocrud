@@ -1,8 +1,8 @@
 import React, {  useState  } from 'react';
 import {connect} from 'react-redux';
-import {
-    editWooProduct
-} from './actions';
+
+
+import { editWooProduct } from '../../store/actions/';
 import ToggleDisplay from 'react-toggle-display';
 
 const WooProduct = ({dispatch , data }) => {
@@ -11,7 +11,6 @@ const WooProduct = ({dispatch , data }) => {
 
     const handleClick = () => {
         // EDIT PRODUCT
-        console.log(data); 
         dispatch(editWooProduct(true,data));
     }
 

@@ -3,11 +3,11 @@ import {connect} from 'react-redux';
 import Paper from '@material-ui/core/Paper';
 import { TextField } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
-import {loading} from '../../layout/actions';
-import {login , storeUserData} from './actions';
+import {loading , login , storeUserData} from '../../store/actions/';
 import { APP_ROUTES } from '../../config';
 import SiteLoader from '../../components/SiteLoader';
-import API from './server-effect';
+import API from '../../API/';
+
 import { withRouter } from 'react-router-dom';
 
 const Login = ({dispatch, AUTHORIZED , history }) => {

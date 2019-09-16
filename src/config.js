@@ -1,4 +1,4 @@
-import { protocol, endPoint } from "./API";
+import { protocol, endPoint } from "./API/";
 
 export const USE_REDUX_CONSOLE = false;
 

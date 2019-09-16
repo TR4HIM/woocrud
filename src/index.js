@@ -1,16 +1,14 @@
 import "@babel/polyfill";
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { createStore , applyMiddleware, compose } from 'redux';
 import { Provider } from 'react-redux';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import thunk  from 'redux-thunk';
-import { ConnectedRouter  , routerMiddleware } from 'connected-react-router';
+import { ConnectedRouter  } from 'connected-react-router';
 import { createBrowserHistory } from 'history';
 
 
 // Import files
-import rootReducer from './rootReducer';
+import store from './store/';
 import Layout from './layout/Layout';
 
 import * as serviceWorker from './serviceWorker';
@@ -32,16 +30,7 @@ const theme = createMuiTheme({
     }
 });
 
-
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-
-
 const history       = createBrowserHistory();
-const middleware    = routerMiddleware(history);
-
-const COMPOSE       = USE_REDUX_CONSOLE ? composeEnhancers(applyMiddleware(middleware, thunk) ) : compose(applyMiddleware(middleware, thunk) );
-
-const store         = createStore(rootReducer, COMPOSE);
 
 
 ReactDOM.render((
