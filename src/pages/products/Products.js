@@ -1,6 +1,5 @@
-import React, { Component } from 'react';
+import React, { useState , useEffect } from 'react';
 import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
 import {loading} from '../../layout/actions';
 import Header from '../../layout/header/Header';
 
@@ -16,119 +15,70 @@ import {
 
 const GET_WOO_PRODUCTS  = API_WOO.WC_getWooProducts();
 
-class Products extends Component {
+const Products = ({dispatch , USER , WOO_PRODUCTS , EDITING_WOO_PRODUCT }) => {
 
-    constructor(props){
-        super(props);
+    const [isLoadingData, setIsLoadingData] = useState(false);
+    const [pager, setPager]                 = useState(1);
+    const [perPage, setPerPage]             = useState(10);
 
-        this.state = {
-            currentCategory         : {},
-            isLoadingData           : false,
-            pager                   : 1,
-            pagesTotal              : null,
-            perPage                 : 10,
 
-        }
-    } 
+    useEffect(() => getWooProducts(), []);
 
-    getWooProducts(){
+
+    
+    const getWooProducts = () => {
 
         // SHOW LOADER
-        this.props.loading(true, "header-loader");
+        dispatch(loading(true, "header-loader"));
 
-        this.props.clearStoreWooProducts();
+        dispatch(clearStoreWooProducts());
 
-        this.setState({
-            isLoadingData   : true
-        });
+        setIsLoadingData(true);
 
-        
-
-        GET_WOO_PRODUCTS( this.props.USER.token , 65, this.state.pager, this.state.perPage )
+        GET_WOO_PRODUCTS( USER.token , 65, pager, perPage )
             .then((result)=>{
                 if( result !== undefined ){
                     
-                    this.props.storeWooProducts(result);
-
-                    this.setState({
-                        isLoadingData   : false
-                    }, ()=>{
-                        window.scrollTo(0, 0)
-                    });
-
+                    dispatch(storeWooProducts(result));
+                    setIsLoadingData(true);
                     // HIDE LOADER
-                    this.props.loading(false, "header-loader");
+                    dispatch(loading(false, "header-loader"));
                 }
             })
             .catch((error)=>{
-                this.props.dispatch({
+                dispatch({
                     type : 'ERROR',
                     payload : error
                 })
                 // HIDE LOADING
-                this.props.loading(false, "header-loader");
+                dispatch(loading(false, "header-loader"));
             })
 
     }
 
-    componentDidMount(){
-        this.getWooProducts();
-        
-    }
 
-    renderProducts(){
+    const renderProducts = () => {
 
-        let listItems = this.props.WOO_PRODUCTS.map((product, i)=> <ProductItem key={i} data={product} /> );
+        let listItems = WOO_PRODUCTS.map((product, i)=> <ProductItem key={i} data={product} /> );
         return (
-            <ul id="products-list" className={this.props.WOO_PRODUCTS.length < 3 ? 'few-products' : ''}>
+            <ul id="products-list" className={WOO_PRODUCTS.length < 3 ? 'few-products' : ''}>
                 {listItems}
             </ul>
         ) 
         
     }
-
-    render(){
         
-        return(
-            <div id="user-products-page" > 
-                <Header />
-
-                <div id="container">
-                    { this.props.WOO_PRODUCTS.length ? this.renderProducts() : null}
-                </div>
-
-                <EditWooProductDrawer isSearchResult={this.props.SEARCH_PRODUCTS ? true : false} /> 
-
-               
+    return(
+        <div id="user-products-page" > 
+            <Header />
+            <div id="container">
+                { WOO_PRODUCTS.length ? renderProducts() : null}
             </div>
-        );
-    }
+            <EditWooProductDrawer isSearchResult={false} /> 
+        </div>
+    );
 }
 
+const mapStateToProps = ({ USER , WOO_PRODUCTS , EDITING_WOO_PRODUCT }) => ({ USER , WOO_PRODUCTS , EDITING_WOO_PRODUCT});
 
-
-
-
-const mapStateToProps = (state) => {
-    return {
-        AUTHORIZED          : state.AUTHORIZED,
-        USER                : state.USER,
-        WOO_PRODUCTS        : state.WOO_PRODUCTS,
-        EDITING_WOO_PRODUCT : state.EDITING_WOO_PRODUCT
-    }
-}
-
-const mapDispatchToProps = (dispatch) => {
-    return {
-        ...bindActionCreators({
-            loading,
-            storeWooProducts,
-            clearStoreWooProducts
-        }, dispatch ),
-
-        dispatch
-    }
-}
-
-
-export default connect(mapStateToProps, mapDispatchToProps)(Products);
+export default connect(mapStateToProps)(Products);

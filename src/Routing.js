@@ -65,9 +65,9 @@ class Routing extends Component {
         return(
             <BrowserRouter>
                 <Switch>
-                    <Route exact path={APP_PATHS.HOME} component={withRouter(Login)} />
+                    <Route exact path={APP_PATHS.HOME} component={Login} />
 
-                    <PrivateRoute exact authed={this.props.AUTHORIZED}  path={APP_PATHS.MY_PRODUCTS}  component={withRouter(Products)}/>
+                    <PrivateRoute exact authed={this.props.AUTHORIZED}  path={APP_PATHS.MY_PRODUCTS}  component={Products}/>
 
                     <Route component={withRouter(Page404)} />
                 </Switch>
