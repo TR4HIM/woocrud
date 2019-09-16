@@ -13,7 +13,8 @@ import {login, loading} from './store/actions/';
 // PAGES 
 import Login from './pages/login/Login';
 import Products from './pages/products/Products';
-import Page404 from './layout/NotFound';
+import Page404 from './pages/not-found/';
+
 import API from './API/';
 
 import {APP_PATHS} from './config';

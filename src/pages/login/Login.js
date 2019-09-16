@@ -5,7 +5,7 @@ import { TextField } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import {loading , login , storeUserData} from '../../store/actions/';
 import { APP_ROUTES } from '../../config';
-import SiteLoader from '../../components/SiteLoader';
+import Loader from '../../components/loader/loader';
 import API from '../../API/';
 
 import { withRouter } from 'react-router-dom';
@@ -53,7 +53,7 @@ const Login = ({dispatch, AUTHORIZED , history }) => {
 
     return (
         <div id="login-page">
-            <SiteLoader id="login-loader" />
+            <Loader id="login-loader" />
             <div id="login-form" elevation={1}>
                 <img id="logo" src={`${process.env.PUBLIC_URL}/img/logo.png`} alt="kibo" />
                 <Paper id="paper" elevation={1}>

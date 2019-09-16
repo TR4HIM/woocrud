@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import ToggleDisplay from 'react-toggle-display';
 import { CircularProgress, LinearProgress } from '@material-ui/core';
 
-class SiteLoader extends Component {
+class Loader extends Component {
 
     constructor(props) {
         super(props);
@@ -57,7 +57,7 @@ class SiteLoader extends Component {
     }
 }
 
-SiteLoader.propTypes = {
+Loader.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
@@ -84,4 +84,4 @@ const mapStateToProps = (state) => {
 
 
 
-export default withStyles(styles)(connect(mapStateToProps, null)(SiteLoader))
+export default withStyles(styles)(connect(mapStateToProps, null)(Loader))

@@ -4,11 +4,10 @@ import Drawer from '@material-ui/core/Drawer';
 import CloseIcon from '@material-ui/icons/Close';
 import {TextField} from '@material-ui/core';
 import Switch from '@material-ui/core/Switch';
-import SiteLoader from '../../components/SiteLoader';
 import ToggleDisplay from 'react-toggle-display';
 import {green} from '@material-ui/core/colors';
 import { withStyles } from '@material-ui/core/styles';
- 
+import Loader from '../../components/loader/loader';
 
 import { editWooProduct } from '../../store/actions/';
 
@@ -136,7 +135,7 @@ const EditWooProductDrawer = ({dispatch , classes , EDITING_WOO_PRODUCT}) => {
         >
 
             <div className={`edit-product-inner `}>
-                <SiteLoader id="edit-product-loader"  size={22} />
+                <Loader id="edit-product-loader"  size={22} />
 
                 <CloseIcon id="close" onClick={ closeDrawer } />
 

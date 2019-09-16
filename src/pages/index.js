@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {connect} from 'react-redux';
 import Routing from '../Routing';
-import SiteLoader from '../components/SiteLoader';
+import Loader from '../components/loader/loader';
 
 
 const Layout = (dispatch,ERROR) => {
@@ -11,7 +11,7 @@ const Layout = (dispatch,ERROR) => {
     return (
         <div id="layout"> 
             {/* LOADER */}
-            <SiteLoader id="root-loader" />             
+            <Loader id="root-loader" />             
             
             {/* APP ROUTING */}
             <Routing />

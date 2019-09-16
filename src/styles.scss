@@ -1,26 +1,26 @@
 // ICON
-@import "./layout/scss/icons/style.scss";
+@import "./scss/icons/style.scss";
 
 // CONFIG
-@import "./layout/scss/config.scss"; 
+@import "./scss/config.scss"; 
 
 // COMMON
-@import "./layout/scss/mixin.scss";
-@import "./layout/scss/typography.scss";
-@import "./layout/scss/button.scss";
-@import "./layout/scss/common.scss";
-@import "./layout/scss/form.scss";
+@import "./scss/mixin.scss";
+@import "./scss/typography.scss";
+@import "./scss/button.scss";
+@import "./scss/common.scss";
+@import "./scss/form.scss";
+
+
 
 // COMPONENTS
-// @import "./components/scss/kibo-modal.scss";
-// @import "./components/scss/search-bar.scss";
+@import "./components/footer/footer.scss";
+@import "./components/header/header.scss";
 
 // PAGES
-@import "./layout/footer/footer.scss";
-@import "./layout/header/header.scss";
-@import "./pages/login/scss/login.scss";
-@import "./pages/products/scss/products.scss";
+@import "./scss/pages/login.scss";
+@import "./scss/pages/products.scss";
 
 
 // Multi-Langauges 
-@import "./layout/scss/rtl.scss";
+@import "./scss/rtl.scss";

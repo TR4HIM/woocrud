@@ -6,12 +6,12 @@ import { IconButton, MenuItem, Drawer } from '@material-ui/core';
 import {login} from '../../store/actions/';
 import MenuIcon from '@material-ui/icons/Menu';
 import { APP_ROUTES } from '../../config';
-import SiteLoader from '../../components/SiteLoader';
+import Loader from '../loader/loader';
 
 
 class Header extends Component {
 
-	constructor(props) {
+	constructor(props) { 
 		super(props);
 		
 		this.state = {
@@ -76,7 +76,7 @@ class Header extends Component {
 					
 					
 					{/* LOADER */}
-					<SiteLoader type="linear" id="header-loader" />
+					<Loader type="linear" id="header-loader" />
 				</div>
 
 				

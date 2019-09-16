@@ -1,16 +1,16 @@
 import { createStore, applyMiddleware, compose } from "redux";
 import thunk from "redux-thunk";
-import appReducer from "./reducers/";
+import createRootReducer  from "./reducers/";
+import { createBrowserHistory } from 'history';
+import { routerMiddleware } from 'connected-react-router'
 
-const rootReducer = ( state, action ) => {
-    if ( action.type === 'LOGOUT' )
-        state = undefined;
+export const history = createBrowserHistory();
 
-    return appReducer(state, action)
+export default  (preloadedState) =>  {
+    const store = createStore(
+      createRootReducer(history), // root reducer with router state
+      preloadedState,
+      compose(applyMiddleware(routerMiddleware(history),thunk)),
+    )
+    return store
 }
-
-const COMPOSE       = compose(applyMiddleware(thunk) );
-
-const store         = createStore(rootReducer, COMPOSE);
-
-export default store;
