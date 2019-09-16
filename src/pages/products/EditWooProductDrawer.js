@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { useState, Fragment , useEffect } from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
@@ -18,80 +18,50 @@ import {
 } from './actions';
 
 
-class EditWooProductDrawer extends Component {
+const EditWooProductDrawer = ({dispatch , classes , EDITING_WOO_PRODUCT}) => {
 
-    constructor(props) {
-        super(props);
-        
-        this.state = {
-            // FIELDS
-            regularPrice            : 0,
-            salePrice            : 0,
-            productName             : "",
-            productThumbnail        : "",
-            productDescription        : "",
-            status                  : false,
-            
-        }
+       
+    const [regularPrice ,       setRegularPrice]        = useState(0);
+    const [salePrice ,          setSalePrice]           = useState(0);
+    const [productName ,        setProductName]         = useState("");
+    const [productThumbnail ,   setProductThumbnail]    = useState("");
+    const [productDescription , setProductDescription]  = useState("");
+    const [status ,             setStatus]              = useState(false);
 
-        this.updatingCount = 0;
-    }    
 
-    componentWillReceiveProps(nextProps) {
+    useEffect(() => {
 
-        // FILL THE FIELD OF THE COMPONENTS BY SETTING THE STATES
-        if( nextProps.EDITING_WOO_PRODUCT.currentProduct  ){
-
-            let regularPrice    = nextProps.EDITING_WOO_PRODUCT.currentProduct.regular_price;
-            let salePrice       = nextProps.EDITING_WOO_PRODUCT.currentProduct.sale_price;
-            this.setState({
-                regularPrice    : regularPrice.length ? regularPrice : '',
-                salePrice       : salePrice,
-                productName     : nextProps.EDITING_WOO_PRODUCT.currentProduct.name,
-                productDescription     : nextProps.EDITING_WOO_PRODUCT.currentProduct.description,
-                productThumbnail     : nextProps.EDITING_WOO_PRODUCT.currentProduct.images[0].src,
-                status          : (nextProps.EDITING_WOO_PRODUCT.currentProduct.status === 'publish'),
-            });
-
+        if(EDITING_WOO_PRODUCT.currentProduct){
+            let regularPrice    = EDITING_WOO_PRODUCT.currentProduct.regular_price;
+            let salePrice       = EDITING_WOO_PRODUCT.currentProduct.sale_price.length ;
+    
+            setRegularPrice(regularPrice);
+            setSalePrice(salePrice);
+            setProductName(EDITING_WOO_PRODUCT.currentProduct.name);
+            setProductThumbnail(EDITING_WOO_PRODUCT.currentProduct.images[0].src);
+            setProductDescription(EDITING_WOO_PRODUCT.currentProduct.description);
+            setStatus((EDITING_WOO_PRODUCT.currentProduct.status === 'publish'))
+    
             // ADD THE OVERFLOW HIDDEN 
             document.body.classList.add('overflow-hidden');
         }
-        else
-            // REMOVE THE OVERFLOW HIDDEN 
-            document.body.classList.remove('overflow-hidden');
-        
+    },[EDITING_WOO_PRODUCT]);
+
+    useEffect(() => {
+        return () => document.body.classList.remove('overflow-hidden');
+    }, [])
+    
+    const closeDrawer = () => {
+        dispatch(editWooProduct(false));
     }
 
-    componentWillUnmount() {
-        // REMOVE THE OVERFLOW HIDDEN 
-        document.body.classList.remove('overflow-hidden');
-    }
-    
-    
-    
-    closeDrawer(){
-        this.props.editWooProduct(false);
-    }
-
-   
-
-    switchChangeHandler(field){
-        this.setState((prevState)=>({
-            [field] : !prevState[field]
-        }));
-    }
-
-    
-
-    readyToRender(product){
-        const productImage = this.state.productThumbnail;
-        const { classes } = this.props;
+    const readyToRender = (product) => {
          
         return(
             <Fragment>
                 
                 <div className="visual">
-                    <img src={productImage} alt={product.name}  />
+                    <img src={productThumbnail} alt={product.name}  />
                 </div>
                 
 
@@ -100,8 +70,8 @@ class EditWooProductDrawer extends Component {
                         <label> Publish Product </label>
                         <Switch
                             className="switch"
-                            checked={this.state.status}
-                            onChange={()=>this.switchChangeHandler('status')}
+                            checked={status}
+                            onChange={()=> setStatus(!status)}
                             classes={{
                                 switchBase: classes.greenSwitch,
                                 checked: classes.colorChecked,
@@ -113,7 +83,7 @@ class EditWooProductDrawer extends Component {
                 <ToggleDisplay>
                     <TextField
                         label='Product Name' 
-                        value={this.state.productName}
+                        value={productName}
                         className="title"
                         type="text"
                         InputLabelProps={{ shrink: true }}
@@ -124,7 +94,7 @@ class EditWooProductDrawer extends Component {
                     />
                     <TextField
                         label='Product Description' 
-                        value={this.state.productDescription}
+                        value={productDescription}
                         className="title"
                         type="text"
                         InputLabelProps={{ shrink: true }}
@@ -136,8 +106,18 @@ class EditWooProductDrawer extends Component {
 
                     <TextField
                         label='Product Price' 
-                        value={this.state.regularPrice}
-                        className="regular-price"
+                        value={regularPrice}
+                        className="title"
+                        type="number"
+                        InputLabelProps={{ shrink: true }}
+                        margin="normal"
+                        variant="outlined"
+                    />
+
+                    <TextField
+                        label='Sale Price' 
+                        value={salePrice}
+                        className="title"
                         type="number"
                         InputLabelProps={{ shrink: true }}
                         margin="normal"
@@ -149,51 +129,41 @@ class EditWooProductDrawer extends Component {
         )
     }
     
-    render() {
+    const RenderDrawer = () => {
+        const product       = EDITING_WOO_PRODUCT.currentProduct;
 
-        const product       = this.props.EDITING_WOO_PRODUCT.currentProduct;
-        const editShortDesc = this.state.editShortDesc;
-        const { classes } = this.props;
         return (
             <Drawer 
                 id="edit-product" 
                 anchor="left" 
-                open={this.props.EDITING_WOO_PRODUCT.status} 
-                onClose={this.closeDrawer.bind(this)}
+                open={EDITING_WOO_PRODUCT.status} 
+                onClose={closeDrawer}
                 classes={{
                     paper: classes.drawerPaper,
                 }}
             >
-
-                <div className={`edit-product-inner ${editShortDesc ? "short-desc-showen" : "" }`}>
+    
+                <div className={`edit-product-inner `}>
                     <SiteLoader id="edit-product-loader"  size={22} />
-
-                    <CloseIcon id="close" onClick={this.closeDrawer.bind(this)} />
-
-                    {product ? this.readyToRender(product) : null}
+    
+                    <CloseIcon id="close" onClick={ closeDrawer } />
+    
+                    {product ? readyToRender(product) : null}
                 </div>
             </Drawer>
         );
+
     }
+    return(
+        <RenderDrawer />
+    )
 }
 
-const mapStateToProps = (state) => {
-    return {
-        USER                    : state.USER,
-        EDITING_WOO_PRODUCT     : state.EDITING_WOO_PRODUCT
-    }
-}
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        ...bindActionCreators({
-            editWooProduct,
-            loading,
-        }, dispatch ),
 
-        dispatch
-    }
-}
+const mapStateToProps = ({ USER  , EDITING_WOO_PRODUCT }) => ({ USER  , EDITING_WOO_PRODUCT});
+
+
 
 const styles = () => ({
     greenSwitch: {
@@ -213,4 +183,4 @@ const styles = () => ({
 });
 
 
-export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(EditWooProductDrawer));
+export default withStyles(styles)(connect(mapStateToProps)(EditWooProductDrawer));

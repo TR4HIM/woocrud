@@ -1,6 +1,5 @@
 import React, {  useState , useEffect } from 'react';
 import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
 import Paper from '@material-ui/core/Paper';
 import { TextField } from '@material-ui/core';
 import Button from '@material-ui/core/Button';

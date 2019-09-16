@@ -31,7 +31,7 @@ const Products = ({dispatch , USER , WOO_PRODUCTS , EDITING_WOO_PRODUCT }) => {
         // SHOW LOADER
         dispatch(loading(true, "header-loader"));
 
-        dispatch(clearStoreWooProducts());
+        dispatch(clearStoreWooProducts()); 
 
         setIsLoadingData(true);
 
@@ -57,22 +57,31 @@ const Products = ({dispatch , USER , WOO_PRODUCTS , EDITING_WOO_PRODUCT }) => {
     }
 
 
+    // const renderProducts = () => {
+    //     return data.map((el)=>(
+    //         <Product key={el['@id']} data={el} selected={ !!ids.find((id)=>id === el['@id']) }  />
+    //     ))
+    // }
+
     const renderProducts = () => {
 
-        let listItems = WOO_PRODUCTS.map((product, i)=> <ProductItem key={i} data={product} /> );
-        return (
-            <ul id="products-list" className={WOO_PRODUCTS.length < 3 ? 'few-products' : ''}>
-                {listItems}
-            </ul>
-        ) 
+        return WOO_PRODUCTS.map((product, i)=> (<ProductItem key={i} data={product} />) );
         
     }
-        
+    
+    const renderProductsContainer = () => {
+        return(
+            <ul id="products-list" className={WOO_PRODUCTS.length < 3 ? 'few-products' : ''}>
+                    { renderProducts() }
+            </ul>
+        )
+    }
+
     return(
         <div id="user-products-page" > 
             <Header />
             <div id="container">
-                { WOO_PRODUCTS.length ? renderProducts() : null}
+                { WOO_PRODUCTS.length ? renderProductsContainer() : null}
             </div>
             <EditWooProductDrawer isSearchResult={false} /> 
         </div>

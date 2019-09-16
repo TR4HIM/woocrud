@@ -1,73 +1,47 @@
-import React, { Component } from 'react';
+import React, {  useState  } from 'react';
 import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
 import {
-    storeCheckedProducts,
     editWooProduct
 } from './actions';
 import ToggleDisplay from 'react-toggle-display';
 
-class WooProduct extends Component {
+const WooProduct = ({dispatch , data }) => {
 
-    constructor(props) {
-        super(props);
+    const [visualLoaded,setVisualLoaded]    = useState(false);
 
-        this.state = {
-            checked         : false,
-            visualLoaded    : false
-        }
-    }
-
-
-    handleClick(){
+    const handleClick = () => {
         // EDIT PRODUCT
-        this.props.editWooProduct(true, this.props.data);
+        console.log(data); 
+        dispatch(editWooProduct(true,data));
     }
 
-    render() {
+    return (
+        <li onClick={handleClick}
+            className={`product ${(data.status === 'private') ? 'private' : ''} ${(data.bargain) ? 'bargain' : ''} `} 
+            id={data.id} 
+        >
+        <div className={`thumbnail ${visualLoaded ? 'visual-loaded' : ''}`}>
+            <img className="visual" src={data.images[0].src} alt="" onLoad={()=>setVisualLoaded(true)} />
+            <img className="mold" src={`${process.env.PUBLIC_URL}/img/product-image-mold.png`} alt="" />
+        </div>
+        <h3 className="title">{data.name}</h3>
 
-        return (
-            <li onClick={this.handleClick.bind(this)}
-                ref={(ref)=>this.product = ref} 
-                className={`product ${(this.props.data.status === 'private') ? 'private' : ''} ${(this.props.data.bargain) ? 'bargain' : ''} `} 
-                id={this.props.data.id} 
-            >
-            <div className={`thumbnail ${this.state.visualLoaded ? 'visual-loaded' : ''}`}>
-                <img className="visual" src={this.props.data.images[0].src} alt="" onLoad={()=>this.setState({ visualLoaded : true })} />
-                <img className="mold" src={`${process.env.PUBLIC_URL}/img/product-image-mold.png`} alt="" />
-            </div>
-            <h3 className="title">{this.props.data.name}</h3>
+        <ToggleDisplay show={Boolean(data.regular_price.length) || Boolean(data.sale_price.length) } className={`details ${ ( data.sale_price && (data.regular_price !== data.sale_price ) )  ? 'in-promo' : ''}`}>
+            { data.regular_price ? <span className="price regular">{data.regular_price}<small> Dh</small></span> : null }
+            { ( data.sale_price && (data.regular_price !== data.sale_price ) ) ? <span className="price promo">{data.sale_price}<small> Dh</small></span> : null }
+        </ToggleDisplay>
 
-            <ToggleDisplay show={Boolean(this.props.data.regular_price.length) || Boolean(this.props.data.sale_price.length) } className={`details ${ ( this.props.data.sale_price && (this.props.data.regular_price !== this.props.data.sale_price ) )  ? 'in-promo' : ''}`}>
-                { this.props.data.regular_price ? <span className="price regular">{this.props.data.regular_price}<small> Dh</small></span> : null }
-                { ( this.props.data.sale_price && (this.props.data.regular_price !== this.props.data.sale_price ) ) ? <span className="price promo">{this.props.data.sale_price}<small> Dh</small></span> : null }
-            </ToggleDisplay>
+        {/* LABELS */}
+        { (data.status === 'private') ? <small className="private-icon" >PRIVATE_TEXT</small> : null }
+        <div className="extra-fields-label">
+            { (data.bargain) ? <small className="bargain-icon" >BARGAIN_TEXT</small> : null }
+            { (data.fake) ? <small className="fake-icon" >FAKE_TEXT</small> : null }
+        </div>
 
-            {/* LABELS */}
-            { (this.props.data.status === 'private') ? <small className="private-icon" >PRIVATE_TEXT</small> : null }
-            <div className="extra-fields-label">
-                { (this.props.data.bargain) ? <small className="bargain-icon" >BARGAIN_TEXT</small> : null }
-                { (this.props.data.fake) ? <small className="fake-icon" >FAKE_TEXT</small> : null }
-            </div>
-
-            <span className="edit-btn">EDIT</span>
-            </li>
-        );
-    }
+        <span className="edit-btn">EDIT</span>
+        </li>
+    );
 
 }
 
-
-
-const mapDispatchToProps = (dispatch) =>{ 
-    return {
-        ...bindActionCreators({
-            storeCheckedProducts,
-            editWooProduct
-        }, dispatch ),
-
-        dispatch
-    }
-}
-
-export default connect(null, mapDispatchToProps)(WooProduct);
+export default connect()(WooProduct);

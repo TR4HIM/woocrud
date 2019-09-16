@@ -18,7 +18,7 @@ export const WOO_PRODUCTS = (state = [], action)=>{
 }
 
 
-export const EDITING_WOO_PRODUCT = (state = { status : false , currentProduct : {} }, action)=>{
+export const EDITING_WOO_PRODUCT = (state = { status : false , currentProduct : null }, action)=>{
 
     if(action.type === _EDIT_WOO_PRODUCT_){
         if(action.payload.status === null) {
