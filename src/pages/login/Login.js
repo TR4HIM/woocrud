@@ -9,7 +9,7 @@ import Loader from '../../components/loader/loader';
 import API from '../../API/';
 import { withRouter } from 'react-router-dom';
 
-const Login = ({dispatch, AUTHORIZED , history }) => {
+export const Login = ({dispatch, AUTHORIZED , history }) => {
      
     const [username, setUsername] = useState('admin');
     const [password, setPassword] = useState('admin');
