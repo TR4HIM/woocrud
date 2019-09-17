@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`UserProfile should render correctly in "debug" mode 1`] = `
+<div
+  id="page-404"
+>
+  <div
+    className="not-found-inner"
+  >
+    <p>
+      Profile Page
+    </p>
+    <WithStyles(ForwardRef(Button))
+      onClick={[Function]}
+      variant="outlined"
+    >
+      Page D'acceuil
+    </WithStyles(ForwardRef(Button))>
+  </div>
+</div>
+`;
+
+exports[`should render correctly with no props 1`] = `
+<div
+  id="page-404"
+>
+  <div
+    className="not-found-inner"
+  >
+    <p>
+      Profile Page
+    </p>
+    <WithStyles(ForwardRef(Button))
+      onClick={[Function]}
+      variant="outlined"
+    >
+      Page D'acceuil
+    </WithStyles(ForwardRef(Button))>
+  </div>
+</div>
+`;
