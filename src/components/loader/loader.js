@@ -1,60 +1,47 @@
-import React, { Component } from 'react';
+import React, { useState , useEffect } from 'react';
 import {connect} from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import ToggleDisplay from 'react-toggle-display';
 import { CircularProgress, LinearProgress } from '@material-ui/core';
 
-class Loader extends Component {
+const Loader = ({LOADER, type , id , size , classes}) => {
 
-    constructor(props) {
-        super(props);
-        
-        this.state = {
-            show : false
-        }
-    }
-    
-    componentWillReceiveProps(nextProps) {
+    const [show,setShow] = useState(false);
 
-        let currentLoader =  nextProps.LOADER.find((loader)=> loader.id === this.props.id);
+    useEffect(()=>{
+        let currentLoader =  LOADER.find((loader)=> loader.id === id);
 
         if( currentLoader )
-            this.setState({
-                show : currentLoader.status
-            })
-        
-    }
-    
-    render() {
-        const { classes } = this.props;
-        return (
-            <ToggleDisplay id={this.props.id || ''} show={this.state.show} className={`loader ${ (this.props.type === 'linear') ? 'linear' : ''}`}>
-                {
-                    (this.props.type !== 'linear') ? 
+            setShow(currentLoader.status);
+    },[LOADER]);
 
-                    <CircularProgress
-                        variant="indeterminate"
-                        disableShrink
-                        className={classes.loader}
-                        size={this.props.size || 28}
-                        thickness={4}
-                    /> 
-                    :
-                    <LinearProgress 
-                        variant="query" 
-                        className="linear-loader"
-                        classes={{
-                            colorPrimary    : classes.linearColorPrimary,
-                            barColorPrimary : classes.linearBarColorPrimary,
-                        }}
-                    />
+    return (
+        <ToggleDisplay id={id || ''} show={show} className={`loader ${ (type === 'linear') ? 'linear' : ''}`}>
+            {
+                (type !== 'linear') ? 
 
-                }
-                
-            </ToggleDisplay>
-        );
-    }
+                <CircularProgress
+                    variant="indeterminate"
+                    disableShrink
+                    className={classes.loader}
+                    size={size || 28}
+                    thickness={4}
+                /> 
+                :
+                <LinearProgress 
+                    variant="query" 
+                    className="linear-loader"
+                    classes={{
+                        colorPrimary    : classes.linearColorPrimary,
+                        barColorPrimary : classes.linearBarColorPrimary,
+                    }}
+                />
+
+            }
+            
+        </ToggleDisplay>
+    );
 }
 
 Loader.propTypes = {
@@ -76,12 +63,8 @@ const styles = (theme)=> ({
 });
 
 
-const mapStateToProps = (state) => {
-    return {
-        LOADER : state.LOADER
-    }
-}
+const mapStateToProps = ({LOADER}) => ({LOADER});
 
 
 
-export default withStyles(styles)(connect(mapStateToProps, null)(Loader))
+export default withStyles(styles)(connect(mapStateToProps)(Loader))

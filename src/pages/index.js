@@ -1,13 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {connect} from 'react-redux';
 import Routing from '../Routing';
 import Loader from '../components/loader/loader';
 
 
-const Layout = (dispatch,ERROR) => {
-
-    const [moldLoaded, setMoldLoaded] = useState(false);
-
+const Layout = ( {dispatch,ERROR}) => {
     return (
         <div id="layout"> 
             {/* LOADER */}
@@ -18,7 +15,6 @@ const Layout = (dispatch,ERROR) => {
 
         </div>
     )
-    
 };
 
 const mapStateToProps = ({ ERROR }) => ({ ERROR })

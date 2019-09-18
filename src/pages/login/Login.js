@@ -7,19 +7,17 @@ import {loading , login , storeUserData} from '../../store/actions/';
 import { APP_ROUTES } from '../../config';
 import Loader from '../../components/loader/loader';
 import API from '../../API/';
-import { withRouter } from 'react-router-dom';
 
-export const Login = ({dispatch, AUTHORIZED , history }) => {
+const Login = ({dispatch, AUTHORIZED , history }) => {
      
     const [username, setUsername] = useState('admin');
     const [password, setPassword] = useState('admin');
    
     useEffect(() => {
         if(AUTHORIZED){
-            // REDIRECT TO PRODUCTS PAGE
             history.push(APP_ROUTES.MY_PRODUCTS);
         }
-    }, []);
+    }, [AUTHORIZED]);
 
     const keyPressHandler = (e) => {
         if(e.keyCode === 13)
@@ -46,7 +44,7 @@ export const Login = ({dispatch, AUTHORIZED , history }) => {
                     payload : error
                 });
                 // HIDE LOADING
-                loading( false, 'login-loader' );
+                dispatch(loading( false, 'login-loader' ));
             })
     }
 

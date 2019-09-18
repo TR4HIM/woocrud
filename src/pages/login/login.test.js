@@ -7,8 +7,12 @@ import { Login } from './Login';
 
 configure({adapter: new Adapter()});
 
-it("Login loads with initial state of null", () => {
-    const wrapper = shallow(<Login />);
-    const text = wrapper.find("p").text();
-    expect(text).toEqual("admin");
+
+describe('<Login />', () => {
+  it("Login loads with initial state of null", () => {
+      const wrapper = shallow(<Login />);
+      const text = wrapper.find("p").text();
+      expect(text).toEqual("admin");
   });
+});
+

@@ -1,4 +1,4 @@
-import React, { useState , useEffect } from 'react';
+import React, { useEffect } from 'react';
 import {connect} from 'react-redux';
 import Header from '../../components/header/Header';
 import Footer from '../../components/footer/Footer'; 
@@ -14,32 +14,18 @@ import API from '../../API/';
 
 const GET_WOO_PRODUCTS  = API.WC_getWooProducts();
 
-const Products = ({dispatch , USER , WOO_PRODUCTS , EDITING_WOO_PRODUCT }) => {
-
-    const [isLoadingData, setIsLoadingData] = useState(false);
-    const [pager, setPager]                 = useState(1);
-    const [perPage, setPerPage]             = useState(10);
-
+const Products = ({dispatch , USER , WOO_PRODUCTS  }) => {
 
     useEffect(() => getWooProducts(), []);
-
-
-    
     const getWooProducts = () => {
-
         // SHOW LOADER
         dispatch(loading(true, "header-loader"));
-
         dispatch(clearStoreWooProducts()); 
-
-        setIsLoadingData(true);
-
-        GET_WOO_PRODUCTS( USER.token , 65, pager, perPage )
+        GET_WOO_PRODUCTS( USER.token , 65, 1, 1 )
             .then((result)=>{
                 if( result !== undefined ){
                     
                     dispatch(storeWooProducts(result));
-                    setIsLoadingData(true);
                     // HIDE LOADER
                     dispatch(loading(false, "header-loader"));
                 }
@@ -54,13 +40,6 @@ const Products = ({dispatch , USER , WOO_PRODUCTS , EDITING_WOO_PRODUCT }) => {
             })
 
     }
-
-
-    // const renderProducts = () => {
-    //     return data.map((el)=>(
-    //         <Product key={el['@id']} data={el} selected={ !!ids.find((id)=>id === el['@id']) }  />
-    //     ))
-    // }
 
     const renderProducts = () => {
 
@@ -90,6 +69,6 @@ const Products = ({dispatch , USER , WOO_PRODUCTS , EDITING_WOO_PRODUCT }) => {
     );
 }
 
-const mapStateToProps = ({ USER , WOO_PRODUCTS , EDITING_WOO_PRODUCT }) => ({ USER , WOO_PRODUCTS , EDITING_WOO_PRODUCT});
+const mapStateToProps = ({ USER , WOO_PRODUCTS }) => ({ USER , WOO_PRODUCTS});
 
 export default connect(mapStateToProps)(Products);
