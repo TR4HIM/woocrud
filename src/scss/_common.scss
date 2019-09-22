@@ -11,6 +11,7 @@ body{
     min-height: 100%;
     overflow: auto !important; // ENABLE SCROLL WHEN THE DRAWER IS OPEN
     padding-right: 0 !important; // FIX MATERIAL MENU SHOWEN
+    padding-bottom: 100px;
     @include font-smoothing();
     -webkit-overflow-scrolling: touch;
     &.overflow-hidden{

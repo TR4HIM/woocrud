@@ -98,6 +98,7 @@ body {
   min-height: 100%;
   overflow: auto !important;
   padding-right: 0 !important;
+  padding-bottom: 100px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-overflow-scrolling: touch; }
@@ -535,6 +536,101 @@ a {
 @media screen and (max-width: 480px) {
   #login-form #logo {
     max-width: 100px; } }
+
+#add-product-page .product-form {
+  padding: 15px;
+  margin-bottom: 20px; }
+  #add-product-page .product-form:last-of-type {
+    margin-bottom: 200px; }
+
+#add-product-page .paper-divider {
+  margin: 15px 0 30px; }
+
+.product-gallery {
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-flow: row wrap;
+  margin-bottom: 20px; }
+  .product-gallery li {
+    display: block;
+    width: 33.33333%;
+    padding: 10px; }
+  .product-gallery img {
+    max-width: 100%; }
+
+.product-image {
+  background-color: #fff;
+  padding: 5px;
+  border-radius: 10px;
+  border: 1px solid #3f51b5;
+  text-align: center;
+  height: 100%;
+  position: relative; }
+  .product-image .remove-image {
+    color: #d35400;
+    position: absolute;
+    right: 0;
+    top: 0;
+    cursor: pointer;
+    opacity: 0.3;
+    transition: .3s all; }
+  .product-image img {
+    width: 100%; }
+  .product-image:hover .remove-image {
+    opacity: 1; }
+
+.product-tag {
+  margin-right: 5px;
+  margin-bottom: 5px; }
+
+.add-tag {
+  padding: 15px 10px; }
+
+.feathured-image {
+  width: 200px;
+  height: 200px;
+  margin: 0 auto 25px; }
+
+.upload-image-holder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border: 1px solid gray;
+  border-radius: 10px;
+  width: 100%;
+  height: 100%; }
+  .upload-image-holder span {
+    cursor: pointer; }
+    .upload-image-holder span:hover {
+      color: red; }
+
+.Mui-focused fieldset legend {
+  margin-left: 10px; }
+
+.default-input {
+  width: 100%;
+  padding: 15px;
+  border: 1px solid red; }
+
+.default-wysiwyg {
+  width: 100%; }
+
+label.Mui-focused {
+  color: "green"; }
+
+.MuiInput-underline:after {
+  border-bottom-color: "green"; }
+
+.MuiOutlinedInput-root fieldset {
+  border-color: "red"; }
+
+.MuiOutlinedInput-root :hover fieldset {
+  border-color: "yellow"; }
+
+.MuiOutlinedInput-root .Mui-focused fieldset {
+  border-color: "green"; }
 
 #products-list {
   -ms-box-orient: horizontal;
@@ -1129,123 +1225,3 @@ a {
   #user-products-page #shop-products-count small {
     font-size: 15px;
     top: -2px; } }
-
-html[dir="rtl"] body * {
-  font-family: "Cairo", sans-serif;
-  font-weight: 600; }
-
-html[dir="rtl"] #main-menu li a,
-html[dir="rtl"] #main-menu #connected-user,
-html[dir="rtl"] #main-menu li.logout button {
-  text-align: right;
-  font-weight: 600; }
-
-html[dir="rtl"] #validation-code-page #container h4 {
-  text-align: right; }
-
-html[dir="rtl"] #request-product-page #uploading-loader {
-  left: -40px;
-  position: absolute;
-  top: 18px; }
-
-html[dir="rtl"] input, html[dir="rtl"] textarea {
-  text-align: left;
-  direction: ltr; }
-
-html[dir="rtl"] #user-products-page #filter-box .filter [role="button"] {
-  text-align: right; }
-
-html[dir="rtl"] #main-menu li a {
-  font-weight: 600; }
-
-html[dir="rtl"] #user-products-page #products-list .product .details .price {
-  display: inline-block;
-  direction: ltr;
-  text-align: left; }
-
-html[dir="rtl"] #edit-product .edit-product-inner .price-box {
-  text-align: left; }
-
-html[dir="rtl"] #menu-categories li {
-  font-family: "Roboto", sans-serif;
-  text-align: left;
-  direction: ltr; }
-
-html[dir="rtl"] #profile-page .city-select {
-  text-align: left; }
-
-html[dir="rtl"] #profile-page .container-inner form #change-password {
-  float: left; }
-
-html[dir="rtl"] #products-list .product .title, html[dir="rtl"] #user-products-page #products-list .product .details {
-  direction: ltr;
-  font-family: "Roboto", sans-serif; }
-
-html[dir="rtl"] #user-products-page #products-list .product .details .price {
-  font-family: "Roboto", sans-serif; }
-
-html[dir="rtl"] #snackbar {
-  direction: ltr; }
-
-html[dir="rtl"] #profile-page .container-inner.authorizations fieldset {
-  direction: ltr; }
-
-html[dir="rtl"] #edit-product .edit-product-inner #status, html[dir="rtl"] #edit-product .edit-product-inner #fake, html[dir="rtl"] #edit-product .edit-product-inner #bargain {
-  direction: ltr; }
-  html[dir="rtl"] #edit-product .edit-product-inner #status label, html[dir="rtl"] #edit-product .edit-product-inner #fake label, html[dir="rtl"] #edit-product .edit-product-inner #bargain label {
-    float: right; }
-  html[dir="rtl"] #edit-product .edit-product-inner #status .switch, html[dir="rtl"] #edit-product .edit-product-inner #fake .switch, html[dir="rtl"] #edit-product .edit-product-inner #bargain .switch {
-    float: left; }
-
-html[dir="rtl"] #edit-product #short-description .rdw-editor-wrapper {
-  left: 0;
-  right: -20px; }
-
-html[dir="rtl"] .modal-inner #delete-confirmation-loader {
-  right: auto;
-  left: 10px; }
-
-html[dir="rtl"] #request-product-page .container-inner .request-form-title {
-  text-align: right; }
-
-html[dir="rtl"] #request-product-page .upload-box {
-  text-align: right; }
-
-html[dir="rtl"] #kibo-products-page #selected-category {
-  direction: ltr; }
-
-html[dir="rtl"] #search-bar #search-input input {
-  direction: rtl; }
-
-html[dir="rtl"] #user-products-page #shop-products-count {
-  direction: rtl; }
-  html[dir="rtl"] #user-products-page #shop-products-count small {
-    margin-left: 0;
-    margin-right: 5px;
-    top: -1px; }
-
-html[dir="rtl"] #main-menu li #goto-shop svg {
-  right: auto;
-  left: 10px; }
-
-html[dir="ltr"] #main-menu li.language button {
-  font-family: "Cairo", sans-serif;
-  font-weight: 600; }
-
-/* CSS specific to iOS devices */
-@supports (-webkit-overflow-scrolling: touch) {
-  html[dir="rtl"] body * {
-    letter-spacing: -1px; } }
-
-@media screen and (max-width: 480px) {
-  html[dir="rtl"] #search-bar #search-input input {
-    text-align: right; }
-  html[dir="rtl"] #search-bar #search-hide {
-    left: 6px;
-    right: auto; }
-  html[dir="rtl"] #search-bar #search-input input {
-    padding: 15px 15px 15px 39px; }
-  html[dir="rtl"] #search-loader {
-    right: auto;
-    left: 11px;
-    top: 13px; } }
