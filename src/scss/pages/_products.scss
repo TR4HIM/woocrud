@@ -96,9 +96,12 @@
 .default-input {
     width: 100%;
     padding:15px; 
-    border:1px solid red;
 }
 
+.panel-form {
+    width: 100%;
+    flex-wrap: wrap;
+}
 .default-wysiwyg {
     width: 100%;
 }
@@ -250,6 +253,15 @@
     
 }
 
+
+#product-product-loader{
+    position: fixed;
+    top: 7px;
+    right: 6px;
+    background: rgba(255, 255, 255, 0.788235294117647);
+    border-radius: 50%;
+    padding: 3px;
+}
 
 
 #products-bar{

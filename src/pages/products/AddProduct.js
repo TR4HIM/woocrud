@@ -10,6 +10,7 @@ import {
         Divider , Chip , 
         ExpansionPanel , ExpansionPanelSummary , ExpansionPanelDetails} from '@material-ui/core';
 import Icon from '@material-ui/core/Icon';
+import {loading } from '../../store/actions/';
 
 import Header from '../../components/header/Header';
 import Footer from '../../components/footer/Footer'; 
@@ -31,17 +32,25 @@ const AddProduct = ({dispatch , USER}) =>  {
 
     useEffect(() => {
         tagInput.current.value = null;
+        dispatch(loading(false, "header-loader"));
     }, [chipData]);
 
     const handleDelete = chipToDelete => () => {
-        setChipData(chips => chips.filter(chip => chip.key !== chipToDelete.key));
+        setChipData(chips => chips.filter(chip => chip.label !== chipToDelete.label));
     };
     
+    const handleUpload = (e) => {
+        console.log(URL.createObjectURL(e.target.files[0]));
+        setProductImage(URL.createObjectURL(e.target.files[0]));
+    }
     const addImageHolder = () => {
         return(
             <div className="upload-image-holder">
-                <span onClick={() => setProductImage(!productImage)}>
-                    <Icon fontSize="large" color="primary">add_circle</Icon>
+                <input accept="image/*"  id="outlined-button-file" multiple type="file" className="hide-upload-input" onChange={ handleUpload }/>
+                <span>
+                    <label htmlFor="outlined-button-file">
+                        <Icon fontSize="large" color="primary">add_circle</Icon>
+                    </label>
                 </span>
             </div>
         );
@@ -51,18 +60,23 @@ const AddProduct = ({dispatch , USER}) =>  {
         return(
             <div className="product-image">
                 <div>
-                    <span className="remove-image">
+                    <span className="remove-image" onClick={removeImage}>
                         <Icon>remove_circle</Icon>
                     </span>
-                    <img src={`${process.env.PUBLIC_URL}/img/logo.png`} />
+                    <img src={ productImage ? productImage : `${process.env.PUBLIC_URL}/img/logo.png` } />
                 </div>
             </div>
         );
     }
 
+    const removeImage = () => {
+        setProductImage(false);
+    }
+
     const keyPressHandler = (e) => {
         // console.log(tagInput)
-        if(e.keyCode === 13){
+        if(tagInput.current.value.trim() != '' && e.keyCode === 13){
+            dispatch(loading(true, "header-loader"));
             setChipData(oldArray => [...oldArray, {label: tagInput.current.value }]);
         }
     }
@@ -85,6 +99,7 @@ const AddProduct = ({dispatch , USER}) =>  {
                                 label="Product Name"
                                 className="default-input"
                                 variant="outlined"
+                                margin="normal"
                             />
                             <TextField
                                 id="product-description"
@@ -94,7 +109,30 @@ const AddProduct = ({dispatch , USER}) =>  {
                                 variant="outlined"
                                 multiline
                                 rows="8"
+                                margin="normal"
                             />
+                            <TextField
+                                id="regular-price"
+                                label="Regular Price"
+                                className="default-input"
+                                variant="outlined"
+                                margin="normal"
+                            />
+                            <TextField
+                                id="sales-price"
+                                label="Sales Price"
+                                className="default-input"
+                                variant="outlined"
+                                margin="normal"
+                            />
+                            <TextField
+                                id="product-sku"
+                                label="SKU"
+                                className="default-input"
+                                variant="outlined"
+                                margin="normal"
+                            />
+                            
                         </Paper>
                         <div>
                             <ExpansionPanel>
@@ -103,9 +141,9 @@ const AddProduct = ({dispatch , USER}) =>  {
                                     aria-controls="panel1a-content"
                                     id="panel1a-header"
                                 >
-                                <Typography className="product-panel">
-                                    Product Short Description
-                                </Typography>
+                                    <Typography className="product-panel">
+                                        Product Short Description
+                                    </Typography>
                                 </ExpansionPanelSummary>
                                 <ExpansionPanelDetails>
                                     <TextField
@@ -117,6 +155,70 @@ const AddProduct = ({dispatch , USER}) =>  {
                                         multiline
                                         rows="8"
                                     />
+                                </ExpansionPanelDetails>
+                            </ExpansionPanel>
+                            <ExpansionPanel>
+                                <ExpansionPanelSummary
+                                    expandIcon={<Icon>expand_more</Icon>}
+                                    aria-controls="panel1a-content2"
+                                    id="panel1a-header2"
+                                >
+                                    <Typography className="product-panel">
+                                        Product Advanced Details
+                                    </Typography>
+                                </ExpansionPanelSummary>
+                                <ExpansionPanelDetails>
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox checked={published} onChange={() => setPublished(!published)} value="checkedA" />
+                                        }
+                                        label="Virtual"
+                                    />
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox checked={published} onChange={() => setPublished(!published)} value="checkedA" />
+                                        }
+                                        label="Downloadable"
+                                    />
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox checked={published} onChange={() => setPublished(!published)} value="checkedA" />
+                                        }
+                                        label="Virtual"
+                                    />
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox checked={published} onChange={() => setPublished(!published)} value="checkedA" />
+                                        }
+                                        label="Downloadable"
+                                    />
+                                </ExpansionPanelDetails>
+                            </ExpansionPanel>
+                            <ExpansionPanel>
+                                <ExpansionPanelSummary
+                                    expandIcon={<Icon>expand_more</Icon>}
+                                    aria-controls="panel1a-content3"
+                                    id="panel1a-header3"
+                                >
+                                    <Typography className="product-panel">
+                                        Linked Proudcts
+                                    </Typography>
+                                </ExpansionPanelSummary>
+                                <ExpansionPanelDetails className="panel-form">
+                                    <TextField
+                                        id="up-sells"
+                                        label="UpSells"
+                                        className="default-input"
+                                        variant="outlined"
+                                        margin="normal"
+                                        />
+                                    <TextField
+                                        id="up-sells"
+                                        label="UpSells"
+                                        className="default-input"
+                                        variant="outlined"
+                                        margin="normal"
+                                        />
                                 </ExpansionPanelDetails>
                             </ExpansionPanel>
                         </div>
@@ -190,7 +292,7 @@ const AddProduct = ({dispatch , USER}) =>  {
                                 label="Love"
                             />
                         </Paper>
-                        <Paper className="product-form">
+                        <Paper id="product-tags" className="product-form">
                             <Typography variant="subtitle2" className="paper-title" gutterBottom>
                                 Product Tags
                             </Typography>

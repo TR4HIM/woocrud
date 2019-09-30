@@ -279,6 +279,9 @@ a {
         line-height: 23px;
         bottom: 0; }
 
+.hide-upload-input {
+  display: none; }
+
 @media screen and (max-width: 959px) {
   #snackbar {
     top: 0 !important; }
@@ -611,8 +614,11 @@ a {
 
 .default-input {
   width: 100%;
-  padding: 15px;
-  border: 1px solid red; }
+  padding: 15px; }
+
+.panel-form {
+  width: 100%;
+  flex-wrap: wrap; }
 
 .default-wysiwyg {
   width: 100%; }
@@ -703,6 +709,14 @@ label.Mui-focused {
       position: absolute;
       top: 5px;
       right: 5px; }
+
+#product-product-loader {
+  position: fixed;
+  top: 7px;
+  right: 6px;
+  background: rgba(255, 255, 255, 0.788235);
+  border-radius: 50%;
+  padding: 3px; }
 
 #products-bar {
   text-align: right;
