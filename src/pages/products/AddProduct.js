@@ -7,7 +7,7 @@ import {
         TextField , 
         FormControlLabel , 
         Switch , Typography , Checkbox ,
-        Divider , Chip , 
+        Divider , Chip , Button ,
         ExpansionPanel , ExpansionPanelSummary , ExpansionPanelDetails} from '@material-ui/core';
 import Icon from '@material-ui/core/Icon';
 
@@ -73,10 +73,15 @@ const AddProduct = ({dispatch , USER}) =>  {
         setProductImage(false);
     }
 
+    useEffect(()=>{
+        console.log('Go');
+        tagInput.current.value = "";
+    },[chipData])
+
     const keyPressHandler = (e) => {
-        // console.log(tagInput)
+        // console.log(tagInput.current.value)
         if(tagInput.current.value.trim() != '' && e.keyCode === 13){
-            dispatch(loading(true, "header-loader"));
+            // dispatch(loading(true, "header-loader"));
             setChipData(oldArray => [...oldArray, {label: tagInput.current.value }]);
         }
     }
@@ -134,7 +139,7 @@ const AddProduct = ({dispatch , USER}) =>  {
                             />
                             
                         </Paper>
-                        <div>
+                        <div className="expansion-panel-container">
                             <ExpansionPanel>
                                 <ExpansionPanelSummary
                                     expandIcon={<Icon>expand_more</Icon>}
@@ -214,6 +219,11 @@ const AddProduct = ({dispatch , USER}) =>  {
                                 </ExpansionPanelDetails>
                             </ExpansionPanel>
                         </div>
+                        <Paper className="product-form">
+                            <Button variant="contained" color="primary">
+                                Add Product
+                            </Button>
+                        </Paper>
                     </Grid>
                     <Grid item xs={12} sm={4}>
                         <Paper className="product-form">
