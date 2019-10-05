@@ -10,16 +10,21 @@ import {
         Divider , Chip , 
         ExpansionPanel , ExpansionPanelSummary , ExpansionPanelDetails} from '@material-ui/core';
 import Icon from '@material-ui/core/Icon';
+
 import {loading } from '../../store/actions/';
 
 import Header from '../../components/header/Header';
 import Footer from '../../components/footer/Footer'; 
+import ProductsAutoComplete from '../../components/products-autocomplete/ProductAutocomplete'; 
+
 
 const AddProduct = ({dispatch , USER}) =>  {
 
     const tagInput = useRef(null);
 
     const [published,setPublished]           = useState(true);
+    const [upSellsProducts,setUpSellsProducts]           = useState([]);
+    const [crossSellsProducts,setCrossSellsProducts]     = useState([]);
     const [productImage,setProductImage]     = useState(false);
     const [productGallery,setProductGallery] = useState([1,2,3,4,5]);
     const [chipData, setChipData] = useState([
@@ -29,11 +34,6 @@ const AddProduct = ({dispatch , USER}) =>  {
         { label: 'React' },
         { label: 'Vue.js' },
     ]);
-
-    useEffect(() => {
-        tagInput.current.value = null;
-        dispatch(loading(false, "header-loader"));
-    }, [chipData]);
 
     const handleDelete = chipToDelete => () => {
         setChipData(chips => chips.filter(chip => chip.label !== chipToDelete.label));
@@ -205,20 +205,12 @@ const AddProduct = ({dispatch , USER}) =>  {
                                     </Typography>
                                 </ExpansionPanelSummary>
                                 <ExpansionPanelDetails className="panel-form">
-                                    <TextField
-                                        id="up-sells"
-                                        label="UpSells"
-                                        className="default-input"
-                                        variant="outlined"
-                                        margin="normal"
-                                        />
-                                    <TextField
-                                        id="up-sells"
-                                        label="UpSells"
-                                        className="default-input"
-                                        variant="outlined"
-                                        margin="normal"
-                                        />
+                                    <div className="autocomplete-container">
+                                        <ProductsAutoComplete fieldLabel="UpSells" onChangeAuto={(upsellsvalue) => setUpSellsProducts(upsellsvalue)}/>
+                                    </div>
+                                    <div className="autocomplete-container">
+                                        <ProductsAutoComplete fieldLabel="Cross-Sells"  onChangeAuto={(crosssellsvalue) => setCrossSellsProducts(crosssellsvalue)} />
+                                    </div>
                                 </ExpansionPanelDetails>
                             </ExpansionPanel>
                         </div>
