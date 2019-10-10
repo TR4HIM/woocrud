@@ -16,18 +16,21 @@ import {loading } from '../../store/actions/';
 import Header from '../../components/header/Header';
 import Footer from '../../components/footer/Footer'; 
 import ProductsAutoComplete from '../../components/products-autocomplete/ProductAutocomplete'; 
+import ButtonUploadImage from '../../components/button-upload/ButtonUpload'; 
 
 
 const AddProduct = ({dispatch , USER}) =>  {
 
     const tagInput = useRef(null);
 
-    const [published,setPublished]           = useState(true);
-    const [upSellsProducts,setUpSellsProducts]           = useState([]);
-    const [crossSellsProducts,setCrossSellsProducts]     = useState([]);
-    const [productImage,setProductImage]     = useState(false);
-    const [productGallery,setProductGallery] = useState([1,2,3,4,5]);
-    const [chipData, setChipData] = useState([
+    const [published,setPublished]                          = useState(true);
+    const [upSellsProducts,setUpSellsProducts]              = useState([]);
+    const [crossSellsProducts,setCrossSellsProducts]        = useState([]);
+    const [productImage,setProductImage]                    = useState(false);
+    const [productGallery,setProductGallery]                = useState([]);
+    const [productGalleryPreviews,setProductGalleryPreviews]                = useState([]);
+    const [productImages,setProductImages]                  = useState([]);
+    const [productTags, setProductTags]                     = useState([
         { label: 'Angular' },
         { label: 'jQuery' },
         { label: 'Polymer' },
@@ -35,35 +38,32 @@ const AddProduct = ({dispatch , USER}) =>  {
         { label: 'Vue.js' },
     ]);
 
+    useEffect(()=>{
+        tagInput.current.value = "";
+    },[productTags]);
+
     const handleDelete = chipToDelete => () => {
-        setChipData(chips => chips.filter(chip => chip.label !== chipToDelete.label));
+        setProductTags(chips => chips.filter(chip => chip.label !== chipToDelete.label));
     };
     
-    const handleUpload = (e) => {
-        console.log(URL.createObjectURL(e.target.files[0]));
-        setProductImage(URL.createObjectURL(e.target.files[0]));
-    }
-    const addImageHolder = () => {
-        return(
-            <div className="upload-image-holder">
-                <input accept="image/*"  id="outlined-button-file" multiple type="file" className="hide-upload-input" onChange={ handleUpload }/>
-                <span>
-                    <label htmlFor="outlined-button-file">
-                        <Icon fontSize="large" color="primary">add_circle</Icon>
-                    </label>
-                </span>
-            </div>
-        );
+    const handleUploadThumbnail = (thumbnail) => {
+        setProductImage(thumbnail.target.files[0]);
     }
 
-    const productImageContainer = () => {
+    const handleProductGallery = (gallery) => {
+        const selectedImages = gallery.target.files;
+        setProductGallery( currentGallery => [...currentGallery,  ...selectedImages ]);
+    }
+
+    const productImageContainer = (imageObject,removeImageFunc) => {
+        const imagePreview = URL.createObjectURL(imageObject);
         return(
             <div className="product-image">
                 <div>
-                    <span className="remove-image" onClick={removeImage}>
+                    <span className="remove-image" onClick={removeImageFunc}>
                         <Icon>remove_circle</Icon>
                     </span>
-                    <img src={ productImage ? productImage : `${process.env.PUBLIC_URL}/img/logo.png` } />
+                    <img src={ imageObject ? imagePreview : `${process.env.PUBLIC_URL}/img/logo.png` } />
                 </div>
             </div>
         );
@@ -73,25 +73,55 @@ const AddProduct = ({dispatch , USER}) =>  {
         setProductImage(false);
     }
 
-    useEffect(()=>{
-        console.log('Go');
-        tagInput.current.value = "";
-    },[chipData])
-
-    const keyPressHandler = (e) => {
-        // console.log(tagInput.current.value)
+    const handleAddTag = (e) => {
         if(tagInput.current.value.trim() != '' && e.keyCode === 13){
-            // dispatch(loading(true, "header-loader"));
-            setChipData(oldArray => [...oldArray, {label: tagInput.current.value }]);
+            setProductTags(oldArray => [...oldArray, {label: tagInput.current.value }]);
         }
+    }
+
+    const renderCategoriesList = () => {
+        return(
+            <>
+            <FormControlLabel
+                control={
+                    <Checkbox checked={published} onChange={() => setPublished(!published)} value="checkedA" />
+                }
+                label="Action"
+            />
+            <FormControlLabel
+                control={
+                    <Checkbox checked={published} onChange={() => setPublished(!published)} value="checkedA" />
+                }
+                label="Comedy"
+            />
+            <FormControlLabel
+                control={
+                    <Checkbox checked={published} onChange={() => setPublished(!published)} value="checkedA" />
+                }
+                label="Drama"
+            />
+            <FormControlLabel
+                control={
+                    <Checkbox checked={published} onChange={() => setPublished(!published)} value="checkedA" />
+                }
+                label="Love"
+            />
+            </>
+        )
+    }
+
+    const removeGallery = (imageToDelete) => {
+        setProductGallery(imagesGallery => imagesGallery.filter(image => image.name !== imageToDelete.name));
+    }
+
+    const removeThumbnail = (image) => {
+        setProductImage(false);
     }
 
     return (
         <div id="add-product-page">
-
             <Header />
-            
-            <Container maxWidth="lg" >
+            <Container maxWidth="lg">
                 <Grid container spacing={3}>
                     <Grid item xs={12} sm={8}>
                         <Paper className="product-form">
@@ -137,7 +167,6 @@ const AddProduct = ({dispatch , USER}) =>  {
                                 variant="outlined"
                                 margin="normal"
                             />
-                            
                         </Paper>
                         <div className="expansion-panel-container">
                             <ExpansionPanel>
@@ -249,7 +278,8 @@ const AddProduct = ({dispatch , USER}) =>  {
                             </Typography>
                             <Divider className="paper-divider" />
                             <div className="feathured-image">
-                                { productImage ? productImageContainer() : addImageHolder() }
+                                {/* To be diccussed with MEhdi */}
+                                { productImage ? productImageContainer(productImage,removeThumbnail) : <ButtonUploadImage typeImage="thumbnail" onChange ={ (var1) => handleUploadThumbnail(var1) } /> }
                             </div>    
                         </Paper>
                         <Paper className="product-form" elevation={2}>
@@ -258,9 +288,9 @@ const AddProduct = ({dispatch , USER}) =>  {
                             </Typography>
                             <Divider className="paper-divider" />
                             <ul className="product-gallery">
-                                { productGallery.map((i)=> (<li key={i}> { productImageContainer() } </li>) ) }
+                                { productGallery.map((image,i)=> (<li key={i}> { productImageContainer(image,() => removeGallery(image)) } </li>) ) }
                                 <li>
-                                    { addImageHolder() }
+                                    <ButtonUploadImage typeImage="gallery"  onChange ={ (var2) => handleProductGallery(var2) } />
                                 </li>
                             </ul>    
                         </Paper>
@@ -269,30 +299,8 @@ const AddProduct = ({dispatch , USER}) =>  {
                                 Categories
                             </Typography>
                             <Divider className="paper-divider" />
-                            <FormControlLabel
-                                control={
-                                    <Checkbox checked={published} onChange={() => setPublished(!published)} value="checkedA" />
-                                }
-                                label="Action"
-                            />
-                            <FormControlLabel
-                                control={
-                                    <Checkbox checked={published} onChange={() => setPublished(!published)} value="checkedA" />
-                                }
-                                label="Comedy"
-                            />
-                            <FormControlLabel
-                                control={
-                                    <Checkbox checked={published} onChange={() => setPublished(!published)} value="checkedA" />
-                                }
-                                label="Drama"
-                            />
-                            <FormControlLabel
-                                control={
-                                    <Checkbox checked={published} onChange={() => setPublished(!published)} value="checkedA" />
-                                }
-                                label="Love"
-                            />
+                            { renderCategoriesList() }
+                            
                         </Paper>
                         <Paper id="product-tags" className="product-form">
                             <Typography variant="subtitle2" className="paper-title" gutterBottom>
@@ -300,7 +308,7 @@ const AddProduct = ({dispatch , USER}) =>  {
                             </Typography>
                             <Divider className="paper-divider" />
                             <div>
-                                {chipData.map((data,i) => {
+                                {productTags.map((data,i) => {
                                     return (
                                     <Chip
                                         key={i}
@@ -316,7 +324,7 @@ const AddProduct = ({dispatch , USER}) =>  {
                                 <TextField
                                     id="product-name"
                                     inputRef={tagInput}
-                                    onKeyDown={(e)=>keyPressHandler(e)}
+                                    onKeyDown={(e)=>handleAddTag(e)}
                                     label="Add Tag"
                                     fullWidth={true}
                                 />

@@ -63,8 +63,94 @@ const WC_getWooProducts = ()=>{
 
 }
 
+const WC_getWooSearchProducts = ()=>{
+
+    var call;
+
+    return (token, query)=>{
+
+        if (call)
+            call.cancel();
+        
+        call = axios.CancelToken.source();
+        return axios.get( `${WC}/products?search=${query}`, {
+            headers : {
+                "Authorization" : `Bearer ${token}`
+            },
+            cancelToken: call.token
+        })
+        .then((result)=>{
+            return result.data;
+        })
+        .catch((error)=>{
+            if ( !axios.isCancel(error)) 
+                return error;
+        })
+    }
+    
+
+}
+
+const WC_getWooCategories = ()=>{
+
+    var call;
+
+    return (token)=>{
+
+        if (call)
+            call.cancel();
+        
+        call = axios.CancelToken.source();
+        return axios.get( `${WC}/products/categories`, {
+            headers : {
+                "Authorization" : `Bearer ${token}`
+            },
+            cancelToken: call.token
+        })
+        .then((result)=>{
+            return result.data;
+        })
+        .catch((error)=>{
+            if ( !axios.isCancel(error)) 
+                return error;
+        })
+    }
+    
+
+}
+const WC_getWooTags = ()=>{
+
+    var call;
+
+    return (token)=>{
+
+        if (call)
+            call.cancel();
+        
+        call = axios.CancelToken.source();
+        return axios.get( `${WC}/products/tags`, {
+            headers : {
+                "Authorization" : `Bearer ${token}`
+            },
+            cancelToken: call.token
+        })
+        .then((result)=>{
+            return result.data;
+        })
+        .catch((error)=>{
+            if ( !axios.isCancel(error)) 
+                return error;
+        })
+    }
+    
+
+}
+
 export default {
     LOGIN,
     TOKEN_VALIDATE,
-    WC_getWooProducts
+    WC_getWooProducts,
+    WC_getWooSearchProducts,
+    WC_getWooCategories,
+    WC_getWooTags
 }

@@ -497,6 +497,10 @@ a {
   width: 100%;
   margin-bottom: 20px; }
 
+.autocomplete-container {
+  width: 100%;
+  margin-bottom: 20px; }
+
 #login-page {
   position: relative;
   min-height: 100vh; }
