@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import {connect} from 'react-redux';
 import Header from '../../components/header/Header';
 import Footer from '../../components/footer/Footer'; 
+import EditProductModal from '../../components/edit-product/EditProduct'; 
 
 
 import ProductItem from './ProductItem';
@@ -61,7 +62,8 @@ const Products = ({dispatch , USER , WOO_PRODUCTS  }) => {
             <div id="container">
                 { WOO_PRODUCTS.length ? renderProductsContainer() : null}
             </div>
-            <EditWooProductDrawer isSearchResult={false} />
+            {/* <EditWooProductDrawer isSearchResult={false} /> */}
+            <EditProductModal />
 
             <Footer />
 

@@ -14,12 +14,12 @@ import { editWooProduct } from '../../store/actions/';
 const EditWooProductDrawer = ({dispatch , classes , EDITING_WOO_PRODUCT}) => {
 
        
-    const [regularPrice ,       setRegularPrice]        = useState(0);
-    const [salePrice ,          setSalePrice]           = useState(0);
-    const [productName ,        setProductName]         = useState("");
-    const [productThumbnail ,   setProductThumbnail]    = useState("");
-    const [productDescription , setProductDescription]  = useState("");
-    const [status ,             setStatus]              = useState(false);
+    const [regularPrice,setRegularPrice]                = useState(0);
+    const [salePrice,setSalePrice]                      = useState(0);
+    const [productName,setProductName]                  = useState("");
+    const [productThumbnail,setProductThumbnail]        = useState("");
+    const [productDescription,setProductDescription]    = useState("");
+    const [status,setStatus]                            = useState(false);
 
 
     useEffect(() => {

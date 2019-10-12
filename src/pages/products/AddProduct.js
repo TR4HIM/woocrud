@@ -186,7 +186,7 @@ const AddProduct = ({dispatch , USER}) =>  {
                                     id="panel1a-header2"
                                 >
                                     <Typography className="product-panel">
-                                        Product Advanced Details
+                                        Advanced
                                     </Typography>
                                 </ExpansionPanelSummary>
                                 <ExpansionPanelDetails>
