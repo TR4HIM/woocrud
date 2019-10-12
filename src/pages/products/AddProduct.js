@@ -23,28 +23,31 @@ const AddProduct = ({dispatch , USER}) =>  {
 
     const tagInput = useRef(null);
 
-    const [published,setPublished]                          = useState(true);
+    const [published,setPublished]                          = useState(false);
+    const [virtual,setVirtual]                              = useState(false);
+    const [downloadable,setDownloadable]                    = useState(false);
     const [upSellsProducts,setUpSellsProducts]              = useState([]);
     const [crossSellsProducts,setCrossSellsProducts]        = useState([]);
     const [productImage,setProductImage]                    = useState(false);
     const [productGallery,setProductGallery]                = useState([]);
-    const [productGalleryPreviews,setProductGalleryPreviews]                = useState([]);
-    const [productImages,setProductImages]                  = useState([]);
     const [productTags, setProductTags]                     = useState([
         { label: 'Angular' },
         { label: 'jQuery' },
-        { label: 'Polymer' },
+        { label: 'Polymer'},
         { label: 'React' },
         { label: 'Vue.js' },
+    ]);
+    const [productCategories, setProductCategories]         = useState([
+        { label: 'Angular', selected : false },
+        { label: 'jQuery', selected : false },
+        { label: 'Polymer', selected : true },
+        { label: 'React', selected : false },
+        { label: 'Vue.js', selected : false },
     ]);
 
     useEffect(()=>{
         tagInput.current.value = "";
     },[productTags]);
-
-    const handleDelete = chipToDelete => () => {
-        setProductTags(chips => chips.filter(chip => chip.label !== chipToDelete.label));
-    };
     
     const handleUploadThumbnail = (thumbnail) => {
         setProductImage(thumbnail.target.files[0]);
@@ -69,53 +72,38 @@ const AddProduct = ({dispatch , USER}) =>  {
         );
     }
 
-    const removeImage = () => {
-        setProductImage(false);
-    }
-
     const handleAddTag = (e) => {
         if(tagInput.current.value.trim() != '' && e.keyCode === 13){
-            setProductTags(oldArray => [...oldArray, {label: tagInput.current.value }]);
+            setProductTags(currentTags => [...currentTags, {label: tagInput.current.value }]);
+
         }
     }
 
+    const handleDelete = chipToDelete => () => {
+        setProductTags(chips => chips.filter(chip => chip.label !== chipToDelete.label));
+    };
+
+    const checkCategory = index => {
+        const newCategoryList = [...productCategories]; 
+        newCategoryList[index].selected = ! newCategoryList[index].selected;
+        setProductCategories(newCategoryList);
+    };
+
     const renderCategoriesList = () => {
         return(
-            <>
-            <FormControlLabel
-                control={
-                    <Checkbox checked={published} onChange={() => setPublished(!published)} value="checkedA" />
-                }
-                label="Action"
-            />
-            <FormControlLabel
-                control={
-                    <Checkbox checked={published} onChange={() => setPublished(!published)} value="checkedA" />
-                }
-                label="Comedy"
-            />
-            <FormControlLabel
-                control={
-                    <Checkbox checked={published} onChange={() => setPublished(!published)} value="checkedA" />
-                }
-                label="Drama"
-            />
-            <FormControlLabel
-                control={
-                    <Checkbox checked={published} onChange={() => setPublished(!published)} value="checkedA" />
-                }
-                label="Love"
-            />
-            </>
+            productCategories.map((category,i)=>(
+                <FormControlLabel
+                    control={ <Checkbox checked={category.selected} 
+                    onChange={() => checkCategory(i) } value={category.selected} /> }
+                    label={category.label}
+                    key={i}
+                />)
+            )  
         )
     }
 
     const removeGallery = (imageToDelete) => {
         setProductGallery(imagesGallery => imagesGallery.filter(image => image.name !== imageToDelete.name));
-    }
-
-    const removeThumbnail = (image) => {
-        setProductImage(false);
     }
 
     return (
@@ -204,25 +192,13 @@ const AddProduct = ({dispatch , USER}) =>  {
                                 <ExpansionPanelDetails>
                                     <FormControlLabel
                                         control={
-                                            <Checkbox checked={published} onChange={() => setPublished(!published)} value="checkedA" />
+                                            <Checkbox checked={virtual} onChange={() => setVirtual(!virtual)} value="checkedA" />
                                         }
                                         label="Virtual"
                                     />
                                     <FormControlLabel
                                         control={
-                                            <Checkbox checked={published} onChange={() => setPublished(!published)} value="checkedA" />
-                                        }
-                                        label="Downloadable"
-                                    />
-                                    <FormControlLabel
-                                        control={
-                                            <Checkbox checked={published} onChange={() => setPublished(!published)} value="checkedA" />
-                                        }
-                                        label="Virtual"
-                                    />
-                                    <FormControlLabel
-                                        control={
-                                            <Checkbox checked={published} onChange={() => setPublished(!published)} value="checkedA" />
+                                            <Checkbox checked={downloadable} onChange={() => setDownloadable(!downloadable)} value="checkedA" />
                                         }
                                         label="Downloadable"
                                     />
@@ -279,7 +255,7 @@ const AddProduct = ({dispatch , USER}) =>  {
                             <Divider className="paper-divider" />
                             <div className="feathured-image">
                                 {/* To be diccussed with MEhdi */}
-                                { productImage ? productImageContainer(productImage,removeThumbnail) : <ButtonUploadImage typeImage="thumbnail" onChange ={ (var1) => handleUploadThumbnail(var1) } /> }
+                                { productImage ? productImageContainer(productImage,() => setProductImage(false)) : <ButtonUploadImage typeImage="thumbnail" onChange ={ (var1) => handleUploadThumbnail(var1) } /> }
                             </div>    
                         </Paper>
                         <Paper className="product-form" elevation={2}>
