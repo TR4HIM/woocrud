@@ -16,13 +16,13 @@
 // COMPONENTS
 @import "./components/footer/footer.scss";
 @import "./components/header/header.scss";
-@import "./components/products-autocomplete/autocomplete.scss"; 
+@import "./components/input-autocomplete/autocomplete.scss"; 
 @import "./components/button-upload/button-upload.scss"; 
-@import "./components/edit-product/edit-product.scss"; 
 
 // PAGES
 @import "./scss/pages/login.scss";
 @import "./scss/pages/products.scss";
+@import "./scss/pages/edit-product.scss";
 
 
 // Multi-Langauges 

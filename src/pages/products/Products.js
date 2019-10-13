@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import {connect} from 'react-redux';
 import Header from '../../components/header/Header';
 import Footer from '../../components/footer/Footer'; 
-import EditProductModal from '../../components/edit-product/EditProduct'; 
+import EditProductModal from '../edit-product/EditProduct'; 
 
 
 import ProductItem from './ProductItem';
@@ -13,7 +13,7 @@ import {loading , storeWooProducts , clearStoreWooProducts} from '../../store/ac
 import API from '../../API/'; 
 
 
-const GET_WOO_PRODUCTS  = API.WC_getWooProducts();
+const GET_WOO_PRODUCTS  = API.WC_getWooProducts();  
 
 const Products = ({dispatch , USER , WOO_PRODUCTS  }) => {
 

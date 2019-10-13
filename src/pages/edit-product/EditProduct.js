@@ -20,7 +20,8 @@ import {
     Switch , Typography , Checkbox ,
     Divider , Chip , Button ,
     ExpansionPanel , ExpansionPanelSummary , ExpansionPanelDetails} from '@material-ui/core';
-import ButtonUploadImage from '../button-upload/ButtonUpload'; 
+
+import ButtonUploadImage from '../../components/button-upload/ButtonUpload'; 
 
 const MaxWidthDialog = ({dispatch  , EDITING_WOO_PRODUCT}) => {
 

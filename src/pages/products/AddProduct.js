@@ -15,8 +15,9 @@ import {loading } from '../../store/actions/';
 
 import Header from '../../components/header/Header';
 import Footer from '../../components/footer/Footer'; 
-import ProductsAutoComplete from '../../components/products-autocomplete/ProductAutocomplete'; 
+import ProductsAutoComplete from '../../components/input-autocomplete/InputAutocomplete'; 
 import ButtonUploadImage from '../../components/button-upload/ButtonUpload'; 
+import EditableImage from '../../components/editable-image/EditableImage'; 
 
 
 const AddProduct = ({dispatch , USER}) =>  {
@@ -253,9 +254,10 @@ const AddProduct = ({dispatch , USER}) =>  {
                                 Product Image 
                             </Typography>
                             <Divider className="paper-divider" />
-                            <div className="feathured-image">
+                            <div className="featured-image">
                                 {/* To be diccussed with MEhdi */}
-                                { productImage ? productImageContainer(productImage,() => setProductImage(false)) : <ButtonUploadImage typeImage="thumbnail" onChange ={ (var1) => handleUploadThumbnail(var1) } /> }
+                                { productImage  ? <EditableImage imageObject={productImage} removeImageFunc={() => setProductImage(false)} /> 
+                                                : <ButtonUploadImage typeImage="thumbnail" onChange ={ (var1) => handleUploadThumbnail(var1) } /> }
                             </div>    
                         </Paper>
                         <Paper className="product-form" elevation={2}>
@@ -264,7 +266,7 @@ const AddProduct = ({dispatch , USER}) =>  {
                             </Typography>
                             <Divider className="paper-divider" />
                             <ul className="product-gallery">
-                                { productGallery.map((image,i)=> (<li key={i}> { productImageContainer(image,() => removeGallery(image)) } </li>) ) }
+                                { productGallery.map((image,i)=> (<li key={i}><EditableImage imageObject={image} removeImageFunc={() => removeGallery(image)} /></li>) ) }
                                 <li>
                                     <ButtonUploadImage typeImage="gallery"  onChange ={ (var2) => handleProductGallery(var2) } />
                                 </li>
