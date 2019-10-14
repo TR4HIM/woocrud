@@ -39,7 +39,7 @@ const AddProduct = ({dispatch , USER}) =>  {
         { label: 'Vue.js' },
     ]);
     const [productCategories, setProductCategories]         = useState([
-        { label: 'Angular', selected : false },
+        { label: 'Angular', selected : true },
         { label: 'jQuery', selected : false },
         { label: 'Polymer', selected : true },
         { label: 'React', selected : false },
@@ -57,20 +57,6 @@ const AddProduct = ({dispatch , USER}) =>  {
     const handleProductGallery = (gallery) => {
         const selectedImages = gallery.target.files;
         setProductGallery( currentGallery => [...currentGallery,  ...selectedImages ]);
-    }
-
-    const productImageContainer = (imageObject,removeImageFunc) => {
-        const imagePreview = URL.createObjectURL(imageObject);
-        return(
-            <div className="product-image">
-                <div>
-                    <span className="remove-image" onClick={removeImageFunc}>
-                        <Icon>remove_circle</Icon>
-                    </span>
-                    <img src={ imageObject ? imagePreview : `${process.env.PUBLIC_URL}/img/logo.png` } />
-                </div>
-            </div>
-        );
     }
 
     const handleAddTag = (e) => {
