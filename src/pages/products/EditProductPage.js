@@ -10,38 +10,28 @@ import {
         Divider , Chip , Button ,
         ExpansionPanel , ExpansionPanelSummary , ExpansionPanelDetails} from '@material-ui/core';
 import Icon from '@material-ui/core/Icon';
-
 import {loading } from '../../store/actions/';
-
 import Header from '../../components/header/Header';
 import Footer from '../../components/footer/Footer';
 import ProductsAutoComplete from '../../components/input-autocomplete/InputAutocomplete';
 import ButtonUploadImage from '../../components/button-upload/ButtonUpload';
 import EditableImage from '../../components/editable-image/EditableImage';
 import ProductForm from '../../components/product-form/ProductForm';
-
-
 import API from '../../API/'; 
-
-
 import {
     Link,
     useParams
-  } from "react-router-dom";
-
+} from "react-router-dom";
 
   
 const EditProductPage = ({dispatch , USER , match}) =>  {
     const { params } = match;
     const [product,setProduct] = useState(null);
+    
     useEffect(()=>{
-        console.log(USER);
         API.WC_getWooProductById(USER.token, params.productId)
         .then((result)=>{
-            console.log(result)
             if( result !== undefined ){
-                
-                // dispatch(storeWooProducts(result));
                 // HIDE LOADER
                 setProduct(result);
                 dispatch(loading(false, "header-loader"));

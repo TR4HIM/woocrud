@@ -24,6 +24,11 @@ const ProductForm = ({dispatch , USER , toEdit=false , productData=null}) =>  {
     const tagInput = useRef(null);
 
     const [productName,setProductName]                      = useState("");
+    const [productDescription,setProductDescription]        = useState("");
+    const [shortProductDescription,setShortProductDescription]        = useState("");
+    const [regularPrice,setRegularPrice]                    = useState(0);
+    const [salePrice,setSalePrice]                          = useState(0);
+    const [sku,setSku]                                      = useState("");
     const [published,setPublished]                          = useState(false);
     const [virtual,setVirtual]                              = useState(false);
     const [downloadable,setDownloadable]                    = useState(false);
@@ -46,12 +51,26 @@ const ProductForm = ({dispatch , USER , toEdit=false , productData=null}) =>  {
         { label: 'Vue.js', selected : false },
     ]);
 
-   
-
     useEffect(()=>{
         if(toEdit === true){
-            setProductName(productData.name) 
             console.log(productData)
+            const isPublished = (productData.status == "publish") ? true : false;
+            
+            let galleryImages = productData.images.map(img => img.src);
+            setProductName(productData.name);
+            setProductDescription(productData.description);
+            setShortProductDescription(productData.short_description);
+            setRegularPrice(productData.regular_price);
+            setSalePrice(productData.sale_price);
+            setSku(productData.sku);
+            setDownloadable(productData.downloadable);
+            setVirtual(productData.virtual);
+            setProductTags(productData.tags);
+            setProductTags(productData.tags);
+            // Remove First Element For Featured Image :) 
+            setProductImage(galleryImages.shift());
+            setProductGallery(galleryImages);
+            setPublished(isPublished);
         }
     },[]);
 
@@ -118,6 +137,7 @@ const ProductForm = ({dispatch , USER , toEdit=false , productData=null}) =>  {
                                 variant="outlined"
                                 margin="normal"
                                 value={productName} 
+                                onChange={(e) => setProductName(e.target.value)}
                             />
                             <TextField
                                 id="product-description"
@@ -128,6 +148,8 @@ const ProductForm = ({dispatch , USER , toEdit=false , productData=null}) =>  {
                                 multiline
                                 rows="8"
                                 margin="normal"
+                                value={productDescription} 
+                                onChange={(e) => setProductDescription(e.target.value)}
                             />
                             <TextField
                                 id="regular-price"
@@ -135,6 +157,8 @@ const ProductForm = ({dispatch , USER , toEdit=false , productData=null}) =>  {
                                 className="default-input"
                                 variant="outlined"
                                 margin="normal"
+                                value={regularPrice} 
+                                onChange={(e) => setRegularPrice(e.target.value)}
                             />
                             <TextField
                                 id="sales-price"
@@ -142,6 +166,8 @@ const ProductForm = ({dispatch , USER , toEdit=false , productData=null}) =>  {
                                 className="default-input"
                                 variant="outlined"
                                 margin="normal"
+                                value={salePrice} 
+                                onChange={(e) => setSalePrice(e.target.value)}
                             />
                             <TextField
                                 id="product-sku"
@@ -149,6 +175,8 @@ const ProductForm = ({dispatch , USER , toEdit=false , productData=null}) =>  {
                                 className="default-input"
                                 variant="outlined"
                                 margin="normal"
+                                value={sku} 
+                                onChange={(e) => setSku(e.target.value)}
                             />
                         </Paper>
                         <div className="expansion-panel-container">
@@ -165,12 +193,14 @@ const ProductForm = ({dispatch , USER , toEdit=false , productData=null}) =>  {
                                 <ExpansionPanelDetails>
                                     <TextField
                                         id="product-description"
-                                        label="Product Description"
+                                        label="Product Short Description"
                                         className="default-wysiwyg" 
                                         margin="normal"
                                         variant="outlined"
                                         multiline
                                         rows="8"
+                                        value={shortProductDescription} 
+                                        onChange={(e) => setShortProductDescription(e.target.value)}
                                     />
                                 </ExpansionPanelDetails>
                             </ExpansionPanel>
@@ -221,7 +251,7 @@ const ProductForm = ({dispatch , USER , toEdit=false , productData=null}) =>  {
                         </div>
                         <Paper className="product-form">
                             <Button variant="contained" color="primary">
-                                Add Product
+                                { (toEdit === true) ? "Save Porduct" : "Add Product" } 
                             </Button>
                         </Paper>
                     </Grid>

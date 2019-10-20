@@ -20,7 +20,7 @@ import Popper from '@material-ui/core/Popper';
 import MenuItem from '@material-ui/core/MenuItem';
 
 const EditableImage = ( { imageObject,removeImageFunc } ) => {
-    const imagePreview = URL.createObjectURL(imageObject);
+    const imagePreview = imageObject.startsWith('http') ? imageObject :  URL.createObjectURL(imageObject);
     return(
         <div className="product-image">
             <div>
