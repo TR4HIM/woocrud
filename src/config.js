@@ -9,7 +9,8 @@ export const APP_ROUTES = {
     MY_PRODUCTS         : '/mes-produits',
     PARAMETERS          : '/parametres',
     CODE_VALIDATION     : '/validation-code-promo',
-    REQUESTED_PRODUCT   : '/demande-ajout-produit'
+    REQUESTED_PRODUCT   : '/demande-ajout-produit',
+    EDIT_PRODUCT        : "/edit-produit/:productId"
 }
 
 export const APP_PATHS = {
@@ -19,7 +20,8 @@ export const APP_PATHS = {
     MY_PRODUCTS         : `${process.env.PUBLIC_URL}${APP_ROUTES.MY_PRODUCTS}`,
     PARAMETERS          : `${process.env.PUBLIC_URL}${APP_ROUTES.PARAMETERS}`,
     CODE_VALIDATION     : `${process.env.PUBLIC_URL}${APP_ROUTES.CODE_VALIDATION}`,
-    REQUESTED_PRODUCT   : `${process.env.PUBLIC_URL}${APP_ROUTES.REQUESTED_PRODUCT}`
+    REQUESTED_PRODUCT   : `${process.env.PUBLIC_URL}${APP_ROUTES.REQUESTED_PRODUCT}`,
+    EDIT_PRODUCT        : `${process.env.PUBLIC_URL}${APP_ROUTES.EDIT_PRODUCT}`
 }
 
 

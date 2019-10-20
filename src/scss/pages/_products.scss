@@ -649,11 +649,11 @@
         .product{
             cursor: pointer;
             .edit-btn {
-                position: absolute;
+                position: relative;
                 z-index: 5;
-                top: 0;
+                // top: 0;
                 left: 0;
-                bottom: 0;
+                bottom: 85px;
                 right: 0;
                 padding: 11px 10px;
                 border: 1px solid #333;

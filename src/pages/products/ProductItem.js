@@ -1,9 +1,12 @@
 import React, {  useState  } from 'react';
 import {connect} from 'react-redux';
-
-
+import { NavLink , Link} from "react-router-dom";
 import { editWooProduct } from '../../store/actions/';
 import ToggleDisplay from 'react-toggle-display';
+import { APP_ROUTES } from '../../config';
+
+import EditProductPage from './EditProductPage'; 
+
 
 const WooProduct = ({dispatch , data }) => {
 
@@ -15,7 +18,7 @@ const WooProduct = ({dispatch , data }) => {
     }
 
     return (
-        <li onClick={handleClick}
+        <li 
             className={`product ${(data.status === 'private') ? 'private' : ''} ${(data.bargain) ? 'bargain' : ''} `} 
             id={data.id} 
         >
@@ -37,7 +40,12 @@ const WooProduct = ({dispatch , data }) => {
             { (data.fake) ? <small className="fake-icon" >FAKE_TEXT</small> : null }
         </div>
 
-        <span className="edit-btn">EDIT</span>
+        <span className="edit-btn" onClick={handleClick}>EDIT</span>
+            <span className="edit-btn">
+                <Link to={`/edit-produit/${data.id}`}>
+                    ADV EDIT 
+                </Link>
+            </span>
         </li>
     );
 

@@ -21,13 +21,13 @@ import EditableImage from '../../components/editable-image/EditableImage';
 import ProductForm from '../../components/product-form/ProductForm';
 
 
-const AddProduct = ({dispatch , USER}) =>  {
+const EditProductPage = ({dispatch , USER}) =>  {
 
 
     return (
         <div id="add-product-page">
             <Header />
-            <ProductForm />
+            <ProductForm formType="edit"/>
             <Footer />
         </div>
     ); 
@@ -35,4 +35,4 @@ const AddProduct = ({dispatch , USER}) =>  {
 
 const mapStateToProps = ({ USER  }) => ({ USER });
 
-export default   connect(mapStateToProps)(AddProduct) ;
+export default   connect(mapStateToProps)(EditProductPage) ;

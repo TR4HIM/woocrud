@@ -1022,11 +1022,10 @@ label.Mui-focused {
 #user-products-page #products-list .product {
   cursor: pointer; }
   #user-products-page #products-list .product .edit-btn {
-    position: absolute;
+    position: relative;
     z-index: 5;
-    top: 0;
     left: 0;
-    bottom: 0;
+    bottom: 85px;
     right: 0;
     padding: 11px 10px;
     border: 1px solid #333;

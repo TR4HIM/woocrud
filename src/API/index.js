@@ -63,6 +63,35 @@ const WC_getWooProducts = ()=>{
 
 }
 
+const WC_getWooProductById = (token, productId)=>{
+
+    var call;
+
+    // return (token, productId)=>{
+
+        // if (call)
+        //     call.cancel();
+        
+        // call = axios.CancelToken.source();
+
+        return axios.get( `${WC}/products/${productId}`, {
+            headers : {
+                "Authorization" : `Bearer ${token}`
+            }
+        })
+        .then((result)=>{
+            return result.data;
+        })
+        .catch((error)=>{
+            if ( !axios.isCancel(error)) 
+                return error;
+        })
+
+    // }
+    
+
+}
+
 const WC_getWooSearchProducts = ()=>{
 
     var call;
@@ -152,5 +181,6 @@ export default {
     WC_getWooProducts,
     WC_getWooSearchProducts,
     WC_getWooCategories,
-    WC_getWooTags
+    WC_getWooTags,
+    WC_getWooProductById
 }

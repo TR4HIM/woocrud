@@ -26,7 +26,7 @@ import ButtonUploadImage from '../../components/button-upload/ButtonUpload';
 const MaxWidthDialog = ({dispatch  , EDITING_WOO_PRODUCT}) => {
 
     const [regularPrice,setRegularPrice]                = useState(0);
-    const [published,setPublished]                = useState(false);
+    const [published,setPublished]                      = useState(false);
     const [salePrice,setSalePrice]                      = useState(0);
     const [productName,setProductName]                  = useState("");
     const [productThumbnail,setProductThumbnail]        = useState("");
@@ -68,10 +68,6 @@ const MaxWidthDialog = ({dispatch  , EDITING_WOO_PRODUCT}) => {
             <DialogContent dividers>
                 <Grid container spacing={3}>
                     <Grid item xs={12} sm={8}>
-                            <Typography variant="subtitle2" className="paper-title" gutterBottom>
-                                Product Informations 
-                            </Typography>
-                            <Divider className="paper-divider" />
                             <TextField
                                 id="product-name"
                                 label="Product Name"
@@ -108,35 +104,19 @@ const MaxWidthDialog = ({dispatch  , EDITING_WOO_PRODUCT}) => {
                                 value={salePrice}
                             />
                             <TextField
-                                id="product-sku"
-                                label="SKU"
-                                className="default-input"
-                                variant="outlined"
+                                id="product-description"
+                                label="Short Product Description"
+                                className="default-wysiwyg" 
                                 margin="normal"
+                                variant="outlined"
+                                multiline
+                                rows="8"
+                                margin="normal"
+                                value={productDescription}
                             />
                     </Grid>
                     <Grid item xs={12} sm={4}>
-                        <Typography variant="subtitle2" className="paper-title" gutterBottom>
-                            Product Image 
-                        </Typography>
-                        <Divider className="paper-divider" />
-                        <ButtonUploadImage typeImage="thumbnail" onChange ={ (var1) => console.log(var1) } />
-                        <Divider className="paper-divider" />
-                        <Typography variant="subtitle2" className="paper-title" gutterBottom>
-                            Product Gallery 
-                        </Typography>
-                        <Divider className="paper-divider" />
-                        <ul className="product-gallery">
-                                <li>
-                                    <ButtonUploadImage typeImage="gallery"  onChange ={ (var2) => console.log(var2) } />
-                                </li>
-                                <li>
-                                    <ButtonUploadImage typeImage="gallery2"  onChange ={ (var2) => console.log(var2) } />
-                                </li>
-                                <li>
-                                    <ButtonUploadImage typeImage="gallery3"  onChange ={ (var2) => console.log(var2) } />
-                                </li>
-                            </ul> 
+                        
                         <Typography variant="subtitle2" className="paper-title" gutterBottom>
                             Product Publish 
                         </Typography>
@@ -152,8 +132,9 @@ const MaxWidthDialog = ({dispatch  , EDITING_WOO_PRODUCT}) => {
                             }
                             label="Published"
                         />
+                        <ButtonUploadImage typeImage="thumbnail" onChange ={ (var1) => console.log(var1) } />
                     </Grid>
-                </Grid>
+                </Grid> 
             </DialogContent>
         </Dialog>
         </>

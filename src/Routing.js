@@ -14,6 +14,7 @@ import {login, loading} from './store/actions/';
 import Login from './pages/login/Login';
 import Products from './pages/products/Products';
 import AddProduct from './pages/products/AddProduct';
+import EditProductPage from './pages/products/EditProductPage';
 import Page404 from './pages/not-found/';
 import UserProfile from './pages/user/';
 
@@ -67,6 +68,7 @@ const Routing = ( {dispatch , AUTHORIZED} ) => {
                     <Route exact path={APP_PATHS.PARAMETERS}    component={withRouter(UserProfile)} />
 
                     <PrivateRoute exact authed={AUTHORIZED}     component={withRouter(Products)} path={APP_PATHS.MY_PRODUCTS}  />
+                    <PrivateRoute exact authed={AUTHORIZED}     component={withRouter(EditProductPage)} path={APP_PATHS.EDIT_PRODUCT}  />
 
                     <Route component={withRouter(Page404)} />
                 </Switch>

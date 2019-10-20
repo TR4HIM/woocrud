@@ -21,13 +21,47 @@ import EditableImage from '../../components/editable-image/EditableImage';
 import ProductForm from '../../components/product-form/ProductForm';
 
 
-const AddProduct = ({dispatch , USER}) =>  {
+import API from '../../API/'; 
 
+
+import {
+    Link,
+    useParams
+  } from "react-router-dom";
+
+
+  
+const EditProductPage = ({dispatch , USER , match}) =>  {
+    const { params } = match;
+    const [product,setProduct] = useState(null);
+    useEffect(()=>{
+        console.log(USER);
+        API.WC_getWooProductById(USER.token, params.productId)
+        .then((result)=>{
+            console.log(result)
+            if( result !== undefined ){
+                
+                // dispatch(storeWooProducts(result));
+                // HIDE LOADER
+                setProduct(result);
+                dispatch(loading(false, "header-loader"));
+            }
+        })
+        .catch((error)=>{
+            dispatch({
+                type : 'ERROR',
+                payload : error
+            })
+            // HIDE LOADING
+            dispatch(loading(false, "header-loader"));
+        })
+
+    },[]);
 
     return (
         <div id="add-product-page">
             <Header />
-            <ProductForm />
+                { (product !== null ) ? <ProductForm toEdit={true} productData={ product }/> : false }
             <Footer />
         </div>
     ); 
@@ -35,4 +69,4 @@ const AddProduct = ({dispatch , USER}) =>  {
 
 const mapStateToProps = ({ USER  }) => ({ USER });
 
-export default   connect(mapStateToProps)(AddProduct) ;
+export default   connect(mapStateToProps)(EditProductPage) ;
