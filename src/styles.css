@@ -1249,3 +1249,8 @@ label.Mui-focused {
   #user-products-page #shop-products-count small {
     font-size: 15px;
     top: -2px; } }
+
+.edit-product-image {
+  max-width: 250px;
+  height: 250px;
+  margin: 15px auto; }

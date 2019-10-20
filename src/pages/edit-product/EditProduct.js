@@ -22,6 +22,7 @@ import {
     ExpansionPanel , ExpansionPanelSummary , ExpansionPanelDetails} from '@material-ui/core';
 
 import ButtonUploadImage from '../../components/button-upload/ButtonUpload'; 
+import EditableImage from '../../components/editable-image/EditableImage';
 
 const MaxWidthDialog = ({dispatch  , EDITING_WOO_PRODUCT}) => {
 
@@ -29,7 +30,7 @@ const MaxWidthDialog = ({dispatch  , EDITING_WOO_PRODUCT}) => {
     const [published,setPublished]                      = useState(false);
     const [salePrice,setSalePrice]                      = useState(0);
     const [productName,setProductName]                  = useState("");
-    const [productThumbnail,setProductThumbnail]        = useState("");
+    const [productThumbnail,setProductThumbnail]        = useState(false);
     const [productDescription,setProductDescription]    = useState("");
     const [status,setStatus]                            = useState(false);
 
@@ -77,17 +78,6 @@ const MaxWidthDialog = ({dispatch  , EDITING_WOO_PRODUCT}) => {
                                 value={productName} 
                             />
                             <TextField
-                                id="product-description"
-                                label="Product Description"
-                                className="default-wysiwyg" 
-                                margin="normal"
-                                variant="outlined"
-                                multiline
-                                rows="8"
-                                margin="normal"
-                                value={productDescription}
-                            />
-                            <TextField
                                 id="regular-price"
                                 label="Regular Price"
                                 className="default-input"
@@ -116,11 +106,10 @@ const MaxWidthDialog = ({dispatch  , EDITING_WOO_PRODUCT}) => {
                             />
                     </Grid>
                     <Grid item xs={12} sm={4}>
-                        
-                        <Typography variant="subtitle2" className="paper-title" gutterBottom>
-                            Product Publish 
-                        </Typography>
-                        <Divider className="paper-divider" />
+                        <div className="featured-image">
+                                { productThumbnail  ? <EditableImage imageObject={productThumbnail} removeImageFunc={() => setProductThumbnail(false)} /> 
+                                                : <ButtonUploadImage typeImage="thumbnail" onChange ={ (var1) => console.log(var1) } /> }
+                        </div>  
                         <FormControlLabel
                             control={
                                 <Switch
@@ -132,7 +121,6 @@ const MaxWidthDialog = ({dispatch  , EDITING_WOO_PRODUCT}) => {
                             }
                             label="Published"
                         />
-                        <ButtonUploadImage typeImage="thumbnail" onChange ={ (var1) => console.log(var1) } />
                     </Grid>
                 </Grid> 
             </DialogContent>
