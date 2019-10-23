@@ -12,7 +12,7 @@ const EditProductPage = ({dispatch , USER , match}) =>  {
     const [product,setProduct] = useState(null);
     
     dispatch(loading(true, "header-loader"));
-    
+
     useEffect(()=>{
         API.WC_getWooProductById(USER.token, params.productId)
         .then((result)=>{
@@ -81,4 +81,4 @@ const EditProductPage = ({dispatch , USER , match}) =>  {
 
 const mapStateToProps = ({ USER  }) => ({ USER });
 
-export default   connect(mapStateToProps)(EditProductPage) ;
+export default connect(mapStateToProps)(EditProductPage) ;

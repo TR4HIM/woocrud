@@ -16,7 +16,7 @@ import Products from './pages/products';
 import AddProduct from './pages/add-product';
 import EditProductPage from './pages/edit-product';
 import Page404 from './pages/not-found';
-import UserProfile from './pages/user';
+import UserProfile from './pages/user-settings';
 
 import API from './API/';
 

@@ -67,3 +67,17 @@ export const editWooProduct = (bool, currentProduct)=>{
         }
     }
 }
+
+export const storeUserProfile = (payload)=>{
+    return {
+        type : TYPES.STORE_PROFILE,
+        payload
+    }
+}
+
+export const updateUser = (payload)=>{
+    return {
+        type    : TYPES.UPDATE_USER,
+        payload
+    }
+}

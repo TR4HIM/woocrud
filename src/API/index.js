@@ -136,6 +136,17 @@ const WC_getWooTags = (token)=>{
     })
 }
 
+const WP_getProfileInfo = (token, idUser)=>{
+    return axios.get( `${WP}/users/me?context=edit`, {
+        headers : {
+            "Authorization" : `Bearer ${token}`,
+        }
+    })
+    .then((result)=>{
+        return result.data
+    });
+}
+
 export default {
     LOGIN,
     TOKEN_VALIDATE,
@@ -143,5 +154,6 @@ export default {
     WC_getWooSearchProducts,
     WC_getWooCategories,
     WC_getWooTags,
-    WC_getWooProductById
+    WC_getWooProductById,
+    WP_getProfileInfo
 }

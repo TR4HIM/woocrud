@@ -1,6 +1,7 @@
 export default {
 	LOGIN 	                        : 'LOGIN',
-	STORE_PROFILE 				    : 'STORE_PROFILE',
+	STORE_PROFILE 	                : 'STORE_PROFILE',
+	UPDATE_USER 				    : 'UPDATE_USER',
     STORE_WOO_PRODUCTS 			    : 'STORE_WOO_PRODUCTS',
     STORE_WOO_CATEGORIES 			: 'STORE_WOO_CATEGORIES',
     STORE_WOO_TAGS 					: 'STORE_WOO_TAGS',
