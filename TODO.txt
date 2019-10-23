@@ -1,18 +1,15 @@
--- Product Single Page
---- https://demos.creative-tim.com/material-kit-pro-react/#/product-page
-
--- Profile Page
---- https://themes.material-ui.com/previews/devias-kit-pro/
-
-
-
-
-
-
-
-
-
-
-
--- Testing Best Practice 
---- https://techblog.commercetools.com/testing-in-react-best-practices-tips-and-tricks-577bb98845cd
+-Store Categories  - Done - Need Shared API
+-Store Tags  - Done - Need Shared API
+-Remove Yellow Messages Unsed Variable
+-Code Tidy
+-List products without Store
+-List product pagination
+-Search products
+-Filter Menu Icon
+-Filter product
+-SideBar Categories
+-Copy User Codes From KIBO
+- API : Search
+- API : Product Pagination
+- API : Filter
+- API : Site Information

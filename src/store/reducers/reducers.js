@@ -57,6 +57,18 @@ export const WOO_PRODUCTS = (state = [], action)=>{
     return state;
 }
 
+export const WOO_CATEGORIES = (state = [], action)=>{
+    if(action.type === TYPES.STORE_WOO_CATEGORIES)
+        return action.payload;
+    return state;
+}
+
+export const WOO_TAGS = (state = [], action)=>{
+    if(action.type === TYPES.STORE_WOO_TAGS)
+        return action.payload;
+    return state;
+}
+
 export const EDITING_WOO_PRODUCT = (state = { status : false , currentProduct : null }, action)=>{
 
     if(action.type === TYPES.EDIT_WOO_PRODUCT){

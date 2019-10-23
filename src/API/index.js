@@ -64,32 +64,18 @@ const WC_getWooProducts = ()=>{
 }
 
 const WC_getWooProductById = (token, productId)=>{
-
-    var call;
-
-    // return (token, productId)=>{
-
-        // if (call)
-        //     call.cancel();
-        
-        // call = axios.CancelToken.source();
-
-        return axios.get( `${WC}/products/${productId}`, {
-            headers : {
-                "Authorization" : `Bearer ${token}`
-            }
-        })
-        .then((result)=>{
-            return result.data;
-        })
-        .catch((error)=>{
-            if ( !axios.isCancel(error)) 
-                return error;
-        })
-
-    // }
-    
-
+    return axios.get( `${WC}/products/${productId}`, {
+        headers : {
+            "Authorization" : `Bearer ${token}`
+        }
+    })
+    .then((result)=>{
+        return result.data;
+    })
+    .catch((error)=>{
+        if ( !axios.isCancel(error)) 
+            return error;
+    })
 }
 
 const WC_getWooSearchProducts = ()=>{
@@ -120,59 +106,34 @@ const WC_getWooSearchProducts = ()=>{
 
 }
 
-const WC_getWooCategories = ()=>{
-
-    var call;
-
-    return (token)=>{
-
-        if (call)
-            call.cancel();
-        
-        call = axios.CancelToken.source();
-        return axios.get( `${WC}/products/categories`, {
-            headers : {
-                "Authorization" : `Bearer ${token}`
-            },
-            cancelToken: call.token
-        })
-        .then((result)=>{
-            return result.data;
-        })
-        .catch((error)=>{
-            if ( !axios.isCancel(error)) 
-                return error;
-        })
-    }
-    
-
+const WC_getWooCategories = (token)=>{
+    return axios.get( `${WC}/products/categories`, {
+        headers : {
+            "Authorization" : `Bearer ${token}`
+        }
+    })
+    .then((result)=>{
+        return result.data;
+    })
+    .catch((error)=>{
+        if ( !axios.isCancel(error)) 
+            return error;
+    })
 }
-const WC_getWooTags = ()=>{
 
-    var call;
-
-    return (token)=>{
-
-        if (call)
-            call.cancel();
-        
-        call = axios.CancelToken.source();
-        return axios.get( `${WC}/products/tags`, {
-            headers : {
-                "Authorization" : `Bearer ${token}`
-            },
-            cancelToken: call.token
-        })
-        .then((result)=>{
-            return result.data;
-        })
-        .catch((error)=>{
-            if ( !axios.isCancel(error)) 
-                return error;
-        })
-    }
-    
-
+const WC_getWooTags = (token)=>{
+    return axios.get( `${WC}/products/tags`, {
+        headers : {
+            "Authorization" : `Bearer ${token}`
+        }
+    })
+    .then((result)=>{
+        return result.data;
+    })
+    .catch((error)=>{
+        if ( !axios.isCancel(error)) 
+            return error;
+    })
 }
 
 export default {

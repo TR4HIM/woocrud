@@ -9,7 +9,7 @@ import ProductItem from './ProductItem';
 import EditWooProductDrawer from './EditWooProductDrawer'
  
 
-import {loading , storeWooProducts , clearStoreWooProducts} from '../../store/actions/';
+import {loading , storeWooProducts , clearStoreWooProducts, storeWooCategories} from '../../store/actions/';
 import API from '../../API/'; 
 
 
@@ -17,15 +17,13 @@ const GET_WOO_PRODUCTS  = API.WC_getWooProducts();
 
 const Products = ({dispatch , USER , WOO_PRODUCTS  }) => {
 
-    useEffect(() => getWooProducts(), []);
-    const getWooProducts = () => {
+    useEffect(() => {
         // SHOW LOADER
         dispatch(loading(true, "header-loader"));
         dispatch(clearStoreWooProducts()); 
         GET_WOO_PRODUCTS( USER.token , 65, 1, 1 )
             .then((result)=>{
                 if( result !== undefined ){
-                    
                     dispatch(storeWooProducts(result));
                     // HIDE LOADER
                     dispatch(loading(false, "header-loader"));
@@ -39,8 +37,23 @@ const Products = ({dispatch , USER , WOO_PRODUCTS  }) => {
                 // HIDE LOADING
                 dispatch(loading(false, "header-loader"));
             })
+    }, []);
 
-    }
+    useEffect(() => {
+        // SHOW LOADER
+        API.WC_getWooCategories(USER.token)
+            .then((result)=>{
+                if( result !== undefined ){
+                    dispatch(storeWooCategories(result));
+                }
+            })
+            .catch((error)=>{
+                dispatch({
+                    type : 'ERROR',
+                    payload : error
+                })
+            })
+    }, []);
 
     const renderProducts = () => {
 

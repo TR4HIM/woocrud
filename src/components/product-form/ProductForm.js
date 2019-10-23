@@ -19,7 +19,7 @@ import ButtonUploadImage from '../../components/button-upload/ButtonUpload';
 import EditableImage from '../../components/editable-image/EditableImage';
 
 
-const ProductForm = ({dispatch , USER , toEdit=false , productData=null}) =>  {
+const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS,  toEdit=false , productData=null}) =>  {
 
     const tagInput = useRef(null);
 
@@ -36,26 +36,21 @@ const ProductForm = ({dispatch , USER , toEdit=false , productData=null}) =>  {
     const [crossSellsProducts,setCrossSellsProducts]        = useState([]);
     const [productImage,setProductImage]                    = useState(false);
     const [productGallery,setProductGallery]                = useState([]);
-    const [productTags, setProductTags]                     = useState([
-        { label: 'Angular' },
-        { label: 'jQuery' },
-        { label: 'Polymer'},
-        { label: 'React' },
-        { label: 'Vue.js' },
-    ]);
-    const [productCategories, setProductCategories]         = useState([
-        { label: 'Angular', selected : true },
-        { label: 'jQuery', selected : false },
-        { label: 'Polymer', selected : true },
-        { label: 'React', selected : false },
-        { label: 'Vue.js', selected : false },
-    ]);
+    const [productTags, setProductTags]                     = useState([]);
+    const [productCategories, setProductCategories]                 = useState([]);
+    const [getProductCategories, setGetProductCategories]           = useState([]);
+
+
+    useEffect(() => {
+        if(toEdit !== true){
+            setProductCategories(WOO_CATEGORIES);
+            setProductTags(WOO_TAGS);
+        }
+    },[WOO_CATEGORIES,WOO_TAGS]);
 
     useEffect(()=>{
         if(toEdit === true){
-            console.log(productData)
             const isPublished = (productData.status == "publish") ? true : false;
-            
             let galleryImages = productData.images.map(img => img.src);
             setProductName(productData.name);
             setProductDescription(productData.description);
@@ -66,13 +61,27 @@ const ProductForm = ({dispatch , USER , toEdit=false , productData=null}) =>  {
             setDownloadable(productData.downloadable);
             setVirtual(productData.virtual);
             setProductTags(productData.tags);
-            setProductTags(productData.tags);
+            setGetProductCategories(productData.categories);
+
             // Remove First Element For Featured Image :) 
             setProductImage(galleryImages.shift());
             setProductGallery(galleryImages);
             setPublished(isPublished);
         }
     },[]);
+
+    useEffect(() => {
+        if(toEdit === true){
+            if(getProductCategories.length > 0){
+                const tmpCats = getProductCategories.map(category => ({
+                    ...category,
+                    selected: true
+                }));
+                const selectedCategories = [...WOO_CATEGORIES.filter(item1 => !tmpCats.find(item2 => item1.id === item2.id)), ...tmpCats]
+                setProductCategories(selectedCategories);
+            }
+        }
+    }, [getProductCategories]);
 
     useEffect(()=>{
         tagInput.current.value = "";
@@ -89,13 +98,13 @@ const ProductForm = ({dispatch , USER , toEdit=false , productData=null}) =>  {
 
     const handleAddTag = (e) => {
         if(tagInput.current.value.trim() != '' && e.keyCode === 13){
-            setProductTags(currentTags => [...currentTags, {label: tagInput.current.value }]);
+            setProductTags(currentTags => [...currentTags, {name: tagInput.current.value }]);
 
         }
     }
 
     const handleDelete = chipToDelete => () => {
-        setProductTags(chips => chips.filter(chip => chip.label !== chipToDelete.label));
+        setProductTags(chips => chips.filter(chip => chip.name !== chipToDelete.name));
     };
 
     const checkCategory = index => {
@@ -110,7 +119,7 @@ const ProductForm = ({dispatch , USER , toEdit=false , productData=null}) =>  {
                 <FormControlLabel
                     control={ <Checkbox checked={category.selected} 
                     onChange={() => checkCategory(i) } value={category.selected} /> }
-                    label={category.label}
+                    label={category.name}
                     key={i}
                 />)
             )  
@@ -310,11 +319,11 @@ const ProductForm = ({dispatch , USER , toEdit=false , productData=null}) =>  {
                             </Typography>
                             <Divider className="paper-divider" />
                             <div>
-                                {productTags.map((data,i) => {
+                                {productTags.length > 0 && productTags.map((data,i) => {
                                     return (
                                     <Chip
                                         key={i}
-                                        label={data.label}
+                                        label={data.name}
                                         onDelete={handleDelete(data)}
                                         color="primary"
                                         className="product-tag"
@@ -338,6 +347,6 @@ const ProductForm = ({dispatch , USER , toEdit=false , productData=null}) =>  {
     ); 
 }
 
-const mapStateToProps = ({ USER  }) => ({ USER });
+const mapStateToProps = ({ USER , WOO_CATEGORIES , WOO_TAGS  }) => ({ USER , WOO_CATEGORIES , WOO_TAGS });
 
 export default   connect(mapStateToProps)(ProductForm) ;

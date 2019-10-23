@@ -31,6 +31,20 @@ export const storeWooProducts = (products)=>{
     }
 }
 
+export const storeWooCategories = (categories)=>{
+    return {
+        type    : TYPES.STORE_WOO_CATEGORIES,
+        payload : categories
+    }
+}
+
+export const storeWooTags = (tags)=>{
+    return {
+        type    : TYPES.STORE_WOO_TAGS,
+        payload : tags
+    }
+}
+
 export const clearStoreWooProducts = ()=>{
     return {
         type    : TYPES.CLEAR_STORE_WOO_PRODUCTS,
