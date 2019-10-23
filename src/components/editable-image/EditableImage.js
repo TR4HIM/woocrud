@@ -9,7 +9,7 @@ const EditableImage = ( { imageObject,removeImageFunc } ) => {
                 <span className="remove-image" onClick={removeImageFunc}>
                     <Icon>remove_circle</Icon>
                 </span>
-                <img src={ imageObject ? imagePreview : `${process.env.PUBLIC_URL}/img/logo.png` } />
+                <img src={ imageObject ? imagePreview : `${process.env.PUBLIC_URL}/img/logo.png` } alt="" />
             </div>
         </div>
     );

@@ -33,7 +33,7 @@ const MaxWidthDialog = ({dispatch  , EDITING_WOO_PRODUCT}) => {
             setProductName(EDITING_WOO_PRODUCT.currentProduct.name);
             setProductThumbnail(EDITING_WOO_PRODUCT.currentProduct.images[0].src);
             setProductDescription(EDITING_WOO_PRODUCT.currentProduct.description);
-            setStatus((EDITING_WOO_PRODUCT.currentProduct.status === 'publish'))
+            setPublished((EDITING_WOO_PRODUCT.currentProduct.status === 'publish'))
              // ADD THE OVERFLOW HIDDEN 
              document.body.classList.add('overflow-hidden');
         }   
@@ -101,8 +101,8 @@ const MaxWidthDialog = ({dispatch  , EDITING_WOO_PRODUCT}) => {
                         <FormControlLabel
                             control={
                                 <Switch
-                                    checked={status}
-                                    onChange={() => setStatus(!published)}
+                                    checked={published}
+                                    onChange={() => setPublished(!published)}
                                     value="published"
                                     color="primary"
                                 />

@@ -17,7 +17,10 @@
 @import "./components/product-form/product-form.scss"; 
 
 // PAGES
-@import "./scss/pages/login.scss";
-@import "./scss/pages/products.scss";
-@import "./scss/pages/edit-product.scss";
+@import "./pages/login/login.scss";
+@import "./pages/products/products.scss";
+@import "./pages/edit-product/edit-product.scss";
+@import "./pages/add-product/add-product.scss";
+@import "./pages/user/user.scss";
+@import "./pages/not-found/not-found.scss";
 
