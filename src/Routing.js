@@ -13,8 +13,8 @@ import {login, loading} from './store/actions/';
 // PAGES 
 import Login from './pages/login/Login';
 import Products from './pages/products/Products';
-import AddProduct from './pages/products/AddProduct';
-import EditProductPage from './pages/products/EditProductPage';
+import AddProduct from './pages/add-product';
+import EditProductPage from './pages/edit-product';
 import Page404 from './pages/not-found/';
 import UserProfile from './pages/user/';
 

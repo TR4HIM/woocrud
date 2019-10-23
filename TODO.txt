@@ -1,7 +1,8 @@
+- Loading 
+- Errors Snack Bar
 -Store Categories  - Done - Need Shared API
 -Store Tags  - Done - Need Shared API
 -Remove Yellow Messages Unsed Variable
--Code Tidy
 -List products without Store
 -List product pagination
 -Search products

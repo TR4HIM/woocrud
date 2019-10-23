@@ -1,19 +1,14 @@
 import React, {  useState  } from 'react';
 import {connect} from 'react-redux';
-import { NavLink , Link} from "react-router-dom";
+import { Link} from "react-router-dom";
 import { editWooProduct } from '../../store/actions/';
 import ToggleDisplay from 'react-toggle-display';
-import { APP_ROUTES } from '../../config';
-
-import EditProductPage from './EditProductPage'; 
-
 
 const WooProduct = ({dispatch , data }) => {
 
     const [visualLoaded,setVisualLoaded]    = useState(false);
 
     const handleClick = () => {
-        // EDIT PRODUCT
         dispatch(editWooProduct(true,data));
     }
 

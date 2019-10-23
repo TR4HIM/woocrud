@@ -1,26 +1,8 @@
-import React , {useState , useRef , useEffect } from 'react';
-import {connect} from 'react-redux';
-import {    
-        Container, 
-        Grid , 
-        Paper , 
-        TextField , 
-        FormControlLabel , 
-        Switch , Typography , Checkbox ,
-        Divider , Chip , 
-        ExpansionPanel , ExpansionPanelSummary , ExpansionPanelDetails} from '@material-ui/core';
+import React from 'react';
 import Icon from '@material-ui/core/Icon';
 
-
-import PropTypes from 'prop-types';
-import deburr from 'lodash/deburr';
-import Downshift from 'downshift';
-import { makeStyles } from '@material-ui/core/styles';
-import Popper from '@material-ui/core/Popper';
-import MenuItem from '@material-ui/core/MenuItem';
-
 const EditableImage = ( { imageObject,removeImageFunc } ) => {
-    const imagePreview = imageObject.startsWith('http') ? imageObject :  URL.createObjectURL(imageObject);
+    const imagePreview = (typeof imageObject === "string") ? imageObject :  URL.createObjectURL(imageObject);
     return(
         <div className="product-image">
             <div>

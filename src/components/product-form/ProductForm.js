@@ -11,13 +11,9 @@ import {
         ExpansionPanel , ExpansionPanelSummary , ExpansionPanelDetails} from '@material-ui/core';
 
 import Icon from '@material-ui/core/Icon';
-import {loading } from '../../store/actions/';
-import Header from '../../components/header/Header';
-import Footer from '../../components/footer/Footer';
 import ProductsAutoComplete from '../../components/input-autocomplete/InputAutocomplete';
 import ButtonUploadImage from '../../components/button-upload/ButtonUpload';
 import EditableImage from '../../components/editable-image/EditableImage';
-
 
 const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS,  toEdit=false , productData=null}) =>  {
 
@@ -36,17 +32,9 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS,  toEdit=false
     const [crossSellsProducts,setCrossSellsProducts]        = useState([]);
     const [productImage,setProductImage]                    = useState(false);
     const [productGallery,setProductGallery]                = useState([]);
-    const [productTags, setProductTags]                     = useState([]);
-    const [productCategories, setProductCategories]                 = useState([]);
+    const [productTags, setProductTags]                     = useState(WOO_TAGS);
+    const [productCategories, setProductCategories]                 = useState(WOO_CATEGORIES);
     const [getProductCategories, setGetProductCategories]           = useState([]);
-
-
-    useEffect(() => {
-        if(toEdit !== true){
-            setProductCategories(WOO_CATEGORIES);
-            setProductTags(WOO_TAGS);
-        }
-    },[WOO_CATEGORIES,WOO_TAGS]);
 
     useEffect(()=>{
         if(toEdit === true){
@@ -86,24 +74,14 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS,  toEdit=false
     useEffect(()=>{
         tagInput.current.value = "";
     },[productTags]);
-    
-    const handleUploadThumbnail = (thumbnail) => {
-        setProductImage(thumbnail.target.files[0]);
-    }
-
-    const handleProductGallery = (gallery) => {
-        const selectedImages = gallery.target.files;
-        setProductGallery( currentGallery => [...currentGallery,  ...selectedImages ]);
-    }
 
     const handleAddTag = (e) => {
         if(tagInput.current.value.trim() != '' && e.keyCode === 13){
             setProductTags(currentTags => [...currentTags, {name: tagInput.current.value }]);
-
         }
     }
 
-    const handleDelete = chipToDelete => () => {
+    const handleDeleteTag = chipToDelete => () => {
         setProductTags(chips => chips.filter(chip => chip.name !== chipToDelete.name));
     };
 
@@ -124,6 +102,15 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS,  toEdit=false
                 />)
             )  
         )
+    }
+
+    const handleUploadThumbnail = (thumbnail) => {
+        setProductImage(thumbnail.target.files[0]);
+    }
+
+    const handleProductGallery = (gallery) => {
+        const selectedImages = gallery.target.files;
+        setProductGallery( currentGallery => [...currentGallery,  ...selectedImages ]);
     }
 
     const removeGallery = (imageToDelete) => {
@@ -324,7 +311,7 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS,  toEdit=false
                                     <Chip
                                         key={i}
                                         label={data.name}
-                                        onDelete={handleDelete(data)}
+                                        onDelete={handleDeleteTag(data)}
                                         color="primary"
                                         className="product-tag"
                                     />

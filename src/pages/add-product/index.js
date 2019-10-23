@@ -1,29 +1,16 @@
-import React , {useState , useRef , useEffect } from 'react';
+import React , {useState , useEffect } from 'react';
 import {connect} from 'react-redux';
-import {    
-        Container, 
-        Grid , 
-        Paper , 
-        TextField , 
-        FormControlLabel , 
-        Switch , Typography , Checkbox ,
-        Divider , Chip , Button ,
-        ExpansionPanel , ExpansionPanelSummary , ExpansionPanelDetails} from '@material-ui/core';
-import Icon from '@material-ui/core/Icon';
-
-
 import Header from '../../components/header/Header';
 import Footer from '../../components/footer/Footer';
-import ProductsAutoComplete from '../../components/input-autocomplete/InputAutocomplete';
-import ButtonUploadImage from '../../components/button-upload/ButtonUpload';
-import EditableImage from '../../components/editable-image/EditableImage';
 import ProductForm from '../../components/product-form/ProductForm';
 import API from '../../API/'; 
-import {loading , storeWooProducts , clearStoreWooProducts, storeWooCategories , storeWooTags} from '../../store/actions/';
+import {storeWooCategories , storeWooTags} from '../../store/actions/';
 
 
-const AddProduct = ({dispatch , USER , WOO_CATEGORIES}) =>  {
+const AddProduct = ({dispatch , USER }) =>  {
 
+    const [isCategoriesLoaded,setIsCategoriesLoaded] = useState(false);
+    const [isTagsLoaded,setIsTagsLoaded] = useState(false);
     /* FOR DEV ONLY THIS SHOULD BE SHARED */
     useEffect(() => {
         // SHOW LOADER
@@ -35,6 +22,7 @@ const AddProduct = ({dispatch , USER , WOO_CATEGORIES}) =>  {
                         selected: false
                     }));
                     dispatch(storeWooCategories(productCategories));
+                    setIsCategoriesLoaded(true);
                 }
             })
             .catch((error)=>{
@@ -50,11 +38,8 @@ const AddProduct = ({dispatch , USER , WOO_CATEGORIES}) =>  {
         API.WC_getWooTags(USER.token)
             .then((result)=>{
                 if( result !== undefined ){
-                    // const productTags = result.map(tag => ({
-                    //     ...tag,
-                    //     selected: false
-                    // }));
                     dispatch(storeWooTags(result));
+                    setIsTagsLoaded(true);
                 }
             })
             .catch((error)=>{
@@ -68,7 +53,7 @@ const AddProduct = ({dispatch , USER , WOO_CATEGORIES}) =>  {
     return (
         <div id="add-product-page">
             <Header />
-            <ProductForm />
+            { isCategoriesLoaded && isTagsLoaded && <ProductForm /> }
             <Footer />
         </div>
     ); 

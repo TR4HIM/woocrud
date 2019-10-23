@@ -2,16 +2,10 @@ import React, { useEffect } from 'react';
 import {connect} from 'react-redux';
 import Header from '../../components/header/Header';
 import Footer from '../../components/footer/Footer'; 
-import EditProductModal from '../edit-product/EditProduct'; 
-
-
-import ProductItem from './ProductItem';
-import EditWooProductDrawer from './EditWooProductDrawer'
- 
-
+import ProductItem from '../../components/product-item/ProductItem'; 
+import EditProductModal from '../../components/edit-modal/EditModal'; 
 import {loading , storeWooProducts , clearStoreWooProducts, storeWooCategories} from '../../store/actions/';
 import API from '../../API/'; 
-
 
 const GET_WOO_PRODUCTS  = API.WC_getWooProducts();  
 
@@ -56,9 +50,7 @@ const Products = ({dispatch , USER , WOO_PRODUCTS  }) => {
     }, []);
 
     const renderProducts = () => {
-
         return WOO_PRODUCTS.map((product, i)=> (<ProductItem key={i} data={product} />) );
-        
     }
     
     const renderProductsContainer = () => {
@@ -77,9 +69,7 @@ const Products = ({dispatch , USER , WOO_PRODUCTS  }) => {
             </div>
             {/* <EditWooProductDrawer isSearchResult={false} /> */}
             <EditProductModal />
-
             <Footer />
-
         </div>
     );
 }
