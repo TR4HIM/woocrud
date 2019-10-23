@@ -1,22 +1,10 @@
 import React , {useState , useRef , useEffect } from 'react';
-import {connect} from 'react-redux';
 import {    
-        Container, 
-        Grid , 
         Paper , 
-        TextField , 
-        FormControlLabel , 
-        Switch , Typography , Checkbox ,
-        Divider , Chip , 
-        ExpansionPanel , ExpansionPanelSummary , ExpansionPanelDetails} from '@material-ui/core';
-import Icon from '@material-ui/core/Icon';
-
-
-import PropTypes from 'prop-types';
+        TextField ,Chip} from '@material-ui/core';
 import deburr from 'lodash/deburr';
 import Downshift from 'downshift';
 import { makeStyles } from '@material-ui/core/styles';
-import Popper from '@material-ui/core/Popper';
 import MenuItem from '@material-ui/core/MenuItem';
 
 
@@ -148,9 +136,9 @@ const classes = makeStyles(theme => ({
 }));
 
 const ProductsAutoComplete = ({fieldLabel , onChangeAuto}) => {
-  const [inputValue, setInputValue] = React.useState('');
-  const [selectedItem, setSelectedItem] = React.useState([]);
-  
+
+  const [inputValue, setInputValue] = useState('');
+  const [selectedItem, setSelectedItem] = useState([]);
 
   useEffect(() => {
     if( selectedItem.length  >=   0){

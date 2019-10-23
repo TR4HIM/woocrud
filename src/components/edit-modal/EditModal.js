@@ -6,7 +6,6 @@ import {connect} from 'react-redux';
 import { editWooProduct } from '../../store/actions/';
 import {    
     Grid , 
-    Paper , 
     TextField , 
     FormControlLabel , 
     Switch } from '@material-ui/core';
@@ -91,7 +90,6 @@ const MaxWidthDialog = ({dispatch  , EDITING_WOO_PRODUCT}) => {
                                 variant="outlined"
                                 multiline
                                 rows="8"
-                                margin="normal"
                                 value={productDescription}
                             />
                     </Grid>

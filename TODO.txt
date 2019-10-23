@@ -2,7 +2,7 @@
 - Errors Snack Bar
 -Store Categories  - Done - Need Shared API
 -Store Tags  - Done - Need Shared API
--Remove Yellow Messages Unsed Variable
+-Install Wysiwig
 -List products without Store
 -List product pagination
 -Search products
@@ -13,4 +13,4 @@
 - API : Search
 - API : Product Pagination
 - API : Filter
-- API : Site Information
+- API : Site Information and Data

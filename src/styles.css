@@ -34,58 +34,6 @@ table {
 * {
   box-sizing: border-box; }
 
-.title-2 {
-  font-size: 23px;
-  letter-spacing: -.5px;
-  line-height: 31px;
-  padding-bottom: 6px;
-  position: relative; }
-  .title-2:after {
-    content: "";
-    position: absolute;
-    height: 2px;
-    background: #fad843;
-    bottom: -2px;
-    left: 0;
-    right: 0; }
-
-p {
-  line-height: 21px;
-  color: #606060; }
-
-.btn {
-  font-weight: 700;
-  line-height: 42px;
-  padding-left: 15px;
-  padding-right: 15px;
-  border-radius: 22px;
-  background: #e7e7e7;
-  transition: background .3s ease-out, color .3s ease-out;
-  color: #333e48;
-  font-size: 14px;
-  border: none;
-  cursor: pointer; }
-  .btn:hover {
-    background: #0062bd;
-    color: white;
-    transition: background .3s ease-out, color .3s ease-out; }
-  .btn.primary {
-    background: #fad843; }
-    .btn.primary:hover {
-      background: #333e48;
-      color: white;
-      transition: background .3s ease-out, color .3s ease-out; }
-  .btn.secondary {
-    background: #0062bd;
-    color: white; }
-    .btn.secondary:hover {
-      background: #333e48;
-      color: white;
-      transition: background .3s ease-out, color .3s ease-out; }
-
-button.btn {
-  line-height: 38px; }
-
 html {
   min-height: 100%;
   background: #eee; }
@@ -287,6 +235,58 @@ a {
     top: 0 !important; }
     #snackbar > div button {
       right: 0; } }
+
+.title-2 {
+  font-size: 23px;
+  letter-spacing: -.5px;
+  line-height: 31px;
+  padding-bottom: 6px;
+  position: relative; }
+  .title-2:after {
+    content: "";
+    position: absolute;
+    height: 2px;
+    background: #fad843;
+    bottom: -2px;
+    left: 0;
+    right: 0; }
+
+p {
+  line-height: 21px;
+  color: #606060; }
+
+.btn {
+  font-weight: 700;
+  line-height: 42px;
+  padding-left: 15px;
+  padding-right: 15px;
+  border-radius: 22px;
+  background: #e7e7e7;
+  transition: background .3s ease-out, color .3s ease-out;
+  color: #333e48;
+  font-size: 14px;
+  border: none;
+  cursor: pointer; }
+  .btn:hover {
+    background: #0062bd;
+    color: white;
+    transition: background .3s ease-out, color .3s ease-out; }
+  .btn.primary {
+    background: #fad843; }
+    .btn.primary:hover {
+      background: #333e48;
+      color: white;
+      transition: background .3s ease-out, color .3s ease-out; }
+  .btn.secondary {
+    background: #0062bd;
+    color: white; }
+    .btn.secondary:hover {
+      background: #333e48;
+      color: white;
+      transition: background .3s ease-out, color .3s ease-out; }
+
+button.btn {
+  line-height: 38px; }
 
 #main-footer {
   background: #f8f8f8;

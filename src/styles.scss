@@ -1,15 +1,11 @@
-// ICON
-@import "./scss/icons/style.scss";
-
 // CONFIG
 @import "./scss/config.scss"; 
+@import "./scss/mixin.scss";
  
 // COMMON
-@import "./scss/mixin.scss";
+@import "./scss/common.scss";
 @import "./scss/typography.scss";
 @import "./scss/button.scss";
-@import "./scss/common.scss";
-@import "./scss/form.scss";
 
 
 
@@ -25,6 +21,3 @@
 @import "./scss/pages/products.scss";
 @import "./scss/pages/edit-product.scss";
 
-
-// Multi-Langauges 
-// @import "./scss/rtl.scss";

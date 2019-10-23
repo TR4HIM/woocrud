@@ -4,9 +4,10 @@ import Header from '../../components/header/Header';
 import Footer from '../../components/footer/Footer';
 import ProductForm from '../../components/product-form/ProductForm';
 import API from '../../API/'; 
-import {loading , storeWooProducts , clearStoreWooProducts, storeWooCategories , storeWooTags} from '../../store/actions/';
+import {loading , storeWooCategories , storeWooTags} from '../../store/actions/';
   
 const EditProductPage = ({dispatch , USER , match}) =>  {
+    
     const { params } = match;
     const [product,setProduct] = useState(null);
     
@@ -66,7 +67,6 @@ const EditProductPage = ({dispatch , USER , match}) =>  {
                 })
             })
     }, []);
-
 
     return (
         <div id="add-product-page">

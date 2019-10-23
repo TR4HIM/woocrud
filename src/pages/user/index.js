@@ -1,7 +1,4 @@
 import React  from 'react';
-import { APP_ROUTES } from '../../config';
-
-
 import { fade, withStyles, makeStyles, createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import InputBase from '@material-ui/core/InputBase';

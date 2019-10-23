@@ -38,7 +38,7 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS,  toEdit=false
 
     useEffect(()=>{
         if(toEdit === true){
-            const isPublished = (productData.status == "publish") ? true : false;
+            const isPublished = (productData.status === "publish") ? true : false;
             let galleryImages = productData.images.map(img => img.src);
             setProductName(productData.name);
             setProductDescription(productData.description);
@@ -76,7 +76,7 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS,  toEdit=false
     },[productTags]);
 
     const handleAddTag = (e) => {
-        if(tagInput.current.value.trim() != '' && e.keyCode === 13){
+        if(tagInput.current.value.trim() !== '' && e.keyCode === 13){
             setProductTags(currentTags => [...currentTags, {name: tagInput.current.value }]);
         }
     }
@@ -143,7 +143,6 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS,  toEdit=false
                                 variant="outlined"
                                 multiline
                                 rows="8"
-                                margin="normal"
                                 value={productDescription} 
                                 onChange={(e) => setProductDescription(e.target.value)}
                             />
