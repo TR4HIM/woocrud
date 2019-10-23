@@ -1,5 +1,6 @@
 - Loading 
 - Errors Snack Bar
+- UpSells/Cross-Sells Checkboxes
 -Store Categories  - Done - Need Shared API
 -Store Tags  - Done - Need Shared API
 -Install Wysiwig

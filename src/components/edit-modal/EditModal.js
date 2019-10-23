@@ -21,7 +21,6 @@ const MaxWidthDialog = ({dispatch  , EDITING_WOO_PRODUCT}) => {
     const [productName,setProductName]                  = useState("");
     const [productThumbnail,setProductThumbnail]        = useState(false);
     const [productDescription,setProductDescription]    = useState("");
-    const [status,setStatus]                            = useState(false);
 
     useEffect(() => {
         if(EDITING_WOO_PRODUCT.currentProduct){

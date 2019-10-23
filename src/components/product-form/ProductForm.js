@@ -19,22 +19,22 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS,  toEdit=false
 
     const tagInput = useRef(null);
 
-    const [productName,setProductName]                      = useState("");
-    const [productDescription,setProductDescription]        = useState("");
-    const [shortProductDescription,setShortProductDescription]        = useState("");
-    const [regularPrice,setRegularPrice]                    = useState(0);
-    const [salePrice,setSalePrice]                          = useState(0);
-    const [sku,setSku]                                      = useState("");
-    const [published,setPublished]                          = useState(false);
-    const [virtual,setVirtual]                              = useState(false);
-    const [downloadable,setDownloadable]                    = useState(false);
-    const [upSellsProducts,setUpSellsProducts]              = useState([]);
-    const [crossSellsProducts,setCrossSellsProducts]        = useState([]);
-    const [productImage,setProductImage]                    = useState(false);
-    const [productGallery,setProductGallery]                = useState([]);
-    const [productTags, setProductTags]                     = useState(WOO_TAGS);
-    const [productCategories, setProductCategories]                 = useState(WOO_CATEGORIES);
-    const [getProductCategories, setGetProductCategories]           = useState([]);
+    const [productName,setProductName]                          = useState("");
+    const [productDescription,setProductDescription]            = useState("");
+    const [shortProductDescription,setShortProductDescription]  = useState("");
+    const [regularPrice,setRegularPrice]                        = useState(0);
+    const [salePrice,setSalePrice]                              = useState(0);
+    const [sku,setSku]                                          = useState("");
+    const [published,setPublished]                              = useState(false);
+    const [virtual,setVirtual]                                  = useState(false);
+    const [downloadable,setDownloadable]                        = useState(false);
+    const [upSellsProducts,setUpSellsProducts]                  = useState([]);
+    const [crossSellsProducts,setCrossSellsProducts]            = useState([]);
+    const [productImage,setProductImage]                        = useState(false);
+    const [productGallery,setProductGallery]                    = useState([]);
+    const [productTags, setProductTags]                         = useState(WOO_TAGS);
+    const [productCategories, setProductCategories]             = useState(WOO_CATEGORIES);
+    const [getProductCategories, setGetProductCategories]       = useState([]);
 
     useEffect(()=>{
         if(toEdit === true){
