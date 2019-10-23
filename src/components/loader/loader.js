@@ -51,14 +51,14 @@ Loader.propTypes = {
 
 const styles = (theme)=> ({
     loader: {
-        color : '#333',
+        color : '#d35400', 
         animationDuration: '550ms'
     },
     linearColorPrimary: {
-        backgroundColor: '#fad843',
+        backgroundColor: '#27ae60',
     },
     linearBarColorPrimary: {
-        backgroundColor: '#333333',
+        backgroundColor: '#d35400',
     }
 });
 

@@ -29,21 +29,6 @@ a{
     text-decoration: none;
 }
 
-#root{
-    height: 100vh;
-    #root-loader{
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        margin-top: -14px;
-        margin-left: -14px;
-        z-index: 1;
-        [role="progressbar"]{
-            color : $black !important
-        }
-    }
-}
-
 #layout{
     height: 100vh;
 }

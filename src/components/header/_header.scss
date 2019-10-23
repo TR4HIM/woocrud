@@ -38,24 +38,6 @@
         right: 60px;
         transform: translateY(-50%);
     }
-    .loader{
-        top: 15px;
-        z-index: 1;
-        position: absolute;
-        left: 50%;
-        margin-left : -14px;
-        &.linear{
-            top: auto;
-            left: 0;
-            right: 0;
-            margin: 0;
-            bottom : -1px;
-            opacity: .3;
-        }
-        .linear-loader{
-            height : 62px;
-        }
-    }
     
 }
 
@@ -170,13 +152,9 @@
     }
 }
 
-
 @media screen and (max-width : 480px){
     #header{
         margin-bottom: 10px;
-    }
-    #header .loader .linear-loader {
-        height: 54px;
     }
 }
 

@@ -61,18 +61,6 @@ button, input, textarea, select {
 a {
   text-decoration: none; }
 
-#root {
-  height: 100vh; }
-  #root #root-loader {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin-top: -14px;
-    margin-left: -14px;
-    z-index: 1; }
-    #root #root-loader [role="progressbar"] {
-      color: #333 !important; }
-
 #layout {
   height: 100vh; }
 
@@ -115,7 +103,7 @@ a {
   .editable-text > div > div:before {
     background-color: #ccc; }
   .editable-text > div > div:after {
-    background-color: #fad843; }
+    background-color: #27ae60; }
   .editable-text .input {
     width: 100%; }
     .editable-text .input.hide {
@@ -153,7 +141,7 @@ a {
       font-size: 200px;
       font-weight: 600;
       margin-bottom: 10px;
-      color: #fad843;
+      color: #27ae60;
       text-shadow: 3px 3px 0 #000; }
     #page-404 .not-found-inner p {
       font-size: 22px;
@@ -189,7 +177,7 @@ a {
       cursor: pointer; }
     .rc-pagination li.rc-pagination-item-active a {
       font-weight: 600;
-      background: #fad843; }
+      background: #27ae60; }
     .rc-pagination li.rc-pagination-prev a {
       position: relative; }
       .rc-pagination li.rc-pagination-prev a:before {
@@ -246,7 +234,7 @@ a {
     content: "";
     position: absolute;
     height: 2px;
-    background: #fad843;
+    background: #27ae60;
     bottom: -2px;
     left: 0;
     right: 0; }
@@ -272,7 +260,7 @@ p {
     color: white;
     transition: background .3s ease-out, color .3s ease-out; }
   .btn.primary {
-    background: #fad843; }
+    background: #27ae60; }
     .btn.primary:hover {
       background: #333e48;
       color: white;
@@ -288,6 +276,36 @@ p {
 button.btn {
   line-height: 38px; }
 
+.MuiButton-root.modal-button {
+  position: absolute;
+  top: 14px;
+  right: 10px; }
+  .MuiButton-root.modal-button a {
+    color: inherit; }
+
+#root #root-loader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -14px;
+  margin-left: -14px;
+  z-index: 1; }
+  #root #root-loader [role="progressbar"] {
+    color: #333 !important; }
+
+#header .loader {
+  top: 15px;
+  z-index: 1;
+  position: absolute;
+  left: 50%;
+  margin-left: -14px; }
+  #header .loader.linear {
+    top: auto;
+    left: 0;
+    right: 0;
+    margin: 0;
+    bottom: -3px; }
+
 #main-footer {
   background: #f8f8f8;
   text-align: center;
@@ -299,7 +317,7 @@ button.btn {
 
 #newsletter {
   height: 65px;
-  background: #fad843;
+  background: #27ae60;
   padding: 11px 0; }
   #newsletter span {
     line-height: 40px;
@@ -318,7 +336,7 @@ button.btn {
   position: relative; }
   #newsletter-form input {
     background: white;
-    border: 2px solid #fad843;
+    border: 2px solid #27ae60;
     border-radius: 20px;
     height: 42px;
     width: 100%;
@@ -377,21 +395,6 @@ button.btn {
     top: 50%;
     right: 60px;
     transform: translateY(-50%); }
-  #header .loader {
-    top: 15px;
-    z-index: 1;
-    position: absolute;
-    left: 50%;
-    margin-left: -14px; }
-    #header .loader.linear {
-      top: auto;
-      left: 0;
-      right: 0;
-      margin: 0;
-      bottom: -1px;
-      opacity: .3; }
-    #header .loader .linear-loader {
-      height: 62px; }
 
 #main-menu > div:last-child {
   width: 100%;
@@ -428,7 +431,7 @@ button.btn {
     position: relative; }
     #main-menu li a.selected {
       color: #333;
-      background: #fad843;
+      background: #27ae60;
       cursor: default; }
   #main-menu li.logout {
     border-top: 1px solid #ccc;
@@ -489,9 +492,7 @@ button.btn {
 
 @media screen and (max-width: 480px) {
   #header {
-    margin-bottom: 10px; }
-  #header .loader .linear-loader {
-    height: 54px; } }
+    margin-bottom: 10px; } }
 
 .autocomplete-container {
   width: 100%;
@@ -752,7 +753,7 @@ label.Mui-focused {
   top: 15px;
   right: 16px; }
   #search-loader svg {
-    color: #fad843; }
+    color: #27ae60; }
 
 #search-not-found {
   position: absolute;
@@ -844,7 +845,7 @@ label.Mui-focused {
   font-style: italic;
   font-size: 13px;
   padding: 1px 10px;
-  background: #fad843;
+  background: #27ae60;
   text-align: center;
   color: #111;
   position: sticky;
@@ -1009,7 +1010,7 @@ label.Mui-focused {
   right: 0;
   z-index: 10;
   padding: 15px 5px;
-  background: #fad843;
+  background: #27ae60;
   color: #333;
   width: 100%;
   border-radius: 0;
@@ -1052,7 +1053,7 @@ label.Mui-focused {
     font-weight: bold; }
     #user-products-page #products-list .product .extra-fields-label .bargain-icon {
       display: block;
-      background: rgba(250, 216, 67, 0.75);
+      background: rgba(39, 174, 96, 0.75);
       color: black;
       z-index: 3;
       font-size: 11px;
@@ -1254,3 +1255,5 @@ label.Mui-focused {
   max-width: 250px;
   height: 250px;
   margin: 15px auto; }
+
+/*# sourceMappingURL=styles.css.map */

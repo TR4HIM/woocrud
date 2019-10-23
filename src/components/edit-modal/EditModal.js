@@ -12,9 +12,14 @@ import {
 
 import ButtonUploadImage from '../../components/button-upload/ButtonUpload'; 
 import EditableImage from '../../components/editable-image/EditableImage';
+import { Link , Redirect } from "react-router-dom";
+import MuiDialogTitle from '@material-ui/core/DialogTitle';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
 
 const MaxWidthDialog = ({dispatch  , EDITING_WOO_PRODUCT}) => {
 
+    const [productId,setProductId]                      = useState(0);
     const [regularPrice,setRegularPrice]                = useState(0);
     const [published,setPublished]                      = useState(false);
     const [salePrice,setSalePrice]                      = useState(0);
@@ -27,6 +32,7 @@ const MaxWidthDialog = ({dispatch  , EDITING_WOO_PRODUCT}) => {
             let regularPrice    = EDITING_WOO_PRODUCT.currentProduct.regular_price;
             let salePrice       = EDITING_WOO_PRODUCT.currentProduct.sale_price.length ;
     
+            setProductId(EDITING_WOO_PRODUCT.currentProduct.id);
             setRegularPrice(regularPrice);
             setSalePrice(salePrice);
             setProductName(EDITING_WOO_PRODUCT.currentProduct.name);
@@ -42,6 +48,11 @@ const MaxWidthDialog = ({dispatch  , EDITING_WOO_PRODUCT}) => {
         document.body.classList.remove('overflow-hidden');
         dispatch(editWooProduct(false));
     };
+    
+    const handleClickAdvanced = () => {
+        dispatch(editWooProduct(false)); 
+        return (<Redirect to={`/edit-produit/${productId}`} />)
+    }
 
     return (
         <>
@@ -53,7 +64,17 @@ const MaxWidthDialog = ({dispatch  , EDITING_WOO_PRODUCT}) => {
             aria-labelledby="max-width-dialog-title"
             scroll="body"
         >
-            <DialogTitle id="max-width-dialog-title">Edit [ { productName } ]</DialogTitle>
+            <MuiDialogTitle disableTypography >
+                <Typography variant="h6">
+                    Edit [ { productName } ]
+                </Typography>
+                {/* Redirect */}
+                <Button variant="outlined" color="secondary" className="modal-button" onClick={ handleClose }>
+                    <Link to={`/edit-produit/${productId}`}>
+                        Advanced Edit 
+                    </Link>
+                </Button>
+            </MuiDialogTitle>
             <DialogContent dividers>
                 <Grid container spacing={3}>
                     <Grid item xs={12} sm={8}>
@@ -95,7 +116,7 @@ const MaxWidthDialog = ({dispatch  , EDITING_WOO_PRODUCT}) => {
                     <Grid item xs={12} sm={4}>
                         <div className="featured-image">
                                 { productThumbnail  ? <EditableImage imageObject={productThumbnail} removeImageFunc={() => setProductThumbnail(false)} /> 
-                                                : <ButtonUploadImage typeImage="thumbnail" onChange ={ (var1) => console.log(var1) } /> }
+                                                : <ButtonUploadImage typeImage="thumbnail" onChange ={ (thumbnail) => setProductThumbnail(thumbnail.target.files[0]) } /> }
                         </div>  
                         <FormControlLabel
                             control={

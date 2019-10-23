@@ -10,10 +10,11 @@ import API from '../../API/';
 const GET_WOO_PRODUCTS  = API.WC_getWooProducts();  
 
 const Products = ({dispatch , USER , WOO_PRODUCTS  }) => {
-
+    
+    dispatch(loading(true, "header-loader"));
+    
     useEffect(() => {
         // SHOW LOADER
-        dispatch(loading(true, "header-loader"));
         dispatch(clearStoreWooProducts()); 
         GET_WOO_PRODUCTS( USER.token , 65, 1, 1 )
             .then((result)=>{

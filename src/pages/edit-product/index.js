@@ -11,6 +11,8 @@ const EditProductPage = ({dispatch , USER , match}) =>  {
     const { params } = match;
     const [product,setProduct] = useState(null);
     
+    dispatch(loading(true, "header-loader"));
+    
     useEffect(()=>{
         API.WC_getWooProductById(USER.token, params.productId)
         .then((result)=>{
