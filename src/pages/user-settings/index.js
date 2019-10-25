@@ -25,11 +25,18 @@ const UserSettings = ({ dispatch , USER , USER_PROFILE}) => {
     const [readyToLoad,setReadyToLoad]                  = useState( false)
     const [showOldPasswordField,setShowOldPasswordField]         = useState( false)
     const [oldPassword,setOldPassword]                  = useState( "")
-    const [confirmationNewPassword,setConfirmationNewPassword]       = useState( "")
-    const [newPassword,setNewPassword]                  = useState( "")
+
+    const [newPassword,setNewPassword]                  = useState("")
+    const [confirmationNewPassword,setConfirmationNewPassword]       = useState("")
+
     const [showSubmitButton,setShowSubmitButton]             = useState( false)
     const [validEmail,setValidEmail]                   = useState( false)
     const [userEmail,setUserEmail]                   = useState(false)
+    const [userName,setUserName]                   = useState("")
+    const [firstName,setFirstName]                   = useState("")
+    const [lastName,setLastName]                   = useState("")
+    const [userUrl,setUserUrl]                   = useState("")
+    const [userAvatar,setUserAvatar]                   = useState("")
     const [successPasswordChange,setSuccessPasswordChange]        = useState( false)
     const [uploading,setUploading]                    = useState( false)
     const [uploadingCover,setUploadingCover]               = useState( false)
@@ -45,27 +52,22 @@ const UserSettings = ({ dispatch , USER , USER_PROFILE}) => {
       return msg;
     }
 
-    function componentWillMount() {
-        
-        // custom rule will have name 'isPasswordMatch'
-        ValidatorForm.addValidationRule('isPasswordMatch', (value) => {
-            return (value !== newPassword) ? false : true;
-        });
-        
-        ValidatorForm.addValidationRule('minChars', (value) => {
-            return (value.length < 8) ? false : true;
-        });
-        
-        ValidatorForm.addValidationRule('maxChars', (value) => {
-            return (value.length > 25) ? false : true;
-        });
-        
-        ValidatorForm.addValidationRule('isCustomEmail', (value) => {
-            var regex = /^[+a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
-            return regex.test(value);
-        });
-        
-    }
+    ValidatorForm.addValidationRule('isPasswordMatch', (value) => {
+        return (value !== newPassword) ? false : true;
+    });
+    
+    ValidatorForm.addValidationRule('minChars', (value) => {
+        return (value.length < 8) ? false : true;
+    });
+    
+    ValidatorForm.addValidationRule('maxChars', (value) => {
+        return (value.length > 25) ? false : true;
+    });
+    
+    ValidatorForm.addValidationRule('isCustomEmail', (value) => {
+        var regex = /^[+a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
+        return regex.test(value);
+    });
 
     useEffect(()=>{
       // SHOW LOADER
@@ -74,8 +76,15 @@ const UserSettings = ({ dispatch , USER , USER_PROFILE}) => {
       API.WP_getProfileInfo(USER.token, USER.id)
           .then((result)=>{
               // HIDE LOADER
-              loading(false, "header-loader");
-              dispatch(storeUserProfile(result));
+            loading(false, "header-loader");
+            setUserName(result.username);
+            setUserEmail(result.email);
+            setFirstName(result.first_name);
+            setLastName(result.last_name);
+            setUserUrl(result.url);
+            setUserAvatar(result.avatar_urls['96']);
+            console.log(result)
+            setIsLoaded(true)
           })
           .catch((error)=>{
 
@@ -88,13 +97,6 @@ const UserSettings = ({ dispatch , USER , USER_PROFILE}) => {
               loading(false, "header-loader");
           })
     },[])
-
-    useEffect(()=>{
-      if(USER_PROFILE){
-        setUserEmail(USER_PROFILE.email)
-        setIsLoaded(true)
-      }
-    },[USER_PROFILE])
 
     function updateProfile(property){   
         
@@ -119,11 +121,6 @@ const UserSettings = ({ dispatch , USER , USER_PROFILE}) => {
                     ...USER_PROFILE,
                     ...result
                 });
-
-                // UPDATE SHOP CATEGORIES ON REDUX STORE
-                updateUser({
-                    shop_categories : result.shop_categories
-                });
         
                 // HIDE LOADER
                 loading(false, "header-loader");
@@ -141,17 +138,9 @@ const UserSettings = ({ dispatch , USER , USER_PROFILE}) => {
        
     }
 
-    const handleChange = (name) => {
-
-        
-
-    };
-
     function keyPressHandler(e){
-
         if(e.keyCode === 13)
             e.target.blur();
-
     }
 
     function submitChangePassword(){
@@ -197,33 +186,11 @@ const UserSettings = ({ dispatch , USER , USER_PROFILE}) => {
         return (
             <Fragment  >
                 <Paper id="shop-header-container" className="container-inner shop shop-header"  elevation={1}>
-            
-                    <div className="profile-cover-image">
-                        <FormControl className="edit-upload-cover">
-                            <input
-                                accept="image/*"
-                                className='hide-default-upload'
-                                id="contained-cover-image"
-                                type="file"
-                                onChange={console.log('Trest')}
-                            />
-                            <label htmlFor="contained-cover-image">
-                                <Button variant="outlined" color="secondary"   component="span"  className="button edit-cover-button">
-                                    {t('EDIT_COVER')}
-                                </Button>
-                            </label>
-                        </FormControl>
-                        <div className="image-bl" style={{backgroundImage:`url(${shop_cover})`}}>
-                            <img alt="Shop Cover" src={shop_cover} />
-                        </div>
-                    </div>
-
-                    <div className="shop-brand" style={{ backgroundImage: `url(${(croppedImageUrlProfile == null) ? shop_logo : croppedImageUrlProfile})`}} >
-                        <div className="shop-brand-edit" onClick={() => console.log('profile')}>
+                    <div className="shop-brand" style={{ backgroundImage: `url(${userAvatar})`}} >
+                        <div className="shop-brand-edit" onClick={() => console.log('Go To Gravatar.com')}>
                             {t('EDIT')}
                         </div>
                     </div>
-                    
                 </Paper>
             </Fragment> 
         );
@@ -236,8 +203,8 @@ const UserSettings = ({ dispatch , USER , USER_PROFILE}) => {
                 <Paper className="container-inner user"  elevation={1}>
                     <Typography variant="h5" component="h4">{t('USER')}</Typography>
                     <TextField
-                        label={t('USER_NAME')}
-                        value={USER_PROFILE.user_login}
+                        label="User Name"
+                        value={userName}
                         className="field"
                         type="text"
                         InputLabelProps={{ shrink: true }}
@@ -248,7 +215,7 @@ const UserSettings = ({ dispatch , USER , USER_PROFILE}) => {
                     />
 
                     <ValidatorForm
-                        forwardRef="form-email"
+                        // forwardRef="form-email"
                         onSubmit={()=>{}}
                         onError={errors => console.log(errors)}
                     >   
@@ -256,10 +223,10 @@ const UserSettings = ({ dispatch , USER , USER_PROFILE}) => {
                             label={t('EMAIL')}
                             onBlur={(e)=>updateProfile('userEmail')}
                             onKeyDown={(e)=>keyPressHandler(e)}
-                            onChange={handleChange('userEmail')}
+                            onChange={(e) => setUserEmail(e.target.value)}
                             name="email"
                             value={userEmail}
-                            validatorListener={(valid)=>this.setState({ validEmail : valid })}
+                            validatorListener={(valid)=>setValidEmail(valid)}
                             validators={[
                                 'required', 
                                 'isCustomEmail'
@@ -275,37 +242,75 @@ const UserSettings = ({ dispatch , USER , USER_PROFILE}) => {
                             variant="outlined"
                             fullWidth
                         />
+                        <TextValidator
+                            label="First Name"
+                            onKeyDown={(e)=>keyPressHandler(e)}
+                            onChange={(e) => setFirstName(e.target.value)}
+                            name="first-name"
+                            value={firstName}
+                            className="field"
+                            type="text"
+                            InputLabelProps={{ shrink: true }}
+                            margin="normal"
+                            variant="outlined"
+                            fullWidth
+                            validators={['required']}
+                            errorMessages={['this field is required']}
+                        />
+                        <TextValidator
+                            label="Last Name"
+                            onKeyDown={(e)=>keyPressHandler(e)}
+                            onChange={(e) => setLastName(e.target.value)}
+                            name="last-name"
+                            value={lastName}
+                            className="field"
+                            type="text"
+                            InputLabelProps={{ shrink: true }}
+                            margin="normal"
+                            variant="outlined"
+                            fullWidth
+                            validators={['required']}
+                            errorMessages={['this field is required']}
+                        />
+                        <TextValidator
+                            label="Website"
+                            onKeyDown={(e)=>keyPressHandler(e)}
+                            onChange={(e) => setUserUrl(e.target.value)}
+                            name="last-name"
+                            value={userUrl}
+                            className="field"
+                            type="text"
+                            InputLabelProps={{ shrink: true }}
+                            margin="normal"
+                            variant="outlined"
+                            fullWidth
+                            validators={['required']}
+                            errorMessages={['this field is required']}
+                        />
                     </ValidatorForm>
-                            
-
-           
-
                     <ValidatorForm
-                        forwardRef="form"
+                        // forwardRef="form"
                         onSubmit={submitChangePassword.bind(this)}
                         onError={errors => console.log(errors)}
                     >
                         <Button 
                             id="change-password" 
                             color="primary" 
-                            onClick={()=>this.setState((prevState)=>({ 
-                                showOldPasswordField : !prevState.showOldPasswordField, 
-                                successPasswordChange : false
-                            }))}
+                            onClick={()=> setShowOldPasswordField(!showOldPasswordField)}
                         >
-                            { !showOldPasswordField ? t('CHANGE_PASSWORD') : t('CANCEL') }
+                            { !showOldPasswordField ? "CHANGE PASSWORD" : "CANCEL" }
                         </Button>
                         
                         {successPasswordChange ? <p id="success-password-change">{t('PASSWORD_HAS_CHANGED')} </p> : null}
 
-                        <ToggleDisplay show={true}>
+                        <ToggleDisplay show={showOldPasswordField}>
                             <p id="helper-text">{t('MANDATORY_PASSWORD_FIELD')}</p>
 
                             <TextValidator
                                 label={t('YOUR_OLD_PASSWORD')}
                                 value={oldPassword}
                                 className="field"
-                                onChange={(e)=>this.setState({ oldPassword : e.target.value })}
+                                onChange={(e)=>setOldPassword(e.target.value)}
                                 type="password"
                                 name="oldPassword"
                                 validators={[
@@ -324,7 +329,7 @@ const UserSettings = ({ dispatch , USER , USER_PROFILE}) => {
                                 label={t('YOUR_NEW_PASSWORD')}
                                 value={newPassword}
                                 className="field"
-                                onChange={(e)=>this.setState({ newPassword : e.target.value })}
+                                onChange={(e)=>setNewPassword(e.target.value)}
                                 type="password"
                                 name="password"
                                 validators={[
@@ -348,7 +353,7 @@ const UserSettings = ({ dispatch , USER , USER_PROFILE}) => {
                                 className="field"
                                 type="password"
                                 name="repeatPassword"
-                                onChange={(e)=>this.setState({ confirmationNewPassword : e.target.value })}
+                                onChange={(e)=>setConfirmationNewPassword(e.target.value)}
                                 validators={[
                                     'isPasswordMatch', 
                                     'required', 
@@ -361,7 +366,7 @@ const UserSettings = ({ dispatch , USER , USER_PROFILE}) => {
                                     t('CHAR_MIN_LIMIT'),
                                     t('CHAR_MAX_LIMIT')
                                 ]}
-                                validatorListener={(valid)=>this.setState({ showSubmitButton : valid })}
+                                validatorListener={(valid)=>setShowSubmitButton(valid)}
                                 InputLabelProps={{ shrink: true }}
                                 margin="normal"
                                 variant="outlined"

@@ -1,4 +1,4 @@
-- Loading 
+- Loading : Test - https://github.com/buildo/react-placeholder
 - Errors Snack Bar
 - UpSells/Cross-Sells Checkboxes
 -Store Categories  - Done - Need Shared API
@@ -15,3 +15,5 @@
 - API : Product Pagination
 - API : Filter
 - API : Site Information and Data
+- Delete Product
+- Sale Price < Regular Price

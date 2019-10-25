@@ -32,8 +32,8 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS,  toEdit=false
     const [crossSellsProducts,setCrossSellsProducts]            = useState([]);
     const [productImage,setProductImage]                        = useState(false);
     const [productGallery,setProductGallery]                    = useState([]);
-    const [productTags, setProductTags]                         = useState(WOO_TAGS);
-    const [productCategories, setProductCategories]             = useState(WOO_CATEGORIES);
+    const [productTags, setProductTags]                         = useState([...WOO_TAGS]);
+    const [productCategories, setProductCategories]             = useState([...WOO_CATEGORIES]);
     const [getProductCategories, setGetProductCategories]       = useState([]);
 
     useEffect(()=>{

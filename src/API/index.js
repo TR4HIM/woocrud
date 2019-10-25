@@ -147,6 +147,22 @@ const WP_getProfileInfo = (token, idUser)=>{
     });
 }
 
+const WC_updateProduct = (token, id, property)=>{
+    let data = {
+        ...property
+    }
+
+    return axios.put( `${WC}/products/${id}`, data, {
+        headers : {
+            "Authorization" : `Bearer ${token}`,
+        }
+    })
+    .then((result)=>{
+        return result.data
+    });
+
+}
+
 export default {
     LOGIN,
     TOKEN_VALIDATE,
@@ -155,5 +171,6 @@ export default {
     WC_getWooCategories,
     WC_getWooTags,
     WC_getWooProductById,
-    WP_getProfileInfo
+    WP_getProfileInfo,
+    WC_updateProduct
 }

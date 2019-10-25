@@ -1364,9 +1364,8 @@ label.Mui-focused {
     #profile-page #shop-header-container.shop-header .image-bl img {
       display: none; }
   #profile-page #shop-header-container.shop-header .shop-brand {
-    width: 150px;
-    height: 150px;
-    position: absolute;
+    width: 200px;
+    height: 200px;
     background-color: #e8e4d4;
     bottom: -50px;
     left: 50px;
