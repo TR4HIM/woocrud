@@ -28,6 +28,7 @@ const MaxWidthDialog = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
     const [productName,setProductName]                  = useState("");
     const [productThumbnail,setProductThumbnail]        = useState(false);
     const [productDescription,setProductDescription]    = useState("");
+    const [isThumbnailUploade,setIsThumbnailUploade]    = useState(false);
 
     useEffect(() => {
         if(EDITING_WOO_PRODUCT.currentProduct){
@@ -53,6 +54,67 @@ const MaxWidthDialog = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
         return (<Redirect to={`/edit-produit/${productId}`} />)
     }
 
+    useEffect(()=>{
+        if(isThumbnailUploade === true){
+            let payload = {};
+            let currentGallery = EDITING_WOO_PRODUCT.currentProduct.images;
+            //Remove first image
+            currentGallery.shift();
+
+            payload = {
+                images: [
+                    {
+                      "src": productThumbnail
+                    },
+                    ...currentGallery
+                ]
+            }
+            dispatch(loading(true, "header-loader"));
+
+            API.WC_updateProduct(USER.token, EDITING_WOO_PRODUCT.currentProduct.id, payload).then(()=>{ 
+                console.log('Here we are again ');   
+                dispatch(loading(false, "header-loader"));
+            })
+            .catch((error)=>{
+                dispatch({
+                    type : "ERROR",
+                    payload : error
+                });
+    
+                // HIDE LOADING
+                dispatch(loading(false, "header-loader"));
+    
+            })
+        }
+    },[isThumbnailUploade])
+
+    const uploadProductThumbnail = (file) => {
+		var formData = new FormData();
+		formData.append( 'file', file );
+		formData.append( 'title', EDITING_WOO_PRODUCT.currentProduct.name );
+		formData.append( 'alt_text', EDITING_WOO_PRODUCT.currentProduct.name );
+		formData.append( 'caption', EDITING_WOO_PRODUCT.currentProduct.name );
+        formData.append( 'post', EDITING_WOO_PRODUCT.currentProduct.id );
+        // formData.append( 'author', USER.id );
+        
+        API.WP_uploadImage(USER.token, formData).then((data)=>{ 
+            console.log(data.source_url);   
+            setProductThumbnail(data.source_url);
+            setIsThumbnailUploade(true);
+            dispatch(loading(false, "header-loader"));
+        })
+        .catch((error)=>{
+            dispatch({
+                type : "ERROR",
+                payload : error
+            });
+
+            // HIDE LOADING
+            dispatch(loading(false, "header-loader"));
+
+        })
+    }
+
     const updateProductProperty = (e,field) => {
         let payload = {};
         dispatch(loading(true, "header-loader"));
@@ -60,12 +122,21 @@ const MaxWidthDialog = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
             if( EDITING_WOO_PRODUCT.currentProduct.name === e.target.value ) return;
             payload = {
                 name   : e.target.value,
-                slug   : e.target.value
+                slug   : e.target.value,
+                // images: [...EDITING_WOO_PRODUCT.currentProduct.images,
+                //     {
+                //       "src": "http://demo.woothemes.com/woocommerce/wp-content/uploads/sites/56/2013/06/T_2_front.jpg"
+                //     },
+                //     {
+                //       "src": "http://demo.woothemes.com/woocommerce/wp-content/uploads/sites/56/2013/06/T_2_back.jpg"
+                //     }
+                // ]
             }
         }
         else if( field === "regular_price" ){
             payload = {
                 regular_price : e.target.value,
+                
             }
         }
         else if( field === "sale_price" ){
@@ -103,7 +174,7 @@ const MaxWidthDialog = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
     }
 
     return (
-        <>
+        <form>
         <Dialog
             fullWidth={true}
             maxWidth="lg"
@@ -172,7 +243,7 @@ const MaxWidthDialog = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
                     <Grid item xs={12} sm={4}>
                         <div className="featured-image">
                                 { productThumbnail  ? <EditableImage imageObject={productThumbnail} removeImageFunc={() => setProductThumbnail(false)} /> 
-                                                : <ButtonUploadImage typeImage="thumbnail" onChange ={ (thumbnail) => setProductThumbnail(thumbnail.target.files[0]) } /> }
+                                                : <ButtonUploadImage typeImage="thumbnail" onChange ={ (thumbnail) =>uploadProductThumbnail(thumbnail.target.files[0]) } /> }
                         </div>  
                         <FormControlLabel
                             control={
@@ -189,7 +260,7 @@ const MaxWidthDialog = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
                 </Grid> 
             </DialogContent>
         </Dialog>
-        </>
+        </form>
     );
 }
 

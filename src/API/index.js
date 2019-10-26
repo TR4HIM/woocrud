@@ -163,6 +163,17 @@ const WC_updateProduct = (token, id, property)=>{
 
 }
 
+const WP_uploadImage = (token, data)=>{
+    return axios.post( `${WP}/media`, data, {
+        headers : {
+            "Authorization" : `Bearer ${token}`,
+        }
+    })
+    .then((result)=>{
+        return result.data
+    });
+}
+
 export default {
     LOGIN,
     TOKEN_VALIDATE,
@@ -172,5 +183,6 @@ export default {
     WC_getWooTags,
     WC_getWooProductById,
     WP_getProfileInfo,
-    WC_updateProduct
+    WC_updateProduct,
+    WP_uploadImage
 }
