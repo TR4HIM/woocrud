@@ -502,6 +502,15 @@ button.btn {
   width: 100%;
   margin-bottom: 20px; }
 
+.edit-modal-title {
+  position: relative; }
+
+#edit-modal-loading {
+  width: 100%;
+  position: absolute;
+  bottom: -4px;
+  left: 0; }
+
 #login-page {
   position: relative;
   min-height: 100vh; }

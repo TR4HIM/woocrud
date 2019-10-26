@@ -81,3 +81,10 @@ export const updateUser = (payload)=>{
         payload
     }
 }
+
+export const updateWooProudct = (payload)=>{
+    return {
+        type    : TYPES.UPDATE_WOO_PRODUCT,
+        payload 
+    }
+}

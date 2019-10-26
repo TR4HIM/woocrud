@@ -3,7 +3,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import {connect} from 'react-redux';
-import { loading , editWooProduct } from '../../store/actions/';
+import { loading , editWooProduct, updateWooProudct} from '../../store/actions/';
 import {    
     Grid , 
     TextField , 
@@ -17,6 +17,7 @@ import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import API from '../../API/'; 
+import Loader from '../loader/loader';
 
 
 const MaxWidthDialog = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
@@ -48,16 +49,12 @@ const MaxWidthDialog = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
         document.body.classList.remove('overflow-hidden');
         dispatch(editWooProduct(false));
     };
-    
-    const handleClickAdvanced = () => {
-        dispatch(editWooProduct(false)); 
-        return (<Redirect to={`/edit-produit/${productId}`} />)
-    }
 
     useEffect(()=>{
         if(isThumbnailUploade === true){
             let payload = {};
             let currentGallery = EDITING_WOO_PRODUCT.currentProduct.images;
+            let id = EDITING_WOO_PRODUCT.currentProduct.id;
             //Remove first image
             currentGallery.shift();
 
@@ -69,11 +66,13 @@ const MaxWidthDialog = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
                     ...currentGallery
                 ]
             }
-            dispatch(loading(true, "header-loader"));
+            // dispatch(loading(true, "edit-modal-loading"));
 
             API.WC_updateProduct(USER.token, EDITING_WOO_PRODUCT.currentProduct.id, payload).then(()=>{ 
-                console.log('Here we are again ');   
-                dispatch(loading(false, "header-loader"));
+                // console.log('Here we are again ');   
+                dispatch(updateWooProudct({id ,...payload}));
+                dispatch(loading(false, "edit-modal-loading"));
+                setIsThumbnailUploade(false);
             })
             .catch((error)=>{
                 dispatch({
@@ -82,8 +81,8 @@ const MaxWidthDialog = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
                 });
     
                 // HIDE LOADING
-                dispatch(loading(false, "header-loader"));
-    
+                dispatch(loading(false, "edit-modal-loading"));
+                setIsThumbnailUploade(false);
             })
         }
     },[isThumbnailUploade])
@@ -96,12 +95,13 @@ const MaxWidthDialog = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
 		formData.append( 'caption', EDITING_WOO_PRODUCT.currentProduct.name );
         formData.append( 'post', EDITING_WOO_PRODUCT.currentProduct.id );
         // formData.append( 'author', USER.id );
+        dispatch(loading(true, "edit-modal-loading"));
         
         API.WP_uploadImage(USER.token, formData).then((data)=>{ 
-            console.log(data.source_url);   
             setProductThumbnail(data.source_url);
             setIsThumbnailUploade(true);
-            dispatch(loading(false, "header-loader"));
+            
+            dispatch(loading(false, "edit-modal-loading"));
         })
         .catch((error)=>{
             dispatch({
@@ -110,33 +110,24 @@ const MaxWidthDialog = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
             });
 
             // HIDE LOADING
-            dispatch(loading(false, "header-loader"));
+            dispatch(loading(false, "edit-modal-loading"));
 
         })
     }
 
     const updateProductProperty = (e,field) => {
         let payload = {};
-        dispatch(loading(true, "header-loader"));
+        let id = EDITING_WOO_PRODUCT.currentProduct.id;
         if(field === "name"){
             if( EDITING_WOO_PRODUCT.currentProduct.name === e.target.value ) return;
             payload = {
                 name   : e.target.value,
-                slug   : e.target.value,
-                // images: [...EDITING_WOO_PRODUCT.currentProduct.images,
-                //     {
-                //       "src": "http://demo.woothemes.com/woocommerce/wp-content/uploads/sites/56/2013/06/T_2_front.jpg"
-                //     },
-                //     {
-                //       "src": "http://demo.woothemes.com/woocommerce/wp-content/uploads/sites/56/2013/06/T_2_back.jpg"
-                //     }
-                // ]
+                slug   : e.target.value
             }
         }
         else if( field === "regular_price" ){
             payload = {
                 regular_price : e.target.value,
-                
             }
         }
         else if( field === "sale_price" ){
@@ -157,9 +148,12 @@ const MaxWidthDialog = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
             setPublished(!published);
         }
 
-        API.WC_updateProduct(USER.token, EDITING_WOO_PRODUCT.currentProduct.id, payload).then(()=>{ 
+        dispatch(loading(true, "edit-modal-loading"));
+
+        API.WC_updateProduct(USER.token, id, payload).then(()=>{ 
             console.log('Here we are again ');   
-            dispatch(loading(false, "header-loader"));
+            dispatch(loading(false, "edit-modal-loading"));
+            dispatch(updateWooProudct({id ,...payload}));
         })
         .catch((error)=>{
             dispatch({
@@ -168,7 +162,7 @@ const MaxWidthDialog = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
             });
 
             // HIDE LOADING
-            dispatch(loading(false, "header-loader"));
+            dispatch(loading(false, "edit-modal-loading"));
 
         })
     }
@@ -182,8 +176,9 @@ const MaxWidthDialog = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
             onClose={handleClose}
             aria-labelledby="max-width-dialog-title"
             scroll="body"
+            className="edit-modal-container"
         >
-            <MuiDialogTitle disableTypography >
+            <MuiDialogTitle disableTypography className="edit-modal-title">
                 <Typography variant="h6">
                     Edit [ { productName } ]
                 </Typography>
@@ -193,6 +188,7 @@ const MaxWidthDialog = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
                         Advanced Edit 
                     </Link>
                 </Button>
+                <Loader id="edit-modal-loading"  type="linear" />
             </MuiDialogTitle>
             <DialogContent dividers>
                 <Grid container spacing={3}>
