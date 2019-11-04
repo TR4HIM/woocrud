@@ -1,16 +1,17 @@
+- Fix loading after quick edit - Done
 - Loading : Test - https://github.com/buildo/react-placeholder
 - Errors Snack Bar
 - UpSells/Cross-Sells Checkboxes
--Store Categories  - Done - Need Shared API
--Store Tags  - Done - Need Shared API
--Install Wysiwig
--List products without Store
--List product pagination
--Search products
--Filter Menu Icon
--Filter product
--SideBar Categories
--Copy User Codes From KIBO
+- Store Categories  - Done - Need Shared API
+- Store Tags  - Done - Need Shared API
+- Install Wysiwig
+- List products without Store
+- List product pagination
+- Search products
+- Filter Menu Icon
+- Filter product
+- SideBar Categories
+- Copy User Codes From KIBO
 - API : Search
 - API : Product Pagination
 - API : Filter

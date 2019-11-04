@@ -511,6 +511,18 @@ button.btn {
   bottom: -4px;
   left: 0; }
 
+@keyframes productUpdatedAnimation {
+  0% {
+    background-color: #3eb99a; }
+  100% {
+    background-color: #fff; } }
+
+.product-item-updated {
+  animation-name: productUpdatedAnimation;
+  animation-duration: 1s;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-in-out; }
+
 #login-page {
   position: relative;
   min-height: 100vh; }

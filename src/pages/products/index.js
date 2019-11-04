@@ -11,9 +11,9 @@ const GET_WOO_PRODUCTS  = API.WC_getWooProducts();
 
 const Products = ({dispatch , USER , WOO_PRODUCTS  }) => {
     
-    dispatch(loading(true, "header-loader"));
     
     useEffect(() => {
+        dispatch(loading(true, "header-loader"));
         // SHOW LOADER
         dispatch(clearStoreWooProducts()); 
         GET_WOO_PRODUCTS( USER.token , 65, 1, 1 )

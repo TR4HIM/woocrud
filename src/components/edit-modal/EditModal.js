@@ -20,7 +20,7 @@ import API from '../../API/';
 import Loader from '../loader/loader';
 
 
-const MaxWidthDialog = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
+const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
 
     const [productId,setProductId]                      = useState(0);
     const [regularPrice,setRegularPrice]                = useState(0);
@@ -47,7 +47,10 @@ const MaxWidthDialog = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
 
     const handleClose = () => {
         document.body.classList.remove('overflow-hidden');
+        let id = EDITING_WOO_PRODUCT.currentProduct.id;
         dispatch(editWooProduct(false));
+        dispatch(updateWooProudct({id ,isUpdated : true}));
+
     };
 
     useEffect(()=>{
@@ -151,9 +154,8 @@ const MaxWidthDialog = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
         dispatch(loading(true, "edit-modal-loading"));
 
         API.WC_updateProduct(USER.token, id, payload).then(()=>{ 
-            console.log('Here we are again ');   
             dispatch(loading(false, "edit-modal-loading"));
-            dispatch(updateWooProudct({id ,...payload}));
+            dispatch(updateWooProudct({id , ...payload}));
         })
         .catch((error)=>{
             dispatch({
@@ -262,4 +264,4 @@ const MaxWidthDialog = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
 
 const mapStateToProps = ({ USER , EDITING_WOO_PRODUCT }) => ({ USER , EDITING_WOO_PRODUCT});
 
-export default connect(mapStateToProps)(MaxWidthDialog);
+export default connect(mapStateToProps)(EditProductModal);

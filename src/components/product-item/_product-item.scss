@@ -1,0 +1,15 @@
+@keyframes productUpdatedAnimation {
+    0% {
+        background-color: $success;
+    }
+    100% {
+        background-color: #fff;
+    }
+}
+    
+.product-item-updated {
+    animation-name: productUpdatedAnimation;
+    animation-duration: 1s;
+    animation-iteration-count: 1;
+    animation-timing-function: ease-in-out;
+} 
