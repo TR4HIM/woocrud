@@ -519,7 +519,7 @@ button.btn {
 
 .product-item-updated {
   animation-name: productUpdatedAnimation;
-  animation-duration: 1s;
+  animation-duration: 2s;
   animation-iteration-count: 1;
   animation-timing-function: ease-in-out; }
 

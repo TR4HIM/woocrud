@@ -39,7 +39,9 @@ const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
             setProductName(EDITING_WOO_PRODUCT.currentProduct.name);
             setProductThumbnail(EDITING_WOO_PRODUCT.currentProduct.images[0].src);
             setProductDescription(EDITING_WOO_PRODUCT.currentProduct.short_description);
-            setPublished((EDITING_WOO_PRODUCT.currentProduct.status === 'publish'))
+            setPublished((EDITING_WOO_PRODUCT.currentProduct.status === 'publish'));
+            let id = EDITING_WOO_PRODUCT.currentProduct.id;
+            dispatch(updateWooProudct({id ,isUpdated : false}));
              // ADD THE OVERFLOW HIDDEN 
              document.body.classList.add('overflow-hidden');
         }   
