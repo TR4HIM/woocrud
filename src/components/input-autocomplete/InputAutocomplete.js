@@ -1,4 +1,5 @@
 import React , {useState , useEffect } from 'react';
+import {connect} from 'react-redux';
 import {    
         Paper , 
         TextField ,Chip} from '@material-ui/core';
@@ -6,139 +7,82 @@ import deburr from 'lodash/deburr';
 import Downshift from 'downshift';
 import { makeStyles } from '@material-ui/core/styles';
 import MenuItem from '@material-ui/core/MenuItem';
+import { loading , editWooProduct, updateWooProudct} from '../../store/actions/';
+import API from '../../API/'; 
+import Loader from '../loader/loader';
 
-
-const suggestions = [
-    { label: 'Afghanistan' },
-    { label: 'Aland Islands' },
-    { label: 'Albania' },
-    { label: 'Algeria' },
-    { label: 'American Samoa' },
-    { label: 'Andorra' },
-    { label: 'Angola' },
-    { label: 'Anguilla' },
-    { label: 'Antarctica' },
-    { label: 'Antigua and Barbuda' },
-    { label: 'Argentina' },
-    { label: 'Armenia' },
-    { label: 'Aruba' },
-    { label: 'Australia' },
-    { label: 'Austria' },
-    { label: 'Azerbaijan' },
-    { label: 'Bahamas' },
-    { label: 'Bahrain' },
-    { label: 'Bangladesh' },
-    { label: 'Barbados' },
-    { label: 'Belarus' },
-    { label: 'Belgium' },
-    { label: 'Belize' },
-    { label: 'Benin' },
-    { label: 'Bermuda' },
-    { label: 'Bhutan' },
-    { label: 'Bolivia, Plurinational State of' },
-    { label: 'Bonaire, Sint Eustatius and Saba' },
-    { label: 'Bosnia and Herzegovina' },
-    { label: 'Botswana' },
-    { label: 'Bouvet Island' },
-    { label: 'Brazil' },
-    { label: 'British Indian Ocean Territory' },
-    { label: 'Brunei Darussalam' },
-];
-
-
-function renderSuggestion(suggestionProps) {
-  const { suggestion, index, itemProps, highlightedIndex, selectedItem } = suggestionProps;
-  const isHighlighted = highlightedIndex === index;
-  const isSelected = (selectedItem || '').indexOf(suggestion.label) > -1;
-
-  return (
-    <MenuItem
-      {...itemProps}
-      key={suggestion.label}
-      selected={isHighlighted}
-      component="div"
-      style={{
-        fontWeight: isSelected ? 500 : 400,
-      }}
-    >
-      {suggestion.label}
-    </MenuItem>
-  );
-}
-
-function getSuggestions(value, { showEmpty = false } = {}) {
-  const inputValue = deburr(value.trim()).toLowerCase();
-  const inputLength = inputValue.length;
-  let count = 0;
-
-  return inputLength === 0 && !showEmpty
-    ? []
-    : suggestions.filter(suggestion => {
-        const keep =
-          count < 5 && suggestion.label.slice(0, inputLength).toLowerCase() === inputValue;
-
-        if (keep) {
-          count += 1;
-        }
-
-        return keep;
-      });
-}
-
-function renderInput(inputProps) {
-    const { InputProps, classes, ref, ...other } = inputProps;
-  
+  function renderSuggestion(suggestionProps) {
+    const { suggestion, index, itemProps, highlightedIndex, selectedItem } = suggestionProps;
     return (
-      <TextField
-        InputProps={{
-          inputRef: ref,
-          classes: {
-            root: classes.inputRoot,
-            input: classes.inputInput,
-          },
-          ...InputProps,
-        }}
-        {...other}
-        
-      />
+      <MenuItem
+        {...itemProps}
+        key={suggestion.name}
+        component="div"
+      >
+        {suggestion.name}
+      </MenuItem>
     );
-}
+  }
 
-const classes = makeStyles(theme => ({
-  root: {
-    flexGrow: 1,
-  },
-  container: {
-    flexGrow: 1,
-    position: 'relative',
-  },
-  paper: {
-    position: 'absolute',
-    zIndex: 10,
-    marginTop: theme.spacing(1),
-    left: 0,
-    right: 0,
-    width:'100%'
-  },
-  chip: {
-    margin: theme.spacing(0.5, 0.25),
-  },
-  inputRoot: {
-    flexWrap: 'wrap',
-  },
-  inputInput: {
-    width: 'auto',
-    flexGrow: 1,
-  },
-  divider: {
-    height: theme.spacing(2),
-  },
-}));
+  function renderInput(inputProps) {
+      const { InputProps, classes, ref, ...other } = inputProps;
+    
+      return (
+        <TextField
+          InputProps={{
+            inputRef: ref,
+            classes: {
+              root: classes.inputRoot,
+              input: classes.inputInput,
+            },
+            ...InputProps,
+          }}
+          {...other}
+          
+        />
+      );
+  }
 
-const ProductsAutoComplete = ({fieldLabel , onChangeAuto}) => {
+  const classes = makeStyles(theme => ({
+    root: {
+      flexGrow: 1,
+    },
+    container: {
+      flexGrow: 1,
+      position: 'relative',
+    },
+    paper: {
+      position: 'absolute',
+      zIndex: 10,
+      marginTop: theme.spacing(1),
+      left: 0,
+      right: 0,
+      width:'100%'
+    },
+    chip: {
+      margin: theme.spacing(0.5, 0.25),
+    },
+    inputRoot: {
+      flexWrap: 'wrap',
+    },
+    inputInput: {
+      width: 'auto',
+      flexGrow: 1,
+    },
+    divider: {
+      height: theme.spacing(2),
+    },
+  }));
+
+
+  // API Search with Cancel
+  const SEARCH  = API.WC_getWooProductByName();
+
+  const ProductsAutoComplete = ({dispatch , USER , fieldLabel , onChangeAuto}) => {
 
   const [inputValue, setInputValue] = useState('');
   const [selectedItem, setSelectedItem] = useState([]);
+  const [suggestionProduct, setSuggestionProduct] = useState([]);
 
   useEffect(() => {
     if( selectedItem.length  >=   0){
@@ -146,6 +90,33 @@ const ProductsAutoComplete = ({fieldLabel , onChangeAuto}) => {
     }
   }, [selectedItem]);
 
+  useEffect(()=>{
+    if(inputValue.length > 0 ){
+      getSuggestions(inputValue);
+    }
+  },[inputValue])
+
+  const getSuggestions = (value) => {
+    const inputValue = deburr(value.trim()).toLowerCase();
+
+    dispatch(loading(true, "header-loader"));
+
+    SEARCH(USER.token,inputValue).then((result)=>{ 
+      if((result !== undefined)){
+        setSuggestionProduct(result);
+        // HIDE LOADING
+        dispatch(loading(false, "header-loader"));
+      }
+    })
+    .catch((error)=>{
+        dispatch({
+            type : "ERROR",
+            payload : error
+        });
+        // HIDE LOADING
+        dispatch(loading(false, "header-loader"));
+    })
+  }
 
   const handleKeyDown = event => {
     if (selectedItem.length && !inputValue.length && event.key === 'Backspace') {
@@ -167,10 +138,10 @@ const ProductsAutoComplete = ({fieldLabel , onChangeAuto}) => {
   };
 
   const handleDelete = item => () => {
-    const newSelectedItem = [...selectedItem];
-    newSelectedItem.splice(newSelectedItem.indexOf(item), 1);
+    const newSelectedItem = selectedItem.filter(itm => itm[0] !== parseInt(item));
     setSelectedItem(newSelectedItem);
   };
+
   return (
     <div className={classes.root}>
         <Downshift
@@ -203,11 +174,11 @@ const ProductsAutoComplete = ({fieldLabel , onChangeAuto}) => {
                   InputProps: {
                     startAdornment: selectedItem.map(item => (
                       <Chip
-                        key={item}
+                        key={item[0]}
                         tabIndex={-1}
-                        label={item}
+                        label={item[1]}
                         className={classes.chip}
-                        onDelete={handleDelete(item)}
+                        onDelete={handleDelete(item[0])}
                       />
                     )),
                     onBlur,
@@ -222,11 +193,11 @@ const ProductsAutoComplete = ({fieldLabel , onChangeAuto}) => {
     
                 {isOpen ? (
                   <Paper className={classes.paper} square>
-                    {getSuggestions(inputValue2).map((suggestion, index) =>
+                    {suggestionProduct.length > 0 && suggestionProduct.map((suggestion, index) =>
                       renderSuggestion({
                         suggestion,
                         index,
-                        itemProps: getItemProps({ item: suggestion.label }),
+                        itemProps: getItemProps({ item: [suggestion.id, suggestion.name] }),
                         highlightedIndex,
                         selectedItem: selectedItem2,
                       }),
@@ -241,6 +212,5 @@ const ProductsAutoComplete = ({fieldLabel , onChangeAuto}) => {
   );
 }
 
-
-
-export default ProductsAutoComplete;  
+const mapStateToProps = ({ USER }) => ({ USER});
+export default connect(mapStateToProps)(ProductsAutoComplete);

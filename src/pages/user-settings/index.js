@@ -71,20 +71,20 @@ const UserSettings = ({ dispatch , USER , USER_PROFILE}) => {
 
     useEffect(()=>{
       // SHOW LOADER
-      loading(true, "header-loader");
+      dispatch(loading(true, "header-loader"));
 
       API.WP_getProfileInfo(USER.token, USER.id)
           .then((result)=>{
               // HIDE LOADER
-            loading(false, "header-loader");
-            setUserName(result.username);
-            setUserEmail(result.email);
-            setFirstName(result.first_name);
-            setLastName(result.last_name);
-            setUserUrl(result.url);
-            setUserAvatar(result.avatar_urls['96']);
-            console.log(result)
-            setIsLoaded(true)
+              setUserName(result.username);
+              setUserEmail(result.email);
+              setFirstName(result.first_name);
+              setLastName(result.last_name);
+              setUserUrl(result.url);
+              setUserAvatar(result.avatar_urls['96']);
+              console.log(result)
+              setIsLoaded(true)
+              dispatch(loading(false, "header-loader"));
           })
           .catch((error)=>{
 
@@ -94,7 +94,7 @@ const UserSettings = ({ dispatch , USER , USER_PROFILE}) => {
               }))
 
               // HIDE LOADER
-              loading(false, "header-loader");
+              dispatch(loading(false, "header-loader"));
           })
     },[])
 
@@ -107,7 +107,7 @@ const UserSettings = ({ dispatch , USER , USER_PROFILE}) => {
         if( USER_PROFILE[property] === this.state[property] ) return;
 
         // SHOW LOADER
-        loading(true, "header-loader");
+        dispatch(loading(true, "header-loader"));
 
         let data = { 
             ...USER_PROFILE,
@@ -123,7 +123,7 @@ const UserSettings = ({ dispatch , USER , USER_PROFILE}) => {
                 });
         
                 // HIDE LOADER
-                loading(false, "header-loader");
+                dispatch(loading(false, "header-loader"));
 
             })
             .catch((error)=>{
@@ -133,7 +133,7 @@ const UserSettings = ({ dispatch , USER , USER_PROFILE}) => {
                 }))
 
                 // HIDE LOADER
-                loading(false, "header-loader");
+                dispatch(loading(false, "header-loader"));
             })
        
     }
@@ -145,7 +145,7 @@ const UserSettings = ({ dispatch , USER , USER_PROFILE}) => {
 
     function submitChangePassword(){
 
-        loading(true, "header-loader");
+        dispatch(loading(true, "header-loader"));
 
         let payload = {
             id              : USER.id,
@@ -154,7 +154,7 @@ const UserSettings = ({ dispatch , USER , USER_PROFILE}) => {
         }
         API.WCV_change_password(USER.token, payload)
             .then((result)=>{
-                loading(false, "header-loader");
+                dispatch(loading(false, "header-loader"));
 
                 this.setState({
                     successPasswordChange   : true,
@@ -172,7 +172,7 @@ const UserSettings = ({ dispatch , USER , USER_PROFILE}) => {
                 }))
 
                 // HIDE LOADER
-                loading(false, "header-loader");
+                dispatch(loading(false, "header-loader"));
             })
     }
     

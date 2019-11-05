@@ -78,6 +78,30 @@ const WC_getWooProductById = (token, productId)=>{
     })
 }
 
+const WC_getWooProductByName = ()=>{
+    var call;
+    return (token, productName)=>{
+
+        if (call)
+            call.cancel();
+        
+        call = axios.CancelToken.source();
+        return axios.get( `${WC}/products?search=${productName}`, {
+            headers : {
+                "Authorization" : `Bearer ${token}`,
+            },
+            cancelToken: call.token
+        })
+        .then((result)=>{
+            return result.data;
+        })
+        .catch((error)=>{
+            if ( !axios.isCancel(error)) 
+                return error;
+        })
+    }
+}
+
 const WC_getWooSearchProducts = ()=>{
 
     var call;
@@ -184,5 +208,6 @@ export default {
     WC_getWooProductById,
     WP_getProfileInfo,
     WC_updateProduct,
+    WC_getWooProductByName,
     WP_uploadImage
 }
