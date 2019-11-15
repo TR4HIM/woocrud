@@ -11,37 +11,6 @@ import { loading , editWooProduct, updateWooProudct} from '../../store/actions/'
 import API from '../../API/'; 
 import Loader from '../loader/loader';
 
-  function renderSuggestion(suggestionProps) {
-    const { suggestion, index, itemProps, highlightedIndex, selectedItem } = suggestionProps;
-    return (
-      <MenuItem
-        {...itemProps}
-        key={suggestion.name}
-        component="div"
-      >
-        {suggestion.name}
-      </MenuItem>
-    );
-  }
-
-  function renderInput(inputProps) {
-      const { InputProps, classes, ref, ...other } = inputProps;
-    
-      return (
-        <TextField
-          InputProps={{
-            inputRef: ref,
-            classes: {
-              root: classes.inputRoot,
-              input: classes.inputInput,
-            },
-            ...InputProps,
-          }}
-          {...other}
-          
-        />
-      );
-  }
 
   const classes = makeStyles(theme => ({
     root: {
@@ -78,69 +47,109 @@ import Loader from '../loader/loader';
   // API Search with Cancel
   const SEARCH  = API.WC_getWooProductByName();
 
-  const ProductsAutoComplete = ({dispatch , USER , fieldLabel , onChangeAuto}) => {
-
-  const [inputValue, setInputValue] = useState('');
-  const [selectedItem, setSelectedItem] = useState([]);
-  const [suggestionProduct, setSuggestionProduct] = useState([]);
-
-  useEffect(() => {
-    if( selectedItem.length  >=   0){
-      onChangeAuto(selectedItem);
-    }
-  }, [selectedItem]);
-
-  useEffect(()=>{
-    if(inputValue.length > 0 ){
-      getSuggestions(inputValue);
-    }
-  },[inputValue])
-
-  const getSuggestions = (value) => {
-    const inputValue = deburr(value.trim()).toLowerCase();
-
-    dispatch(loading(true, "header-loader"));
-
-    SEARCH(USER.token,inputValue).then((result)=>{ 
-      if((result !== undefined)){
-        setSuggestionProduct(result);
-        // HIDE LOADING
-        dispatch(loading(false, "header-loader"));
-      }
-    })
-    .catch((error)=>{
-        dispatch({
-            type : "ERROR",
-            payload : error
-        });
-        // HIDE LOADING
-        dispatch(loading(false, "header-loader"));
-    })
+  const renderSuggestion = (suggestionProps) => {
+    const { suggestion, index, itemProps, highlightedIndex, selectedItem } = suggestionProps;
+    return (
+      <MenuItem
+        {...itemProps}
+        key={suggestion.name}
+        component="div"
+      >
+        {suggestion.name}
+      </MenuItem>
+    );
   }
 
-  const handleKeyDown = event => {
-    if (selectedItem.length && !inputValue.length && event.key === 'Backspace') {
-      setSelectedItem(selectedItem.slice(0, selectedItem.length - 1));
+  const renderInput = (inputProps) => {
+      const { InputProps, classes, ref, ...other } = inputProps;
+    
+      return (
+        <TextField
+          InputProps={{
+            inputRef: ref,
+            classes: {
+              root: classes.inputRoot,
+              input: classes.inputInput,
+            },
+            ...InputProps,
+          }}
+          {...other}
+          
+        />
+      );
+  }
+
+const ProductsAutoComplete = ({dispatch , USER , fieldLabel , onChangeAuto}) => {
+
+    const [inputValue, setInputValue] = useState('');
+    const [selectedItem, setSelectedItem] = useState([]);
+    const [suggestionProduct, setSuggestionProduct] = useState([]);
+
+    useEffect(() => {
+      if( selectedItem.length  >=   0){
+        onChangeAuto(selectedItem);
+      }
+    }, [selectedItem]);
+
+    useEffect(()=>{
+      if(inputValue.length > 0 ){
+        getSuggestions(inputValue);
+      }
+    },[inputValue]);
+
+    const getSuggestions = (value) => {
+      const inputValue = deburr(value.trim()).toLowerCase();
+
+      dispatch(loading(true, "header-loader"));
+
+      // TO ADD : Show only unselected products
+      SEARCH(USER.token,inputValue).then((result)=>{ 
+        if((result !== undefined)){
+          setSuggestionProduct(result);
+          // HIDE LOADING
+          dispatch(loading(false, "header-loader"));
+        }
+      })
+      .catch((error)=>{
+          dispatch({
+              type : "ERROR",
+              payload : error
+          });
+          // HIDE LOADING
+          dispatch(loading(false, "header-loader"));
+      })
     }
-  };
 
-  const handleInputChange = event => {
-    setInputValue(event.target.value);
-  };
+  
+    
 
-  const handleChange = item => {
-    let newSelectedItem = [...selectedItem];
-    if (newSelectedItem.indexOf(item) === -1) {
-      newSelectedItem = [...newSelectedItem, item];
-    }
-    setInputValue('');
-    setSelectedItem(newSelectedItem);
-  };
+    const handleKeyDown = event => {
+      if (selectedItem.length && !inputValue.length && event.key === 'Backspace') {
+        setSelectedItem(selectedItem.slice(0, selectedItem.length - 1));
+      }
+    };
 
-  const handleDelete = item => () => {
-    const newSelectedItem = selectedItem.filter(itm => itm[0] !== parseInt(item));
-    setSelectedItem(newSelectedItem);
-  };
+    const handleInputChange = event => {
+      setInputValue(event.target.value);
+    };
+
+    const handleChange = item => {
+      let newSelectedItem = [...selectedItem];
+
+      const checkIfAdded = (element) => element.id === item.id;
+
+      if(newSelectedItem.some(checkIfAdded) !== true){
+        newSelectedItem = [...newSelectedItem, item];
+      }
+
+      setInputValue('');
+      setSelectedItem(newSelectedItem);
+    };
+
+    const handleDelete = item => () => {
+      const newSelectedItem = selectedItem.filter(itm => itm[0] !== parseInt(item));
+      setSelectedItem(newSelectedItem);
+    };
 
   return (
     <div className={classes.root}>
@@ -149,6 +158,7 @@ import Loader from '../loader/loader';
           inputValue={inputValue}
           onChange={handleChange}
           selectedItem={selectedItem}
+          itemToString={item => (item ? item.name : '')}
         >
           {({
             getInputProps,
@@ -161,7 +171,7 @@ import Loader from '../loader/loader';
           }) => {
             const { onBlur, onChange, onFocus, ...inputProps } = getInputProps({
               onKeyDown: handleKeyDown,
-              placeholder: 'Select multiple countries',
+              placeholder: 'Select multiple products',
             });
     
             return (
@@ -174,11 +184,11 @@ import Loader from '../loader/loader';
                   InputProps: {
                     startAdornment: selectedItem.map(item => (
                       <Chip
-                        key={item[0]}
+                        key={item.id}
                         tabIndex={-1}
-                        label={item[1]}
+                        label={item.name}
                         className={classes.chip}
-                        onDelete={handleDelete(item[0])}
+                        onDelete={handleDelete(item.id)}
                       />
                     )),
                     onBlur,
@@ -193,14 +203,19 @@ import Loader from '../loader/loader';
     
                 {isOpen ? (
                   <Paper className={classes.paper} square>
-                    {suggestionProduct.length > 0 && suggestionProduct.map((suggestion, index) =>
-                      renderSuggestion({
-                        suggestion,
-                        index,
-                        itemProps: getItemProps({ item: [suggestion.id, suggestion.name] }),
-                        highlightedIndex,
-                        selectedItem: selectedItem2,
-                      }),
+                    {suggestionProduct.length > 0 && suggestionProduct.map((suggestion, index) =>{
+                        const checkIfAdded = (element) => element.id === suggestion.id;
+                        if(selectedItem.some(checkIfAdded) !== true){
+                          return renderSuggestion({
+                            suggestion,
+                            index : suggestion.id,
+                            itemProps: getItemProps({ item: {'id' : suggestion.id, 'name' : suggestion.name} }),
+                            highlightedIndex : suggestion.id,
+                            selectedItem: selectedItem2,
+                          })
+
+                        }
+                      }
                     )}
                   </Paper>
                 ) : null}
@@ -213,4 +228,5 @@ import Loader from '../loader/loader';
 }
 
 const mapStateToProps = ({ USER }) => ({ USER});
+
 export default connect(mapStateToProps)(ProductsAutoComplete);
