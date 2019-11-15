@@ -498,6 +498,34 @@ button.btn {
   width: 100%;
   margin-bottom: 20px; }
 
+#product-auto-complete .page-root {
+  flex-grow: 1; }
+
+#product-auto-complete .page-container {
+  flex-grow: 1;
+  position: 'relative'; }
+
+#product-auto-complete .auto-complete-paper {
+  position: 'absolute';
+  z-index: 10;
+  margin-top: 10px;
+  left: 0;
+  right: 0;
+  width: '100%'; }
+
+#product-auto-complete .auto-complete-chip {
+  margin: 10px 15px; }
+
+#product-auto-complete .auto-complete-input-root {
+  flex-wrap: 'wrap'; }
+
+#product-auto-complete .auto-complete-input {
+  width: 'auto';
+  flex-grow: 1; }
+
+#product-auto-complete .divider {
+  height: 20px; }
+
 .autocomplete-container {
   width: 100%;
   margin-bottom: 20px; }

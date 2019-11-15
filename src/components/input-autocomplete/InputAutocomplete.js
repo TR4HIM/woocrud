@@ -11,39 +11,6 @@ import { loading , editWooProduct, updateWooProudct} from '../../store/actions/'
 import API from '../../API/'; 
 import Loader from '../loader/loader';
 
-
-  const classes = makeStyles(theme => ({
-    root: {
-      flexGrow: 1,
-    },
-    container: {
-      flexGrow: 1,
-      position: 'relative',
-    },
-    paper: {
-      position: 'absolute',
-      zIndex: 10,
-      marginTop: theme.spacing(1),
-      left: 0,
-      right: 0,
-      width:'100%'
-    },
-    chip: {
-      margin: theme.spacing(0.5, 0.25),
-    },
-    inputRoot: {
-      flexWrap: 'wrap',
-    },
-    inputInput: {
-      width: 'auto',
-      flexGrow: 1,
-    },
-    divider: {
-      height: theme.spacing(2),
-    },
-  }));
-
-
   // API Search with Cancel
   const SEARCH  = API.WC_getWooProductByName();
 
@@ -61,15 +28,15 @@ import Loader from '../loader/loader';
   }
 
   const renderInput = (inputProps) => {
-      const { InputProps, classes, ref, ...other } = inputProps;
+      const { InputProps,   ref, ...other } = inputProps;
     
       return (
         <TextField
           InputProps={{
             inputRef: ref,
             classes: {
-              root: classes.inputRoot,
-              input: classes.inputInput,
+              root: 'page-root',
+              input: 'auto-complete-input',
             },
             ...InputProps,
           }}
@@ -120,9 +87,6 @@ const ProductsAutoComplete = ({dispatch , USER , fieldLabel , onChangeAuto}) => 
       })
     }
 
-  
-    
-
     const handleKeyDown = event => {
       if (selectedItem.length && !inputValue.length && event.key === 'Backspace') {
         setSelectedItem(selectedItem.slice(0, selectedItem.length - 1));
@@ -135,26 +99,23 @@ const ProductsAutoComplete = ({dispatch , USER , fieldLabel , onChangeAuto}) => 
 
     const handleChange = item => {
       let newSelectedItem = [...selectedItem];
-
       const checkIfAdded = (element) => element.id === item.id;
-
       if(newSelectedItem.some(checkIfAdded) !== true){
         newSelectedItem = [...newSelectedItem, item];
       }
-
       setInputValue('');
       setSelectedItem(newSelectedItem);
     };
 
     const handleDelete = item => () => {
-      const newSelectedItem = selectedItem.filter(itm => itm[0] !== parseInt(item));
+      const newSelectedItem = selectedItem.filter(itm => itm.id !== parseInt(item));
       setSelectedItem(newSelectedItem);
     };
 
   return (
-    <div className={classes.root}>
+    <div className="page-root">
         <Downshift
-          id="downshift-multiple"
+          id="product-auto-complete"
           inputValue={inputValue}
           onChange={handleChange}
           selectedItem={selectedItem}
@@ -175,10 +136,9 @@ const ProductsAutoComplete = ({dispatch , USER , fieldLabel , onChangeAuto}) => 
             });
     
             return (
-              <div className={classes.container}>
+              <div className="page-container">
                 {renderInput({
                   fullWidth: true,
-                  classes,
                   label:  fieldLabel ,
                   InputLabelProps: getLabelProps(),
                   InputProps: {
@@ -187,7 +147,7 @@ const ProductsAutoComplete = ({dispatch , USER , fieldLabel , onChangeAuto}) => 
                         key={item.id}
                         tabIndex={-1}
                         label={item.name}
-                        className={classes.chip}
+                        className="auto-complete-chip"
                         onDelete={handleDelete(item.id)}
                       />
                     )),
@@ -202,7 +162,7 @@ const ProductsAutoComplete = ({dispatch , USER , fieldLabel , onChangeAuto}) => 
                 })}
     
                 {isOpen ? (
-                  <Paper className={classes.paper} square>
+                  <Paper className="auto-complete-paper" square>
                     {suggestionProduct.length > 0 && suggestionProduct.map((suggestion, index) =>{
                         const checkIfAdded = (element) => element.id === suggestion.id;
                         if(selectedItem.some(checkIfAdded) !== true){
@@ -213,7 +173,6 @@ const ProductsAutoComplete = ({dispatch , USER , fieldLabel , onChangeAuto}) => 
                             highlightedIndex : suggestion.id,
                             selectedItem: selectedItem2,
                           })
-
                         }
                       }
                     )}
