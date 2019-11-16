@@ -551,6 +551,53 @@ button.btn {
   animation-iteration-count: 1;
   animation-timing-function: ease-in-out; }
 
+#product-editable-image .product-image {
+  background-color: #fff;
+  padding: 5px;
+  border-radius: 10px;
+  border: 1px solid #3f51b5;
+  text-align: center;
+  height: 100%;
+  position: relative; }
+  #product-editable-image .product-image .remove-image {
+    color: #d35400;
+    position: absolute;
+    right: -2px;
+    top: -2px;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: .3s all;
+    z-index: 1; }
+  #product-editable-image .product-image img {
+    width: 100%;
+    height: 100%;
+    display: block; }
+  #product-editable-image .product-image:hover .remove-image {
+    opacity: 1; }
+
+#product-editable-image .image-loading {
+  animation: loadingFadeIn 1.5s infinite alternate; }
+
+#product-editable-image .image-uploaded {
+  animation-name: imageUploaded;
+  animation-duration: 2s;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-in-out; }
+
+@keyframes loadingFadeIn {
+  0% {
+    opacity: 1; }
+  50% {
+    opacity: .3; }
+  100% {
+    opacity: 1; } }
+
+@keyframes imageUploaded {
+  0% {
+    background-color: #3eb99a; }
+  100% {
+    background-color: #fff; } }
+
 #login-page {
   position: relative;
   min-height: 100vh; }
@@ -616,30 +663,10 @@ button.btn {
   .product-gallery li {
     display: block;
     width: 33.33333%;
-    padding: 10px; }
+    padding: 10px;
+    height: 115px; }
   .product-gallery img {
     max-width: 100%; }
-
-.product-image {
-  background-color: #fff;
-  padding: 5px;
-  border-radius: 10px;
-  border: 1px solid #3f51b5;
-  text-align: center;
-  height: 100%;
-  position: relative; }
-  .product-image .remove-image {
-    color: #d35400;
-    position: absolute;
-    right: 0;
-    top: 0;
-    cursor: pointer;
-    opacity: 0.3;
-    transition: .3s all; }
-  .product-image img {
-    width: 100%; }
-  .product-image:hover .remove-image {
-    opacity: 1; }
 
 .product-tag {
   margin-right: 5px;

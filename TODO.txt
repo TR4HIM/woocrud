@@ -1,4 +1,5 @@
-- Auto-complete API
+- Delete Media API
+- Auto-complete API - Done
 - Fix loading after quick edit - Done
 - Loading : Test - https://github.com/buildo/react-placeholder
 - Errors Snack Bar

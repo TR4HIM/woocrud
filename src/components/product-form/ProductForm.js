@@ -38,6 +38,7 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS,  toEdit=false
     const [productCategories, setProductCategories]             = useState([...WOO_CATEGORIES]);
     const [getProductCategories, setGetProductCategories]       = useState([]);
     const [isThumbnailUploade,setIsThumbnailUploade]    = useState(false);
+    const [tmpUploadedImageUrl,setTmpUploadedImageUrl]    = useState("");
 
     useEffect(()=>{
         if(toEdit === true){
@@ -79,15 +80,27 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS,  toEdit=false
     },[productTags]);
 
     useEffect(()=>{
-        if(isThumbnailUploade === true){
-            console.log('Done')
-            
+        if(isThumbnailUploade && tmpUploadedImageUrl !== ""){
+            const nextState2 = productGallery.map(a => a.isUloading === true ? { ...a, isUloading : false , sourceUrl : tmpUploadedImageUrl} : a);
+            setProductGallery(nextState2);
+            setTmpUploadedImageUrl(""); 
+            setIsThumbnailUploade(false);
         }
-    },[isThumbnailUploade])
+    },[productGallery,isThumbnailUploade]);
+
+    // useEffect(()=>{
+    //     if(isThumbnailUploade === true){
+    //         console.log('Done')
+            
+    //     }
+    // },[isThumbnailUploade])
 
     const uploadProductImage = (file,imgType="gallery") => {
-		var formData = new FormData();
-		formData.append( 'file', file );
+        let imageObject = file.imageObject;
+        let formData    = new FormData();
+
+        formData.append( 'file', imageObject );
+        
         dispatch(loading(true, "header-loader"));
         return API.WP_uploadImage(USER.token, formData).then((data)=>{ 
             if(imgType == 'thumbnail'){
@@ -110,13 +123,25 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS,  toEdit=false
         })
     }
 
+    const handleThumbnailProduct = (file) =>{
+        let imageObj = {id : file.name, name : file.name, isUloading : true, imageObject : file};
+        setProductImage(imageObj);
+        uploadProductImage(imageObj,'thumbnail');
+    }
     const handleProductGallery = async (gallery) => {
         const selectedImages = gallery.target.files;
         for(let i = 0; i < selectedImages.length ; i++){
             let productImage = selectedImages[i];
-            await uploadProductImage(productImage).then((data)=>{
-                setProductGallery( currentGallery => [...currentGallery,  data.source_url]);
+            let id = i+productImage.name;
+            let imageObj = {id, name : productImage.name, isUloading : true, imageObject : productImage};
+            setIsThumbnailUploade(false);
+            setProductGallery( currentGallery => [...currentGallery,  imageObj]);
+            
+            await uploadProductImage(imageObj).then((data)=>{
+                setTmpUploadedImageUrl(data.source_url); 
+                setIsThumbnailUploade(true);
             })
+            // console.log(productGallery);
         }
         dispatch(loading(false, "header-loader"));
     }
@@ -314,7 +339,7 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS,  toEdit=false
                             <Divider className="paper-divider" />
                             <div className="featured-image">
                                 { productImage  ? <EditableImage imageObject={productImage} removeImageFunc={() => setProductImage(false)} /> 
-                                                : <ButtonUploadImage typeImage="thumbnail" onChange ={ (thumbnail) => uploadProductImage(thumbnail.target.files[0],'thumbnail') } /> }
+                                                : <ButtonUploadImage typeImage="thumbnail" onChange ={ (thumbnail) => handleThumbnailProduct(thumbnail.target.files[0],'thumbnail') } /> }
                             </div>    
                         </Paper>
                         <Paper className="product-form" elevation={2}>
