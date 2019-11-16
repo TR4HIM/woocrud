@@ -29,6 +29,7 @@ const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
     const [productThumbnail,setProductThumbnail]        = useState(false);
     const [productDescription,setProductDescription]    = useState("");
     const [isThumbnailUploade,setIsThumbnailUploade]    = useState(false);
+    const [tmpUploadedImageUrl,setTmpUploadedImageUrl]  = useState("");
 
     useEffect(() => {
         if(EDITING_WOO_PRODUCT.currentProduct){
@@ -55,25 +56,23 @@ const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
     };
 
     useEffect(()=>{
-        if(isThumbnailUploade === true){
+        if(isThumbnailUploade === true && tmpUploadedImageUrl !== ""){
             let payload = {};
             let currentGallery = EDITING_WOO_PRODUCT.currentProduct.images;
             let id = EDITING_WOO_PRODUCT.currentProduct.id;
             //Remove first image
             currentGallery.shift();
-
+            console.log(productThumbnail.sourceUrl)
             payload = {
                 images: [
                     {
-                      "src": productThumbnail
+                      "src": productThumbnail.sourceUrl
                     },
                     ...currentGallery
                 ]
             }
-            // dispatch(loading(true, "edit-modal-loading"));
 
             API.WC_updateProduct(USER.token, EDITING_WOO_PRODUCT.currentProduct.id, payload).then(()=>{ 
-                // console.log('Here we are again ');   
                 dispatch(updateWooProudct({id ,...payload}));
                 dispatch(loading(false, "edit-modal-loading"));
                 setIsThumbnailUploade(false);
@@ -89,20 +88,28 @@ const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
                 setIsThumbnailUploade(false);
             })
         }
-    },[isThumbnailUploade])
+    },[isThumbnailUploade,isThumbnailUploade])
+
+    useEffect(()=>{
+        if(tmpUploadedImageUrl !== ""){
+            let imageObj = {...productThumbnail , isUloading : false, sourceUrl : tmpUploadedImageUrl};
+            setProductThumbnail(imageObj);
+        }
+    },[tmpUploadedImageUrl]);
 
     const uploadProductThumbnail = (file) => {
-		var formData = new FormData();
-		formData.append( 'file', file );
+        let formData = new FormData();
+        let imageObject = file.imageObject;
+		formData.append( 'file', imageObject );
 		formData.append( 'title', EDITING_WOO_PRODUCT.currentProduct.name );
 		formData.append( 'alt_text', EDITING_WOO_PRODUCT.currentProduct.name );
 		formData.append( 'caption', EDITING_WOO_PRODUCT.currentProduct.name );
         formData.append( 'post', EDITING_WOO_PRODUCT.currentProduct.id );
-        // formData.append( 'author', USER.id );
         dispatch(loading(true, "edit-modal-loading"));
         
         API.WP_uploadImage(USER.token, formData).then((data)=>{ 
-            setProductThumbnail(data.source_url);
+            let imageObj = {...productThumbnail , isUloading : false, sourceUrl : data.source_url};
+            setTmpUploadedImageUrl(data.source_url);
             setIsThumbnailUploade(true);
             
             dispatch(loading(false, "edit-modal-loading"));
@@ -117,6 +124,12 @@ const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
             dispatch(loading(false, "edit-modal-loading"));
 
         })
+    }
+
+    const handleThumbnailProduct = (file) =>{
+        let imageObj = {id : file.name, name : file.name, isUloading : true, imageObject : file};
+        setProductThumbnail(imageObj);
+        uploadProductThumbnail(imageObj);
     }
 
     const updateProductProperty = (e,field) => {
@@ -242,7 +255,7 @@ const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
                     <Grid item xs={12} sm={4}>
                         <div className="featured-image">
                                 { productThumbnail  ? <EditableImage imageObject={productThumbnail} removeImageFunc={() => setProductThumbnail(false)} /> 
-                                                : <ButtonUploadImage typeImage="thumbnail" onChange ={ (thumbnail) =>uploadProductThumbnail(thumbnail.target.files[0]) } /> }
+                                                : <ButtonUploadImage typeImage="thumbnail" onChange ={ (thumbnail) =>handleThumbnailProduct(thumbnail.target.files[0]) } /> }
                         </div>  
                         <FormControlLabel
                             control={

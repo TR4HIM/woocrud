@@ -88,13 +88,6 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS,  toEdit=false
         }
     },[productGallery,isThumbnailUploade]);
 
-    // useEffect(()=>{
-    //     if(isThumbnailUploade === true){
-    //         console.log('Done')
-            
-    //     }
-    // },[isThumbnailUploade])
-
     const uploadProductImage = (file,imgType="gallery") => {
         let imageObject = file.imageObject;
         let formData    = new FormData();
@@ -116,7 +109,6 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS,  toEdit=false
                 type : "ERROR",
                 payload : error
             });
-
             // HIDE LOADING
             dispatch(loading(false, "header-loader"));
 
