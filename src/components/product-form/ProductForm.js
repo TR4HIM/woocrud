@@ -14,6 +14,8 @@ import Icon from '@material-ui/core/Icon';
 import ProductsAutoComplete from '../../components/input-autocomplete/InputAutocomplete';
 import ButtonUploadImage from '../../components/button-upload/ButtonUpload';
 import EditableImage from '../../components/editable-image/EditableImage';
+import { loading , editWooProduct, updateWooProudct} from '../../store/actions/';
+import API from '../../API/'; 
 
 const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS,  toEdit=false , productData=null}) =>  {
 
@@ -32,9 +34,10 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS,  toEdit=false
     const [crossSellsProducts,setCrossSellsProducts]            = useState([]);
     const [productImage,setProductImage]                        = useState(false);
     const [productGallery,setProductGallery]                    = useState([]);
-    const [productTags, setProductTags]                         = useState([...WOO_TAGS]);
+    const [productTags, setProductTags]                         = useState([]);
     const [productCategories, setProductCategories]             = useState([...WOO_CATEGORIES]);
     const [getProductCategories, setGetProductCategories]       = useState([]);
+    const [isThumbnailUploade,setIsThumbnailUploade]    = useState(false);
 
     useEffect(()=>{
         if(toEdit === true){
@@ -75,6 +78,53 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS,  toEdit=false
         tagInput.current.value = "";
     },[productTags]);
 
+    useEffect(()=>{
+        if(isThumbnailUploade === true){
+            console.log('Done')
+            
+        }
+    },[isThumbnailUploade])
+
+    const uploadProductImage = (file,imgType="gallery") => {
+		var formData = new FormData();
+		formData.append( 'file', file );
+        dispatch(loading(true, "header-loader"));
+        return API.WP_uploadImage(USER.token, formData).then((data)=>{ 
+            if(imgType == 'thumbnail'){
+                setProductImage(data.source_url);
+                setIsThumbnailUploade(true);
+                dispatch(loading(false, "header-loader"));
+            }else{
+                return data;
+            }
+        })
+        .catch((error)=>{
+            dispatch({
+                type : "ERROR",
+                payload : error
+            });
+
+            // HIDE LOADING
+            dispatch(loading(false, "header-loader"));
+
+        })
+    }
+
+    const handleProductGallery = async (gallery) => {
+        const selectedImages = gallery.target.files;
+        for(let i = 0; i < selectedImages.length ; i++){
+            let productImage = selectedImages[i];
+            await uploadProductImage(productImage).then((data)=>{
+                setProductGallery( currentGallery => [...currentGallery,  data.source_url]);
+            })
+        }
+        dispatch(loading(false, "header-loader"));
+    }
+
+    const removeGallery = (imageToDelete) => {
+        setProductGallery(imagesGallery => imagesGallery.filter(image => image !== imageToDelete));
+    }
+  
     const handleAddTag = (e) => {
         if(tagInput.current.value.trim() !== '' && e.keyCode === 13){
             setProductTags(currentTags => [...currentTags, {name: tagInput.current.value }]);
@@ -104,18 +154,7 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS,  toEdit=false
         )
     }
 
-    const handleUploadThumbnail = (thumbnail) => {
-        setProductImage(thumbnail.target.files[0]);
-    }
-
-    const handleProductGallery = (gallery) => {
-        const selectedImages = gallery.target.files;
-        setProductGallery( currentGallery => [...currentGallery,  ...selectedImages ]);
-    }
-
-    const removeGallery = (imageToDelete) => {
-        setProductGallery(imagesGallery => imagesGallery.filter(image => image.name !== imageToDelete.name));
-    }
+    
 
     return (
         <Container maxWidth="lg">
@@ -274,9 +313,8 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS,  toEdit=false
                             </Typography>
                             <Divider className="paper-divider" />
                             <div className="featured-image">
-                                {/* To be diccussed with MEhdi */}
                                 { productImage  ? <EditableImage imageObject={productImage} removeImageFunc={() => setProductImage(false)} /> 
-                                                : <ButtonUploadImage typeImage="thumbnail" onChange ={ (var1) => handleUploadThumbnail(var1) } /> }
+                                                : <ButtonUploadImage typeImage="thumbnail" onChange ={ (thumbnail) => uploadProductImage(thumbnail.target.files[0],'thumbnail') } /> }
                             </div>    
                         </Paper>
                         <Paper className="product-form" elevation={2}>
