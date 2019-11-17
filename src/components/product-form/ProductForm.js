@@ -43,16 +43,19 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS,  toEdit=false
     const [isThumbnailUploade,setIsThumbnailUploade]            = useState(false);
     const [tmpUploadedImageUrl,setTmpUploadedImageUrl]          = useState("");
     const [productDeletedImages, setProductDeletedImages]       = useState([]);
-    const [crossSellsProductsDataReady, setCrossSellsProductsDataReady]     = useState(false);
-    const [upSellsProductsDataReady, setUpSellsProductsDataReady]     = useState(false);
+    const [crossSellsProductsDataReady, setCrossSellsProductsDataReady]     = useState(true);
+    const [upSellsProductsDataReady, setUpSellsProductsDataReady]     = useState(true);
 
     useEffect(()=>{
         if(toEdit === true){
             const isPublished   = (productData.status === "publish") ? true : false;
             let galleryImages   = productData.images.map(img => ({sourceUrl : img.src , id : img.id}));
-            let upSellIds       = productData.upsell_ids.map(prod => ({id:prod, name:"Ta3lab"}));
-            let crossSellIds    = productData.cross_sell_ids.map(prod => ({id:prod, name:"Ta9jdawr"}));
-            
+
+            if(productData.upsell_ids.length > 0)
+                setCrossSellsProductsDataReady(false);
+            if(productData.upsell_ids.length > 0)
+                setUpSellsProductsDataReady(false);
+
             setUpSellsProductsIds(productData.upsell_ids);
             setCrossSellsProductsIds(productData.cross_sell_ids);
 
@@ -75,8 +78,6 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS,  toEdit=false
     },[]);
 
     useEffect(()=>{
-        console.log('mnawtwal ?');
-        
         if(upSellsProductsIds.length > 0) 
             getRelatedProductData(upSellsProductsIds,'upSellsProducts')
         if (crossSellsProductsIds.length > 0)
@@ -84,7 +85,6 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS,  toEdit=false
     },[upSellsProductsIds, crossSellsProductsIds]);
 
     useEffect(()=>{
-    
         if(upSellsProducts.length > 0){
             setUpSellsProductsDataReady(true)
         }
@@ -98,13 +98,11 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS,  toEdit=false
         const listProductsData = [];
         for(let i = 0; i < relatedProducts.length ; i++){
             let id = relatedProducts[i];
-            console.log(id);
             await API.WC_getWooProductById(USER.token, id)
             .then((result)=>{
                 if( result !== undefined ){
                     // HIDE LOADER
                     let productItem = {id:result.id, name:result.name};
-                    console.log(productItem);
                     listProductsData.push(productItem)
                     dispatch(loading(false, "header-loader"));
                 }
@@ -120,13 +118,8 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS,  toEdit=false
         }
         if(relatedType === "upSellsProducts")
             setUpSellsProducts(listProductsData);
-
         if(relatedType === "crossSellsProducts")
             setCrossSellsProducts(listProductsData);
-            
-        console.log(relatedType);
-        console.log(listProductsData);
-
     }
 
     useEffect(() => {
