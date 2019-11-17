@@ -161,6 +161,7 @@ const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
 
         })
     }
+    
     const updateProductProperty = (e,field) => {
         let payload = {};
         let id = EDITING_WOO_PRODUCT.currentProduct.id;

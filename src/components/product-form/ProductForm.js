@@ -14,13 +14,14 @@ import Icon from '@material-ui/core/Icon';
 import ProductsAutoComplete from '../../components/input-autocomplete/InputAutocomplete';
 import ButtonUploadImage from '../../components/button-upload/ButtonUpload';
 import EditableImage from '../../components/editable-image/EditableImage';
-import { loading , editWooProduct, updateWooProudct} from '../../store/actions/';
+import { loading } from '../../store/actions/';
 import API from '../../API/'; 
 
 const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS,  toEdit=false , productData=null}) =>  {
 
     const tagInput = useRef(null);
 
+    const [productID,setProductID]                              = useState(false);
     const [productName,setProductName]                          = useState("");
     const [productDescription,setProductDescription]            = useState("");
     const [shortProductDescription,setShortProductDescription]  = useState("");
@@ -32,18 +33,30 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS,  toEdit=false
     const [downloadable,setDownloadable]                        = useState(false);
     const [upSellsProducts,setUpSellsProducts]                  = useState([]);
     const [crossSellsProducts,setCrossSellsProducts]            = useState([]);
+    const [upSellsProductsIds,setUpSellsProductsIds]            = useState([]);
+    const [crossSellsProductsIds,setCrossSellsProductsIds]      = useState([]);
     const [productImage,setProductImage]                        = useState(false);
     const [productGallery,setProductGallery]                    = useState([]);
     const [productTags, setProductTags]                         = useState([]);
     const [productCategories, setProductCategories]             = useState([...WOO_CATEGORIES]);
     const [getProductCategories, setGetProductCategories]       = useState([]);
-    const [isThumbnailUploade,setIsThumbnailUploade]    = useState(false);
-    const [tmpUploadedImageUrl,setTmpUploadedImageUrl]    = useState("");
+    const [isThumbnailUploade,setIsThumbnailUploade]            = useState(false);
+    const [tmpUploadedImageUrl,setTmpUploadedImageUrl]          = useState("");
+    const [productDeletedImages, setProductDeletedImages]       = useState([]);
+    const [crossSellsProductsDataReady, setCrossSellsProductsDataReady]     = useState(false);
+    const [upSellsProductsDataReady, setUpSellsProductsDataReady]     = useState(false);
 
     useEffect(()=>{
         if(toEdit === true){
-            const isPublished = (productData.status === "publish") ? true : false;
-            let galleryImages = productData.images.map(img => img.src);
+            const isPublished   = (productData.status === "publish") ? true : false;
+            let galleryImages   = productData.images.map(img => ({sourceUrl : img.src , id : img.id}));
+            let upSellIds       = productData.upsell_ids.map(prod => ({id:prod, name:"Ta3lab"}));
+            let crossSellIds    = productData.cross_sell_ids.map(prod => ({id:prod, name:"Ta9jdawr"}));
+            
+            setUpSellsProductsIds(productData.upsell_ids);
+            setCrossSellsProductsIds(productData.cross_sell_ids);
+
+            setProductID(productData.id);
             setProductName(productData.name);
             setProductDescription(productData.description);
             setShortProductDescription(productData.short_description);
@@ -54,13 +67,67 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS,  toEdit=false
             setVirtual(productData.virtual);
             setProductTags(productData.tags);
             setGetProductCategories(productData.categories);
-
             // Remove First Element For Featured Image :) 
             setProductImage(galleryImages.shift());
             setProductGallery(galleryImages);
             setPublished(isPublished);
         }
     },[]);
+
+    useEffect(()=>{
+        console.log('mnawtwal ?');
+        
+        if(upSellsProductsIds.length > 0) 
+            getRelatedProductData(upSellsProductsIds,'upSellsProducts')
+        if (crossSellsProductsIds.length > 0)
+            getRelatedProductData(crossSellsProductsIds,'crossSellsProducts')
+    },[upSellsProductsIds, crossSellsProductsIds]);
+
+    useEffect(()=>{
+    
+        if(upSellsProducts.length > 0){
+            setUpSellsProductsDataReady(true)
+        }
+        if(crossSellsProducts.length > 0){
+            setCrossSellsProductsDataReady(true)
+        }
+
+    },[upSellsProducts, crossSellsProducts]);
+
+    const getRelatedProductData = async (relatedProducts,relatedType) => {
+        const listProductsData = [];
+        for(let i = 0; i < relatedProducts.length ; i++){
+            let id = relatedProducts[i];
+            console.log(id);
+            await API.WC_getWooProductById(USER.token, id)
+            .then((result)=>{
+                if( result !== undefined ){
+                    // HIDE LOADER
+                    let productItem = {id:result.id, name:result.name};
+                    console.log(productItem);
+                    listProductsData.push(productItem)
+                    dispatch(loading(false, "header-loader"));
+                }
+            })
+            .catch((error)=>{
+                dispatch({
+                    type : 'ERROR',
+                    payload : error
+                })
+                // HIDE LOADING
+                dispatch(loading(false, "header-loader"));
+            })
+        }
+        if(relatedType === "upSellsProducts")
+            setUpSellsProducts(listProductsData);
+
+        if(relatedType === "crossSellsProducts")
+            setCrossSellsProducts(listProductsData);
+            
+        console.log(relatedType);
+        console.log(listProductsData);
+
+    }
 
     useEffect(() => {
         if(toEdit === true){
@@ -81,8 +148,8 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS,  toEdit=false
 
     useEffect(()=>{
         if(isThumbnailUploade && tmpUploadedImageUrl !== ""){
-            const nextState2 = productGallery.map(a => a.isUloading === true ? { ...a, isUloading : false , sourceUrl : tmpUploadedImageUrl} : a);
-            setProductGallery(nextState2);
+            const productGalleryObj = productGallery.map(a => a.isUloading === true ? { ...a, isUloading : false , sourceUrl : tmpUploadedImageUrl} : a);
+            setProductGallery(productGalleryObj);
             setTmpUploadedImageUrl(""); 
             setIsThumbnailUploade(false);
         }
@@ -93,6 +160,8 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS,  toEdit=false
         let formData    = new FormData();
 
         formData.append( 'file', imageObject );
+        if(productID !== false)
+            formData.append( 'post', productID);
         
         dispatch(loading(true, "header-loader"));
         return API.WP_uploadImage(USER.token, formData).then((data)=>{ 
@@ -120,6 +189,7 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS,  toEdit=false
         setProductImage(imageObj);
         uploadProductImage(imageObj,'thumbnail');
     }
+
     const handleProductGallery = async (gallery) => {
         const selectedImages = gallery.target.files;
         for(let i = 0; i < selectedImages.length ; i++){
@@ -133,15 +203,24 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS,  toEdit=false
                 setTmpUploadedImageUrl(data.source_url); 
                 setIsThumbnailUploade(true);
             })
-            // console.log(productGallery);
         }
         dispatch(loading(false, "header-loader"));
     }
 
     const removeGallery = (imageToDelete) => {
         setProductGallery(imagesGallery => imagesGallery.filter(image => image !== imageToDelete));
+        if(typeof imgObject !== "string"){
+            setProductDeletedImages(currentDeletedImages => [...currentDeletedImages, imageToDelete])
+        }
     }
-  
+    
+    const deleteThumbnailImage = (imgObject) => {
+        setProductImage(false);
+        if(typeof imgObject !== "string"){
+            setProductDeletedImages(currentDeletedImages => [...currentDeletedImages, imgObject])
+        }
+    }
+    
     const handleAddTag = (e) => {
         if(tagInput.current.value.trim() !== '' && e.keyCode === 13){
             setProductTags(currentTags => [...currentTags, {name: tagInput.current.value }]);
@@ -292,10 +371,10 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS,  toEdit=false
                                 </ExpansionPanelSummary>
                                 <ExpansionPanelDetails className="panel-form">
                                     <div className="autocomplete-container">
-                                        <ProductsAutoComplete fieldLabel="UpSells" onChangeAuto={(upsellsvalue) => setUpSellsProducts(upsellsvalue)}/>
+                                        { upSellsProductsDataReady      && <ProductsAutoComplete fieldLabel="UpSells" currentProduct={upSellsProducts} onChangeAuto={(upsellsvalue) => setUpSellsProducts(upsellsvalue)}/> }
                                     </div>
                                     <div className="autocomplete-container">
-                                        <ProductsAutoComplete fieldLabel="Cross-Sells"  onChangeAuto={(crosssellsvalue) => setCrossSellsProducts(crosssellsvalue)} />
+                                        { crossSellsProductsDataReady   && <ProductsAutoComplete fieldLabel="Cross-Sells"  currentProduct={crossSellsProducts} onChangeAuto={(crosssellsvalue) => setCrossSellsProducts(crosssellsvalue)} /> }
                                     </div>
                                 </ExpansionPanelDetails>
                             </ExpansionPanel>
@@ -330,7 +409,7 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS,  toEdit=false
                             </Typography>
                             <Divider className="paper-divider" />
                             <div className="featured-image">
-                                { productImage  ? <EditableImage imageObject={productImage} removeImageFunc={() => setProductImage(false)} /> 
+                                { productImage  ? <EditableImage imageObject={productImage} removeImageFunc={() =>deleteThumbnailImage(productImage)} />  
                                                 : <ButtonUploadImage typeImage="thumbnail" onChange ={ (thumbnail) => handleThumbnailProduct(thumbnail.target.files[0],'thumbnail') } /> }
                             </div>    
                         </Paper>

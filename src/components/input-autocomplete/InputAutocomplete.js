@@ -46,11 +46,17 @@ import Loader from '../loader/loader';
       );
   }
 
-const ProductsAutoComplete = ({dispatch , USER , fieldLabel , onChangeAuto}) => {
+const ProductsAutoComplete = ({dispatch , USER , fieldLabel , onChangeAuto , currentProduct = []}) => {
 
-    const [inputValue, setInputValue] = useState('');
-    const [selectedItem, setSelectedItem] = useState([]);
+    const [inputValue, setInputValue]               = useState('');
+    const [selectedItem, setSelectedItem]           = useState([]);
     const [suggestionProduct, setSuggestionProduct] = useState([]);
+
+    useEffect(() => {
+      if(currentProduct.length > 0){
+        setSelectedItem(currentProduct);
+      }
+    }, []);
 
     useEffect(() => {
       if( selectedItem.length  >=   0){
