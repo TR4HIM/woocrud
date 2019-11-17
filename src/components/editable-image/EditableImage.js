@@ -11,7 +11,6 @@ const EditableImage = ( { imageObject , removeImageFunc } ) => {
         else if('sourceUrl' in imageObject)
             imagePreview = imageObject.sourceUrl;
     }
-    console.log(imageObject);
     return(
         <div id="product-editable-image">
             <div className={`product-image ${(imageObject.isUloading === false) ? 'image-uploaded' : ''}`}>

@@ -30,6 +30,7 @@ const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
     const [productDescription,setProductDescription]    = useState("");
     const [isThumbnailUploade,setIsThumbnailUploade]    = useState(false);
     const [tmpUploadedImageUrl,setTmpUploadedImageUrl]  = useState("");
+    const [tmpUploadedImageId,setTmpUploadedImageId]  = useState("");
 
     useEffect(() => {
         if(EDITING_WOO_PRODUCT.currentProduct){
@@ -65,7 +66,6 @@ const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
             let id = EDITING_WOO_PRODUCT.currentProduct.id;
             //Remove first image
             currentGallery.shift();
-            console.log(productThumbnail.sourceUrl)
             payload = {
                 images: [
                     {
@@ -95,10 +95,10 @@ const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
 
     useEffect(()=>{
         if(tmpUploadedImageUrl !== ""){
-            let imageObj = {...productThumbnail , isUloading : false, sourceUrl : tmpUploadedImageUrl};
+            let imageObj = {...productThumbnail , isUloading : false, sourceUrl : tmpUploadedImageUrl , id : tmpUploadedImageId};
             setProductThumbnail(imageObj);
         }
-    },[tmpUploadedImageUrl]);
+    },[tmpUploadedImageUrl,tmpUploadedImageId]);
 
     const uploadProductThumbnail = (file) => {
         let formData = new FormData();
@@ -111,8 +111,8 @@ const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
         dispatch(loading(true, "edit-modal-loading"));
         
         API.WP_uploadImage(USER.token, formData).then((data)=>{ 
-            let imageObj = {...productThumbnail , isUloading : false, sourceUrl : data.source_url};
             setTmpUploadedImageUrl(data.source_url);
+            setTmpUploadedImageId(data.id);
             setIsThumbnailUploade(true);
             
             dispatch(loading(false, "edit-modal-loading"));
@@ -139,6 +139,15 @@ const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
         dispatch(loading(true, "edit-modal-loading"));
         API.WP_deleteImage(USER.token, imgObject.id).then((data)=>{ 
             setProductThumbnail(false);
+            let id = EDITING_WOO_PRODUCT.currentProduct.id;
+            let currentGallery = EDITING_WOO_PRODUCT.currentProduct.images;
+            currentGallery.shift();
+            let payload = {
+                images: [
+                    ...currentGallery
+                ]
+            }
+            dispatch(updateWooProudct({id ,...payload}));
             dispatch(loading(false, "edit-modal-loading"));
         })
         .catch((error)=>{
