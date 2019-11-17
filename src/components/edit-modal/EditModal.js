@@ -37,7 +37,10 @@ const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
             setRegularPrice(EDITING_WOO_PRODUCT.currentProduct.regular_price);
             setSalePrice(EDITING_WOO_PRODUCT.currentProduct.sale_price);
             setProductName(EDITING_WOO_PRODUCT.currentProduct.name);
-            setProductThumbnail(EDITING_WOO_PRODUCT.currentProduct.images[0].src);
+            if(EDITING_WOO_PRODUCT.currentProduct.images.length>0){
+                let imageObj = {sourceUrl : EDITING_WOO_PRODUCT.currentProduct.images[0].src , id : EDITING_WOO_PRODUCT.currentProduct.images[0].id};
+                setProductThumbnail(imageObj);
+            }
             setProductDescription(EDITING_WOO_PRODUCT.currentProduct.short_description);
             setPublished((EDITING_WOO_PRODUCT.currentProduct.status === 'publish'));
             let id = EDITING_WOO_PRODUCT.currentProduct.id;
@@ -132,6 +135,23 @@ const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
         uploadProductThumbnail(imageObj);
     }
 
+    const deleteThumbnailImage = (imgObject) => {
+        dispatch(loading(true, "edit-modal-loading"));
+        API.WP_deleteImage(USER.token, imgObject.id).then((data)=>{ 
+            setProductThumbnail(false);
+            dispatch(loading(false, "edit-modal-loading"));
+        })
+        .catch((error)=>{
+            dispatch({
+                type : "ERROR",
+                payload : error
+            });
+
+            // HIDE LOADING
+            dispatch(loading(false, "edit-modal-loading"));
+
+        })
+    }
     const updateProductProperty = (e,field) => {
         let payload = {};
         let id = EDITING_WOO_PRODUCT.currentProduct.id;
@@ -254,7 +274,7 @@ const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
                     </Grid>
                     <Grid item xs={12} sm={4}>
                         <div className="featured-image">
-                                { productThumbnail  ? <EditableImage imageObject={productThumbnail} removeImageFunc={() => setProductThumbnail(false)} /> 
+                                { productThumbnail  ? <EditableImage imageObject={productThumbnail} removeImageFunc={() => deleteThumbnailImage(productThumbnail)} /> 
                                                 : <ButtonUploadImage typeImage="thumbnail" onChange ={ (thumbnail) =>handleThumbnailProduct(thumbnail.target.files[0]) } /> }
                         </div>  
                         <FormControlLabel

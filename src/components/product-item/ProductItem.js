@@ -19,7 +19,7 @@ const WooProduct = ({dispatch , data }) => {
             id={data.id} 
         >
             <div className={`thumbnail ${visualLoaded ? 'visual-loaded' : ''}`}>
-                <img className="visual" src={data.images[0].src} alt="" onLoad={()=>setVisualLoaded(true)} />
+                { (data.images.length>0) ? <img className="visual" src={data.images[0].src} alt="" onLoad={()=>setVisualLoaded(true)} /> : "" }
                 <img className="mold" src={`${process.env.PUBLIC_URL}/img/product-image-mold.png`} alt="" />
             </div>
             <h3 className="title">{data.name}</h3>

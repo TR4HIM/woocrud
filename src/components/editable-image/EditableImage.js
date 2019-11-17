@@ -2,7 +2,16 @@ import React from 'react';
 import Icon from '@material-ui/core/Icon';
 
 const EditableImage = ( { imageObject , removeImageFunc } ) => { 
-    const imagePreview = (typeof imageObject === "string") ? imageObject :  URL.createObjectURL(imageObject.imageObject);
+    let imagePreview;
+    if(typeof imageObject === "string"){
+        imagePreview = imageObject;
+    }else{
+        if('imageObject' in imageObject)
+            imagePreview = URL.createObjectURL(imageObject.imageObject);
+        else if('sourceUrl' in imageObject)
+            imagePreview = imageObject.sourceUrl;
+    }
+    console.log(imageObject);
     return(
         <div id="product-editable-image">
             <div className={`product-image ${(imageObject.isUloading === false) ? 'image-uploaded' : ''}`}>

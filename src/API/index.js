@@ -198,6 +198,17 @@ const WP_uploadImage = (token, data)=>{
     });
 }
 
+const WP_deleteImage = (token, id)=>{
+    return axios.delete( `${WP}/media/${id}?force=true`,  {
+        headers : {
+            "Authorization" : `Bearer ${token}`,
+        }
+    })
+    .then((result)=>{
+        return result.data
+    });
+}
+
 export default {
     LOGIN,
     TOKEN_VALIDATE,
@@ -209,5 +220,6 @@ export default {
     WP_getProfileInfo,
     WC_updateProduct,
     WC_getWooProductByName,
-    WP_uploadImage
+    WP_uploadImage,
+    WP_deleteImage
 }
