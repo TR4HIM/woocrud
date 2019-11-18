@@ -75,10 +75,28 @@ const EditProductPage = ({dispatch , USER , WOO_CATEGORIES , match}) =>  {
     //         })
     // }, []);
 
+    const saveEditedProduct = (payload) => {
+        console.log(payload);
+        
+        API.WC_updateProduct(USER.token,  payload.productId , payload.payload ).then((data)=>{ 
+            console.log("Done");
+            console.log(data);
+            dispatch(loading(false, "header-loader"));
+        })
+        .catch((error)=>{
+            dispatch({
+                type : "ERROR",
+                payload : error
+            });
+            // HIDE LOADING
+            dispatch(loading(false, "header-loader"));
+        })
+    }
+
     return (
         <div id="add-product-page">
             <Header />
-                { (product !== null && isCategoriesLoaded) ? <ProductForm toEdit={true} productData={ product }/> : false }
+                { (product !== null && isCategoriesLoaded) ? <ProductForm toEdit={true} productData={ product } saveProductAction={(productData) => saveEditedProduct(productData)}/> : false }
             <Footer />
         </div>
     ); 
