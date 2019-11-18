@@ -147,6 +147,22 @@ const WC_getWooTags = (token)=>{
     })
 }
 
+const WC_createWooTags = (token,data)=>{
+    let newTag = data;
+    return axios.post( `${WC}/products/tags`, newTag , {
+        headers : {
+            "Authorization" : `Bearer ${token}`
+        }
+    })
+    .then((result)=>{
+        return result.data;
+    })
+    .catch((error)=>{
+        if ( !axios.isCancel(error)) 
+            return error;
+    })
+}
+
 const WP_getProfileInfo = (token, idUser)=>{
     return axios.get( `${WP}/users/me?context=edit`, {
         headers : {
@@ -224,5 +240,6 @@ export default {
     WC_getWooProductByName,
     WP_uploadImage,
     WC_createProduct,
+    WC_createWooTags,
     WP_deleteImage
 }

@@ -14,10 +14,11 @@ import Icon from '@material-ui/core/Icon';
 import ProductsAutoComplete from '../../components/input-autocomplete/InputAutocomplete';
 import ButtonUploadImage from '../../components/button-upload/ButtonUpload';
 import EditableImage from '../../components/editable-image/EditableImage';
-import { loading } from '../../store/actions/';
+import { loading , storeWooTags} from '../../store/actions/';
 import API from '../../API/'; 
 
-const ProductForm = ({dispatch , USER , WOO_CATEGORIES ,  toEdit=false , productData=null , saveProductAction}) =>  {
+
+const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=false , productData=null , saveProductAction}) =>  {
 
     const tagInput = useRef(null);
 
@@ -37,6 +38,7 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES ,  toEdit=false , product
     const [crossSellsProductsIds,setCrossSellsProductsIds]                  = useState([]);
     const [productImage,setProductImage]                                    = useState(false);
     const [productGallery,setProductGallery]                                = useState([]);
+    const [wooStoreTags, setWooStoreTags]                                   = useState([]);
     const [productTags, setProductTags]                                     = useState([]);
     const [wooStoreCategories, setWooStoreCategories]                       = useState([]);
     const [getProductCategories, setGetProductCategories]                   = useState([]);
@@ -48,6 +50,7 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES ,  toEdit=false , product
 
     useEffect(()=>{
         setWooStoreCategories(WOO_CATEGORIES);
+        setWooStoreTags(WOO_TAGS);
 
         if(toEdit === true){
             const isPublished   = (productData.status === "publish") ? true : false;
@@ -69,12 +72,14 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES ,  toEdit=false , product
             setSku(productData.sku);
             setDownloadable(productData.downloadable);
             setVirtual(productData.virtual);
-            setProductTags(productData.tags);
+            setProductTags(productData.tags)
             setGetProductCategories(productData.categories);
+
             // Remove First Element For Featured Image :) 
             setProductImage(galleryImages.shift());
             setProductGallery(galleryImages);
             setPublished(isPublished);
+
         }
     },[]);
 
@@ -94,6 +99,8 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES ,  toEdit=false , product
         }
 
     },[upSellsProducts, crossSellsProducts]);
+
+    
 
     const getRelatedProductData = async (relatedProducts,relatedType) => {
         const listProductsData = [];
@@ -138,7 +145,8 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES ,  toEdit=false , product
 
     useEffect(()=>{
         tagInput.current.value = "";
-    },[productTags]);
+
+    },[productTags])
 
     useEffect(()=>{
         if(isThumbnailUploade && tmpUploadedImageUrl !== ""){
@@ -147,7 +155,7 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES ,  toEdit=false , product
             setTmpUploadedImageUrl(""); 
             setIsThumbnailUploade(false);
         }
-    },[productGallery,isThumbnailUploade]);
+    },[productGallery,isThumbnailUploade])
 
     const uploadProductImage = (file,imgType="gallery") => {
         let imageObject = file.imageObject;
@@ -215,21 +223,48 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES ,  toEdit=false , product
         }
     }
     
+    const addTagToWoo = (payload) => {
+        API.WC_createWooTags(USER.token,payload).then((data)=>{ 
+            setProductTags(currentTags => [...currentTags, data])
+            dispatch(storeWooTags([...WOO_TAGS, data]));
+            dispatch(loading(false, "header-loader"));
+        })
+        .catch((error)=>{
+            dispatch({
+                type : "ERROR",
+                payload : error
+            });
+            // HIDE LOADING
+            dispatch(loading(false, "header-loader"));
+        })
+    }
+
     const handleAddTag = (e) => {
         if(tagInput.current.value.trim() !== '' && e.keyCode === 13){
-            setProductTags(currentTags => [...currentTags, {name: tagInput.current.value }]);
+            let wooStoreTags    = WOO_TAGS.filter(tag => tag.name === tagInput.current.value.trim() ).map(t => ({id : t.id , name : t.name}));
+            let isTagExist      = productTags.filter(tag => tag.name === tagInput.current.value.trim() )
+            if(isTagExist.length > 0){
+                tagInput.current.value = "";
+                return;
+            }
+            if(wooStoreTags.length > 0)
+                setProductTags(currentTags => [...currentTags, ...wooStoreTags])
+            else {
+                addTagToWoo({name : tagInput.current.value.trim()});
+            }
+
         }
     }
 
     const handleDeleteTag = chipToDelete => () => {
-        setProductTags(chips => chips.filter(chip => chip.name !== chipToDelete.name));
-    };
+        setWooStoreTags(chips => chips.filter(chip => chip.name !== chipToDelete.name));
+    }
 
     const checkCategory = index => {
         const newCategoryList = [...wooStoreCategories]; 
         newCategoryList[index].selected = ! newCategoryList[index].selected;
         setWooStoreCategories(newCategoryList);
-    };
+    }
 
     const renderCategoriesList = () => {
         return(
@@ -249,45 +284,46 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES ,  toEdit=false , product
         
         dispatch(loading(true, "header-loader"));
 
+        
         let galleryImages       = productGallery.map(img => ({src : img.sourceUrl}));
         let productCategories   = wooStoreCategories.filter(cat => cat.selected ).map(c => ({id : c.id}));
         let productUpSells      = upSellsProducts.map(ups =>  ups.id );
         let productCrossSells   = crossSellsProducts.map(ups =>  ups.id );
-        console.log(productImage)
+
         if( productImage !== undefined && productImage !== false){
             if(toEdit === true && typeof productImage !== "string")
                 galleryImages.unshift({src : productImage.sourceUrl});
             else
                 galleryImages.unshift({src : productImage});
         }
-
+        
         let payload = {
             sale_price          : salePrice.toString(),
             status              : (published)  ? 'publish' : 'draft',
             short_description   : shortProductDescription,
             sku                 : sku,
             categories          : productCategories,
-            tags                : [{id : 30}],
+            tags                : productTags,
             virtual             : virtual,
             downloadable        : downloadable,
             upsell_ids          : productUpSells,
             cross_sell_ids      : productCrossSells,
             // related_ids      : 'EMPTY',
         };
+        payload = {...payload, regular_price : regularPrice.toString()};
         payload = {...payload, name          : productName};
         payload = {...payload, description   : productDescription};
         payload = {...payload, images        : galleryImages};
-        payload = {...payload, regular_price : regularPrice.toString()};
+
 
         // If new product
-        (toEdit === true) ? saveProductAction({ productId : productID , payload : payload }) : saveProductAction(payload);
+        (toEdit === true) ? saveProductAction({ productId : productID , payload }) : saveProductAction(payload);
         
         
     }
     return (
 
         <Container maxWidth="lg">
-                
                 <Grid container spacing={3}>
                     <Grid item xs={12} sm={8}>
                         <Paper className="product-form">
@@ -501,6 +537,6 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES ,  toEdit=false , product
     ); 
 }
 
-const mapStateToProps = ({ USER , WOO_CATEGORIES }) => ({ USER , WOO_CATEGORIES });
+const mapStateToProps = ({ USER , WOO_CATEGORIES , WOO_TAGS }) => ({ USER , WOO_CATEGORIES , WOO_TAGS });
 
 export default   connect(mapStateToProps)(ProductForm) ;
