@@ -65,7 +65,7 @@ const AddProduct = ({dispatch , USER }) =>  {
     return (
         <div id="add-product-page">
             <Header />
-            { isCategoriesLoaded && isTagsLoaded && <ProductForm /> }
+            { isCategoriesLoaded && isTagsLoaded && <ProductForm saveProductAction={(productData)=>console.log(productData)} /> }
             <Footer />
         </div>
     ); 

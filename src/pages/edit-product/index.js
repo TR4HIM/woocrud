@@ -59,21 +59,21 @@ const EditProductPage = ({dispatch , USER , WOO_CATEGORIES , match}) =>  {
     //     // if(isCategoriesLoaded)
 
     // },[isCategoriesLoaded])
-    useEffect(() => {
-        // SHOW LOADER
-        API.WC_getWooTags(USER.token)
-            .then((result)=>{
-                if( result !== undefined ){
-                    dispatch(storeWooTags(result));
-                }
-            })
-            .catch((error)=>{
-                dispatch({
-                    type : 'ERROR',
-                    payload : error 
-                })
-            })
-    }, []);
+    // useEffect(() => {
+    //     // SHOW LOADER
+    //     API.WC_getWooTags(USER.token)
+    //         .then((result)=>{
+    //             if( result !== undefined ){
+    //                 dispatch(storeWooTags(result));
+    //             }
+    //         })
+    //         .catch((error)=>{
+    //             dispatch({
+    //                 type : 'ERROR',
+    //                 payload : error 
+    //             })
+    //         })
+    // }, []);
 
     return (
         <div id="add-product-page">

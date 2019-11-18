@@ -17,34 +17,34 @@ import EditableImage from '../../components/editable-image/EditableImage';
 import { loading } from '../../store/actions/';
 import API from '../../API/'; 
 
-const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS,  toEdit=false , productData=null}) =>  {
+const ProductForm = ({dispatch , USER , WOO_CATEGORIES ,  toEdit=false , productData=null , saveProductAction}) =>  {
 
     const tagInput = useRef(null);
 
-    const [productID,setProductID]                              = useState(false);
-    const [productName,setProductName]                          = useState("");
-    const [productDescription,setProductDescription]            = useState("");
-    const [shortProductDescription,setShortProductDescription]  = useState("");
-    const [regularPrice,setRegularPrice]                        = useState(0);
-    const [salePrice,setSalePrice]                              = useState(0);
-    const [sku,setSku]                                          = useState("");
-    const [published,setPublished]                              = useState(false);
-    const [virtual,setVirtual]                                  = useState(false);
-    const [downloadable,setDownloadable]                        = useState(false);
-    const [upSellsProducts,setUpSellsProducts]                  = useState([]);
-    const [crossSellsProducts,setCrossSellsProducts]            = useState([]);
-    const [upSellsProductsIds,setUpSellsProductsIds]            = useState([]);
-    const [crossSellsProductsIds,setCrossSellsProductsIds]      = useState([]);
-    const [productImage,setProductImage]                        = useState(false);
-    const [productGallery,setProductGallery]                    = useState([]);
-    const [productTags, setProductTags]                         = useState([]);
-    const [wooStoreCategories, setWooStoreCategories]             = useState([]);
-    const [getProductCategories, setGetProductCategories]       = useState([]);
-    const [isThumbnailUploade,setIsThumbnailUploade]            = useState(false);
-    const [tmpUploadedImageUrl,setTmpUploadedImageUrl]          = useState("");
-    const [productDeletedImages, setProductDeletedImages]       = useState([]);
+    const [productID,setProductID]                                          = useState(false);
+    const [productName,setProductName]                                      = useState("");
+    const [productDescription,setProductDescription]                        = useState("");
+    const [shortProductDescription,setShortProductDescription]              = useState("");
+    const [regularPrice,setRegularPrice]                                    = useState(0);
+    const [salePrice,setSalePrice]                                          = useState(0);
+    const [sku,setSku]                                                      = useState("");
+    const [published,setPublished]                                          = useState(false);
+    const [virtual,setVirtual]                                              = useState(false);
+    const [downloadable,setDownloadable]                                    = useState(false);
+    const [upSellsProducts,setUpSellsProducts]                              = useState([]);
+    const [crossSellsProducts,setCrossSellsProducts]                        = useState([]);
+    const [upSellsProductsIds,setUpSellsProductsIds]                        = useState([]);
+    const [crossSellsProductsIds,setCrossSellsProductsIds]                  = useState([]);
+    const [productImage,setProductImage]                                    = useState(false);
+    const [productGallery,setProductGallery]                                = useState([]);
+    const [productTags, setProductTags]                                     = useState([]);
+    const [wooStoreCategories, setWooStoreCategories]                       = useState([]);
+    const [getProductCategories, setGetProductCategories]                   = useState([]);
+    const [isThumbnailUploade,setIsThumbnailUploade]                        = useState(false);
+    const [tmpUploadedImageUrl,setTmpUploadedImageUrl]                      = useState("");
+    const [productDeletedImages, setProductDeletedImages]                   = useState([]);
     const [crossSellsProductsDataReady, setCrossSellsProductsDataReady]     = useState(true);
-    const [upSellsProductsDataReady, setUpSellsProductsDataReady]     = useState(true);
+    const [upSellsProductsDataReady, setUpSellsProductsDataReady]           = useState(true);
 
     useEffect(()=>{
         setWooStoreCategories(WOO_CATEGORIES);
@@ -77,11 +77,6 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS,  toEdit=false
             setPublished(isPublished);
         }
     },[]);
-
-    // useEffect(()=>{
-    //     console.log("here");
-    //     console.log(productCategories);
-    // },[productCategories])
 
     useEffect(()=>{
         if(upSellsProductsIds.length > 0) 
@@ -250,7 +245,70 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS,  toEdit=false
     }
 
     
+    const productPayLoadData = () => {
+        // saveProductAction(playlod)
+        /* 
+    const [crossSellsProducts,setCrossSellsProducts]                        = useState([]);
+    const [upSellsProductsIds,setUpSellsProductsIds]                        = useState([]);
+    const [crossSellsProductsIds,setCrossSellsProductsIds]                  = useState([]);
+    const [productImage,setProductImage]                                    = useState(false);
+    const [productGallery,setProductGallery]                                = useState([]);
+    const [productTags, setProductTags]                                     = useState([]);
+    const [wooStoreCategories, setWooStoreCategories]                       = useState([]);
+    const [getProductCategories, setGetProductCategories]                   = useState([]);
+    const [isThumbnailUploade,setIsThumbnailUploade]                        = useState(false);
+    const [tmpUploadedImageUrl,setTmpUploadedImageUrl]                      = useState("");
+    const [productDeletedImages, setProductDeletedImages]                   = useState([]);
+    const [crossSellsProductsDataReady, setCrossSellsProductsDataReady]     = useState(true);
+    const [upSellsProductsDataReady, setUpSellsProductsDataReady]           = useState(true);
+        
+        */
+        dispatch(loading(true, "header-loader"));
 
+        let galleryImages       = productGallery.map(img => ({src : img.sourceUrl}));
+        let productCategories   = wooStoreCategories.filter(cat => cat.selected ).map(c => ({id : c.id}));
+
+
+        if(productImage !== false){
+            galleryImages.unshift({src : productImage});
+        }
+        console.log(productCategories);
+        let payload = {
+            sale_price          : salePrice.toString(),
+            status              : (published)  ? 'publish' : 'draft',
+            short_description   : shortProductDescription,
+            sku                 : sku,
+            categories          : productCategories,
+            tags                : [{id : 30}],
+            virtual             : virtual,
+            downloadable        : downloadable,
+            upsell_ids          : upSellsProducts,
+            cross_sell_ids      : crossSellsProducts,
+            // related_ids      : 'EMPTY',
+        };
+        payload = {...payload, name          : productName};
+        payload = {...payload, description   : productDescription};
+        payload = {...payload, images        : galleryImages};
+        payload = {...payload, regular_price : regularPrice.toString()};
+
+        console.log(payload);
+        // return;
+        API.WC_createProduct(USER.token,  payload).then((data)=>{ 
+            console.log("Done");
+            console.log(data);
+            dispatch(loading(false, "header-loader"));
+        })
+        .catch((error)=>{
+            dispatch({
+                type : "ERROR",
+                payload : error
+            });
+            // HIDE LOADING
+            dispatch(loading(false, "header-loader"));
+        })
+
+
+    }
     return (
         <Container maxWidth="lg">
                 <Grid container spacing={3}>
@@ -379,9 +437,10 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS,  toEdit=false
                             </ExpansionPanel>
                         </div>
                         <Paper className="product-form">
-                            <Button variant="contained" color="primary">
-                                { (toEdit === true) ? "Save Porduct" : "Add Product" } 
-                            </Button>
+                            { (toEdit === true) ? <Button variant="contained" onClick={()=>productPayLoadData('Save Product')} color="primary">Save Porduct</Button> 
+                                                : <Button variant="contained" onClick={()=>productPayLoadData('Add Product')} color="primary">Add Porduct</Button> } 
+                            
+                            
                         </Paper>
                     </Grid>
                     <Grid item xs={12} sm={4}>
@@ -466,6 +525,6 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS,  toEdit=false
     ); 
 }
 
-const mapStateToProps = ({ USER , WOO_CATEGORIES , WOO_TAGS  }) => ({ USER , WOO_CATEGORIES , WOO_TAGS });
+const mapStateToProps = ({ USER , WOO_CATEGORIES }) => ({ USER , WOO_CATEGORIES });
 
 export default   connect(mapStateToProps)(ProductForm) ;

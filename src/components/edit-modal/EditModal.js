@@ -30,7 +30,7 @@ const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
     const [productDescription,setProductDescription]    = useState("");
     const [isThumbnailUploade,setIsThumbnailUploade]    = useState(false);
     const [tmpUploadedImageUrl,setTmpUploadedImageUrl]  = useState("");
-    const [tmpUploadedImageId,setTmpUploadedImageId]  = useState("");
+    const [tmpUploadedImageId,setTmpUploadedImageId]    = useState("");
 
     useEffect(() => {
         if(EDITING_WOO_PRODUCT.currentProduct){
