@@ -26,7 +26,7 @@ const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
     const [published,setPublished]                      = useState(false);
     const [salePrice,setSalePrice]                      = useState(0);
     const [productName,setProductName]                  = useState("");
-    const [productThumbnail,setProductThumbnail]        = useState(false);
+    const [productThumbnail,setProductThumbnail]        = useState(false); 
     const [productDescription,setProductDescription]    = useState("");
     const [isThumbnailUploade,setIsThumbnailUploade]    = useState(false);
     const [tmpUploadedImageUrl,setTmpUploadedImageUrl]  = useState("");
@@ -41,6 +41,8 @@ const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
             if(EDITING_WOO_PRODUCT.currentProduct.images.length>0){
                 let imageObj = {sourceUrl : EDITING_WOO_PRODUCT.currentProduct.images[0].src , id : EDITING_WOO_PRODUCT.currentProduct.images[0].id};
                 setProductThumbnail(imageObj);
+            }else{
+                setProductThumbnail(false);
             }
             setProductDescription(EDITING_WOO_PRODUCT.currentProduct.short_description);
             setPublished((EDITING_WOO_PRODUCT.currentProduct.status === 'publish'));

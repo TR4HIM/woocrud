@@ -7,7 +7,6 @@ import EditProductModal from '../../components/edit-modal/EditModal';
 import {loading , storeWooProducts , clearStoreWooProducts, storeWooCategories} from '../../store/actions/';
 import API from '../../API/'; 
 
-const GET_WOO_PRODUCTS  = API.WC_getWooProducts();  
 
 const Products = ({dispatch , USER , WOO_PRODUCTS  }) => {
     
@@ -16,7 +15,7 @@ const Products = ({dispatch , USER , WOO_PRODUCTS  }) => {
         dispatch(loading(true, "header-loader"));
         // SHOW LOADER
         dispatch(clearStoreWooProducts()); 
-        GET_WOO_PRODUCTS( USER.token , 65, 1, 1 )
+        API.WC_getWooProducts( USER.token , 65, 1, 1 )
             .then((result)=>{
                 if( result !== undefined ){
                     dispatch(storeWooProducts(result));

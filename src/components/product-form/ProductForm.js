@@ -253,9 +253,9 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES ,  toEdit=false , product
         let productCategories   = wooStoreCategories.filter(cat => cat.selected ).map(c => ({id : c.id}));
         let productUpSells      = upSellsProducts.map(ups =>  ups.id );
         let productCrossSells   = crossSellsProducts.map(ups =>  ups.id );
-
-        if(productImage !== false){
-            if(toEdit === true)
+        console.log(productImage)
+        if( productImage !== undefined && productImage !== false){
+            if(toEdit === true && typeof productImage !== "string")
                 galleryImages.unshift({src : productImage.sourceUrl});
             else
                 galleryImages.unshift({src : productImage});
@@ -414,10 +414,9 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES ,  toEdit=false , product
                             </ExpansionPanel>
                         </div>
                         <Paper className="product-form">
-                            { (toEdit === true) ? <Button variant="contained" onClick={()=>productPayLoadData('Save Product')} color="primary">Save Porduct</Button> 
-                                                : <Button variant="contained" onClick={()=>productPayLoadData('Add Product')} color="primary">Add Porduct</Button> } 
-                            
-                            
+                            <Button variant="contained" onClick={()=>productPayLoadData('Add Product')} color="primary">
+                                { (toEdit === true)  ? 'Save Porduct' : 'Add Porduct' }
+                            </Button>
                         </Paper>
                     </Grid>
                     <Grid item xs={12} sm={4}>
