@@ -38,7 +38,7 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS,  toEdit=false
     const [productImage,setProductImage]                        = useState(false);
     const [productGallery,setProductGallery]                    = useState([]);
     const [productTags, setProductTags]                         = useState([]);
-    const [productCategories, setProductCategories]             = useState([...WOO_CATEGORIES]);
+    const [wooStoreCategories, setWooStoreCategories]             = useState([]);
     const [getProductCategories, setGetProductCategories]       = useState([]);
     const [isThumbnailUploade,setIsThumbnailUploade]            = useState(false);
     const [tmpUploadedImageUrl,setTmpUploadedImageUrl]          = useState("");
@@ -47,10 +47,11 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS,  toEdit=false
     const [upSellsProductsDataReady, setUpSellsProductsDataReady]     = useState(true);
 
     useEffect(()=>{
+        setWooStoreCategories(WOO_CATEGORIES);
+
         if(toEdit === true){
             const isPublished   = (productData.status === "publish") ? true : false;
             let galleryImages   = productData.images.map(img => ({sourceUrl : img.src , id : img.id}));
-
             if(productData.upsell_ids.length > 0)
                 setCrossSellsProductsDataReady(false);
             if(productData.upsell_ids.length > 0)
@@ -76,6 +77,11 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS,  toEdit=false
             setPublished(isPublished);
         }
     },[]);
+
+    // useEffect(()=>{
+    //     console.log("here");
+    //     console.log(productCategories);
+    // },[productCategories])
 
     useEffect(()=>{
         if(upSellsProductsIds.length > 0) 
@@ -123,17 +129,17 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS,  toEdit=false
     }
 
     useEffect(() => {
-        if(toEdit === true){
-            if(getProductCategories.length > 0){
+        if(toEdit === true ){
+            if(getProductCategories.length > 0 && wooStoreCategories.length > 0){
                 const tmpCats = getProductCategories.map(category => ({
                     ...category,
                     selected: true
                 }));
-                const selectedCategories = [...WOO_CATEGORIES.filter(item1 => !tmpCats.find(item2 => item1.id === item2.id)), ...tmpCats]
-                setProductCategories(selectedCategories);
+                const selectedCategories = [...WOO_CATEGORIES.filter(item1 => !tmpCats.find(item2 => item1.id === item2.id)), ...tmpCats];
+                setWooStoreCategories(selectedCategories);
             }
         }
-    }, [getProductCategories]);
+    }, [getProductCategories ]);
 
     useEffect(()=>{
         tagInput.current.value = "";
@@ -225,14 +231,14 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS,  toEdit=false
     };
 
     const checkCategory = index => {
-        const newCategoryList = [...productCategories]; 
+        const newCategoryList = [...wooStoreCategories]; 
         newCategoryList[index].selected = ! newCategoryList[index].selected;
-        setProductCategories(newCategoryList);
+        setWooStoreCategories(newCategoryList);
     };
 
     const renderCategoriesList = () => {
         return(
-            productCategories.map((category,i)=>(
+            wooStoreCategories.map((category,i)=>(
                 <FormControlLabel
                     control={ <Checkbox checked={category.selected} 
                     onChange={() => checkCategory(i) } value={category.selected} /> }

@@ -6,11 +6,11 @@ import ProductForm from '../../components/product-form/ProductForm';
 import API from '../../API/'; 
 import {loading , storeWooCategories , storeWooTags} from '../../store/actions/';
   
-const EditProductPage = ({dispatch , USER , match}) =>  {
+const EditProductPage = ({dispatch , USER , WOO_CATEGORIES , match}) =>  {
     
     const { params } = match;
-    const [product,setProduct] = useState(null);
-    
+    const [ product,setProduct] = useState(null);
+    const [ isCategoriesLoaded, setIsCategoriesLoaded] = useState(false);
     dispatch(loading(true, "header-loader"));
 
     useEffect(()=>{
@@ -44,6 +44,7 @@ const EditProductPage = ({dispatch , USER , match}) =>  {
                         selected: false
                     }));
                     dispatch(storeWooCategories(productCategories));
+                    setIsCategoriesLoaded(true)
                 }
             })
             .catch((error)=>{
@@ -53,7 +54,11 @@ const EditProductPage = ({dispatch , USER , match}) =>  {
                 })
             })
     }, []);
+    // useEffect(()=>{
+    //     console.log(WOO_CATEGORIES);
+    //     // if(isCategoriesLoaded)
 
+    // },[isCategoriesLoaded])
     useEffect(() => {
         // SHOW LOADER
         API.WC_getWooTags(USER.token)
@@ -73,12 +78,12 @@ const EditProductPage = ({dispatch , USER , match}) =>  {
     return (
         <div id="add-product-page">
             <Header />
-                { (product !== null ) ? <ProductForm toEdit={true} productData={ product }/> : false }
+                { (product !== null && isCategoriesLoaded) ? <ProductForm toEdit={true} productData={ product }/> : false }
             <Footer />
         </div>
     ); 
 }
 
-const mapStateToProps = ({ USER  }) => ({ USER });
+const mapStateToProps = ({ USER , WOO_CATEGORIES  }) => ({ USER , WOO_CATEGORIES});
 
 export default connect(mapStateToProps)(EditProductPage) ;
