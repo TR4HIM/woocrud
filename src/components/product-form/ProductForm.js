@@ -16,6 +16,7 @@ import ButtonUploadImage from '../../components/button-upload/ButtonUpload';
 import EditableImage from '../../components/editable-image/EditableImage';
 import { loading } from '../../store/actions/';
 import API from '../../API/'; 
+import { Redirect } from 'react-router';
 
 const ProductForm = ({dispatch , USER , WOO_CATEGORIES ,  toEdit=false , productData=null , saveProductAction}) =>  {
 
@@ -45,6 +46,7 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES ,  toEdit=false , product
     const [productDeletedImages, setProductDeletedImages]                   = useState([]);
     const [crossSellsProductsDataReady, setCrossSellsProductsDataReady]     = useState(true);
     const [upSellsProductsDataReady, setUpSellsProductsDataReady]           = useState(true);
+    const [isNewProductSaved, setIsNewProductSaved]                         = useState(false);
 
     useEffect(()=>{
         setWooStoreCategories(WOO_CATEGORIES);
@@ -247,32 +249,18 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES ,  toEdit=false , product
     
     const productPayLoadData = () => {
         // saveProductAction(playlod)
-        /* 
-    const [crossSellsProducts,setCrossSellsProducts]                        = useState([]);
-    const [upSellsProductsIds,setUpSellsProductsIds]                        = useState([]);
-    const [crossSellsProductsIds,setCrossSellsProductsIds]                  = useState([]);
-    const [productImage,setProductImage]                                    = useState(false);
-    const [productGallery,setProductGallery]                                = useState([]);
-    const [productTags, setProductTags]                                     = useState([]);
-    const [wooStoreCategories, setWooStoreCategories]                       = useState([]);
-    const [getProductCategories, setGetProductCategories]                   = useState([]);
-    const [isThumbnailUploade,setIsThumbnailUploade]                        = useState(false);
-    const [tmpUploadedImageUrl,setTmpUploadedImageUrl]                      = useState("");
-    const [productDeletedImages, setProductDeletedImages]                   = useState([]);
-    const [crossSellsProductsDataReady, setCrossSellsProductsDataReady]     = useState(true);
-    const [upSellsProductsDataReady, setUpSellsProductsDataReady]           = useState(true);
-        
-        */
         dispatch(loading(true, "header-loader"));
 
         let galleryImages       = productGallery.map(img => ({src : img.sourceUrl}));
         let productCategories   = wooStoreCategories.filter(cat => cat.selected ).map(c => ({id : c.id}));
+        let productUpSells      = upSellsProducts.map(ups =>  ups.id );
+        let productCrossSells   = crossSellsProducts.map(ups =>  ups.id );
 
 
         if(productImage !== false){
             galleryImages.unshift({src : productImage});
         }
-        console.log(productCategories);
+        console.log(productUpSells);
         let payload = {
             sale_price          : salePrice.toString(),
             status              : (published)  ? 'publish' : 'draft',
@@ -282,8 +270,8 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES ,  toEdit=false , product
             tags                : [{id : 30}],
             virtual             : virtual,
             downloadable        : downloadable,
-            upsell_ids          : upSellsProducts,
-            cross_sell_ids      : crossSellsProducts,
+            upsell_ids          : productUpSells,
+            cross_sell_ids      : productCrossSells,
             // related_ids      : 'EMPTY',
         };
         payload = {...payload, name          : productName};
@@ -297,6 +285,8 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES ,  toEdit=false , product
             console.log("Done");
             console.log(data);
             dispatch(loading(false, "header-loader"));
+            setIsNewProductSaved(true);
+            setProductID(data.id);
         })
         .catch((error)=>{
             dispatch({
@@ -310,7 +300,9 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES ,  toEdit=false , product
 
     }
     return (
+
         <Container maxWidth="lg">
+                { isNewProductSaved && productID !== false && <Redirect to={`/edit-produit/${productID}`} /> }
                 <Grid container spacing={3}>
                     <Grid item xs={12} sm={8}>
                         <Paper className="product-form">
