@@ -1,30 +1,30 @@
-// ICON
-@import "./scss/icons/style.scss";
-
 // CONFIG
 @import "./scss/config.scss"; 
+@import "./scss/mixin.scss";
  
 // COMMON
-@import "./scss/mixin.scss";
+@import "./scss/common.scss";
 @import "./scss/typography.scss";
 @import "./scss/button.scss";
-@import "./scss/common.scss";
-@import "./scss/form.scss";
 
 
 
 // COMPONENTS
+@import "./components/loader/loader.scss";
 @import "./components/footer/footer.scss";
 @import "./components/header/header.scss";
 @import "./components/input-autocomplete/autocomplete.scss"; 
 @import "./components/button-upload/button-upload.scss"; 
 @import "./components/product-form/product-form.scss"; 
+@import "./components/edit-modal/edit-modal.scss"; 
+@import "./components/product-item/product-item.scss"; 
+@import "./components/editable-image/editable-image.scss"; 
 
 // PAGES
-@import "./scss/pages/login.scss";
-@import "./scss/pages/products.scss";
-@import "./scss/pages/edit-product.scss";
+@import "./pages/login/login.scss";
+@import "./pages/products/products.scss";
+@import "./pages/edit-product/edit-product.scss";
+@import "./pages/add-product/add-product.scss";
+@import "./pages/user-settings/user-settings.scss";
+@import "./pages/not-found/not-found.scss";
 
-
-// Multi-Langauges 
-// @import "./scss/rtl.scss";

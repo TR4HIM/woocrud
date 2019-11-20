@@ -1,195 +1,131 @@
-import React , {useState , useRef , useEffect } from 'react';
+import React , {useState , useEffect } from 'react';
 import {connect} from 'react-redux';
 import {    
-        Container, 
-        Grid , 
         Paper , 
-        TextField , 
-        FormControlLabel , 
-        Switch , Typography , Checkbox ,
-        Divider , Chip , 
-        ExpansionPanel , ExpansionPanelSummary , ExpansionPanelDetails} from '@material-ui/core';
-import Icon from '@material-ui/core/Icon';
-
-
-import PropTypes from 'prop-types';
+        TextField ,Chip} from '@material-ui/core';
 import deburr from 'lodash/deburr';
 import Downshift from 'downshift';
 import { makeStyles } from '@material-ui/core/styles';
-import Popper from '@material-ui/core/Popper';
 import MenuItem from '@material-ui/core/MenuItem';
+import { loading , editWooProduct, updateWooProudct} from '../../store/actions/';
+import API from '../../API/'; 
+import Loader from '../loader/loader';
 
+  // API Search with Cancel
+  const SEARCH  = API.WC_getWooProductByName();
 
-const suggestions = [
-    { label: 'Afghanistan' },
-    { label: 'Aland Islands' },
-    { label: 'Albania' },
-    { label: 'Algeria' },
-    { label: 'American Samoa' },
-    { label: 'Andorra' },
-    { label: 'Angola' },
-    { label: 'Anguilla' },
-    { label: 'Antarctica' },
-    { label: 'Antigua and Barbuda' },
-    { label: 'Argentina' },
-    { label: 'Armenia' },
-    { label: 'Aruba' },
-    { label: 'Australia' },
-    { label: 'Austria' },
-    { label: 'Azerbaijan' },
-    { label: 'Bahamas' },
-    { label: 'Bahrain' },
-    { label: 'Bangladesh' },
-    { label: 'Barbados' },
-    { label: 'Belarus' },
-    { label: 'Belgium' },
-    { label: 'Belize' },
-    { label: 'Benin' },
-    { label: 'Bermuda' },
-    { label: 'Bhutan' },
-    { label: 'Bolivia, Plurinational State of' },
-    { label: 'Bonaire, Sint Eustatius and Saba' },
-    { label: 'Bosnia and Herzegovina' },
-    { label: 'Botswana' },
-    { label: 'Bouvet Island' },
-    { label: 'Brazil' },
-    { label: 'British Indian Ocean Territory' },
-    { label: 'Brunei Darussalam' },
-];
-
-
-function renderSuggestion(suggestionProps) {
-  const { suggestion, index, itemProps, highlightedIndex, selectedItem } = suggestionProps;
-  const isHighlighted = highlightedIndex === index;
-  const isSelected = (selectedItem || '').indexOf(suggestion.label) > -1;
-
-  return (
-    <MenuItem
-      {...itemProps}
-      key={suggestion.label}
-      selected={isHighlighted}
-      component="div"
-      style={{
-        fontWeight: isSelected ? 500 : 400,
-      }}
-    >
-      {suggestion.label}
-    </MenuItem>
-  );
-}
-
-function getSuggestions(value, { showEmpty = false } = {}) {
-  const inputValue = deburr(value.trim()).toLowerCase();
-  const inputLength = inputValue.length;
-  let count = 0;
-
-  return inputLength === 0 && !showEmpty
-    ? []
-    : suggestions.filter(suggestion => {
-        const keep =
-          count < 5 && suggestion.label.slice(0, inputLength).toLowerCase() === inputValue;
-
-        if (keep) {
-          count += 1;
-        }
-
-        return keep;
-      });
-}
-
-function renderInput(inputProps) {
-    const { InputProps, classes, ref, ...other } = inputProps;
-  
+  const renderSuggestion = (suggestionProps) => {
+    const { suggestion, index, itemProps, highlightedIndex, selectedItem } = suggestionProps;
     return (
-      <TextField
-        InputProps={{
-          inputRef: ref,
-          classes: {
-            root: classes.inputRoot,
-            input: classes.inputInput,
-          },
-          ...InputProps,
-        }}
-        {...other}
-        
-      />
+      <MenuItem
+        {...itemProps}
+        key={suggestion.name}
+        component="div"
+      >
+        {suggestion.name}
+      </MenuItem>
     );
-}
+  }
 
-const classes = makeStyles(theme => ({
-  root: {
-    flexGrow: 1,
-  },
-  container: {
-    flexGrow: 1,
-    position: 'relative',
-  },
-  paper: {
-    position: 'absolute',
-    zIndex: 10,
-    marginTop: theme.spacing(1),
-    left: 0,
-    right: 0,
-    width:'100%'
-  },
-  chip: {
-    margin: theme.spacing(0.5, 0.25),
-  },
-  inputRoot: {
-    flexWrap: 'wrap',
-  },
-  inputInput: {
-    width: 'auto',
-    flexGrow: 1,
-  },
-  divider: {
-    height: theme.spacing(2),
-  },
-}));
+  const renderInput = (inputProps) => {
+      const { InputProps,   ref, ...other } = inputProps;
+    
+      return (
+        <TextField
+          InputProps={{
+            inputRef: ref,
+            classes: {
+              root: 'page-root',
+              input: 'auto-complete-input',
+            },
+            ...InputProps,
+          }}
+          {...other}
+          
+        />
+      );
+  }
 
-const ProductsAutoComplete = ({fieldLabel , onChangeAuto}) => {
-  const [inputValue, setInputValue] = React.useState('');
-  const [selectedItem, setSelectedItem] = React.useState([]);
-  
+const ProductsAutoComplete = ({dispatch , USER , fieldLabel , onChangeAuto , currentProduct = []}) => {
 
-  useEffect(() => {
-    if( selectedItem.length  >=   0){
-      onChangeAuto(selectedItem);
+    const [inputValue, setInputValue]               = useState('');
+    const [selectedItem, setSelectedItem]           = useState([]);
+    const [suggestionProduct, setSuggestionProduct] = useState([]);
+
+    useEffect(() => {
+      if(currentProduct.length > 0){
+        setSelectedItem(currentProduct);
+      }
+    }, []);
+
+    useEffect(() => {
+      if( selectedItem.length  >=   0){
+        onChangeAuto(selectedItem);
+      }
+    }, [selectedItem]);
+
+    useEffect(()=>{
+      if(inputValue.length > 0 ){
+        getSuggestions(inputValue);
+      }
+    },[inputValue]);
+
+    const getSuggestions = (value) => {
+      const inputValue = deburr(value.trim()).toLowerCase();
+
+      dispatch(loading(true, "header-loader"));
+
+      // TO ADD : Show only unselected products
+      SEARCH(USER.token,inputValue).then((result)=>{ 
+        if((result !== undefined)){
+          setSuggestionProduct(result);
+          // HIDE LOADING
+          dispatch(loading(false, "header-loader"));
+        }
+      })
+      .catch((error)=>{
+          dispatch({
+              type : "ERROR",
+              payload : error
+          });
+          // HIDE LOADING
+          dispatch(loading(false, "header-loader"));
+      })
     }
-  }, [selectedItem]);
 
+    const handleKeyDown = event => {
+      if (selectedItem.length && !inputValue.length && event.key === 'Backspace') {
+        setSelectedItem(selectedItem.slice(0, selectedItem.length - 1));
+      }
+    };
 
-  const handleKeyDown = event => {
-    if (selectedItem.length && !inputValue.length && event.key === 'Backspace') {
-      setSelectedItem(selectedItem.slice(0, selectedItem.length - 1));
-    }
-  };
+    const handleInputChange = event => {
+      setInputValue(event.target.value);
+    };
 
-  const handleInputChange = event => {
-    setInputValue(event.target.value);
-  };
+    const handleChange = item => {
+      let newSelectedItem = [...selectedItem];
+      const checkIfAdded = (element) => element.id === item.id;
+      if(newSelectedItem.some(checkIfAdded) !== true){
+        newSelectedItem = [...newSelectedItem, item];
+      }
+      setInputValue('');
+      setSelectedItem(newSelectedItem);
+    };
 
-  const handleChange = item => {
-    let newSelectedItem = [...selectedItem];
-    if (newSelectedItem.indexOf(item) === -1) {
-      newSelectedItem = [...newSelectedItem, item];
-    }
-    setInputValue('');
-    setSelectedItem(newSelectedItem);
-  };
+    const handleDelete = item => () => {
+      const newSelectedItem = selectedItem.filter(itm => itm.id !== parseInt(item));
+      setSelectedItem(newSelectedItem);
+    };
 
-  const handleDelete = item => () => {
-    const newSelectedItem = [...selectedItem];
-    newSelectedItem.splice(newSelectedItem.indexOf(item), 1);
-    setSelectedItem(newSelectedItem);
-  };
   return (
-    <div className={classes.root}>
+    <div className="page-root">
         <Downshift
-          id="downshift-multiple"
+          id="product-auto-complete"
           inputValue={inputValue}
           onChange={handleChange}
           selectedItem={selectedItem}
+          itemToString={item => (item ? item.name : '')}
         >
           {({
             getInputProps,
@@ -202,24 +138,23 @@ const ProductsAutoComplete = ({fieldLabel , onChangeAuto}) => {
           }) => {
             const { onBlur, onChange, onFocus, ...inputProps } = getInputProps({
               onKeyDown: handleKeyDown,
-              placeholder: 'Select multiple countries',
+              placeholder: 'Select multiple products',
             });
     
             return (
-              <div className={classes.container}>
+              <div className="page-container">
                 {renderInput({
                   fullWidth: true,
-                  classes,
                   label:  fieldLabel ,
                   InputLabelProps: getLabelProps(),
                   InputProps: {
                     startAdornment: selectedItem.map(item => (
                       <Chip
-                        key={item}
+                        key={item.id}
                         tabIndex={-1}
-                        label={item}
-                        className={classes.chip}
-                        onDelete={handleDelete(item)}
+                        label={item.name}
+                        className="auto-complete-chip"
+                        onDelete={handleDelete(item.id)}
                       />
                     )),
                     onBlur,
@@ -233,15 +168,19 @@ const ProductsAutoComplete = ({fieldLabel , onChangeAuto}) => {
                 })}
     
                 {isOpen ? (
-                  <Paper className={classes.paper} square>
-                    {getSuggestions(inputValue2).map((suggestion, index) =>
-                      renderSuggestion({
-                        suggestion,
-                        index,
-                        itemProps: getItemProps({ item: suggestion.label }),
-                        highlightedIndex,
-                        selectedItem: selectedItem2,
-                      }),
+                  <Paper className="auto-complete-paper" square>
+                    {suggestionProduct.length > 0 && suggestionProduct.map((suggestion, index) =>{
+                        const checkIfAdded = (element) => element.id === suggestion.id;
+                        if(selectedItem.some(checkIfAdded) !== true){
+                          return renderSuggestion({
+                            suggestion,
+                            index : suggestion.id,
+                            itemProps: getItemProps({ item: {'id' : suggestion.id, 'name' : suggestion.name} }),
+                            highlightedIndex : suggestion.id,
+                            selectedItem: selectedItem2,
+                          })
+                        }
+                      }
                     )}
                   </Paper>
                 ) : null}
@@ -253,6 +192,6 @@ const ProductsAutoComplete = ({fieldLabel , onChangeAuto}) => {
   );
 }
 
+const mapStateToProps = ({ USER }) => ({ USER});
 
-
-export default ProductsAutoComplete;  
+export default connect(mapStateToProps)(ProductsAutoComplete);

@@ -4,15 +4,24 @@ import Header from '../../components/header/Header';
 import Footer from '../../components/footer/Footer';
 import ProductForm from '../../components/product-form/ProductForm';
 import API from '../../API/'; 
-import {storeWooCategories , storeWooTags} from '../../store/actions/';
+import {loading , storeWooCategories , storeWooTags} from '../../store/actions/';
+import { Redirect } from 'react-router';
 
 
 const AddProduct = ({dispatch , USER }) =>  {
 
     const [isCategoriesLoaded,setIsCategoriesLoaded] = useState(false);
     const [isTagsLoaded,setIsTagsLoaded] = useState(false);
+    const [isNewProductSaved, setIsNewProductSaved]                         = useState(false);
+    const [productID,setProductID]                                          = useState(false);
+
+
+    dispatch(loading(true, "header-loader"));
+
     /* FOR DEV ONLY THIS SHOULD BE SHARED */
     useEffect(() => {
+        dispatch(loading(true, "header-loader"));
+
         // SHOW LOADER
         API.WC_getWooCategories(USER.token)
             .then((result)=>{
@@ -24,16 +33,20 @@ const AddProduct = ({dispatch , USER }) =>  {
                     dispatch(storeWooCategories(productCategories));
                     setIsCategoriesLoaded(true);
                 }
+                dispatch(loading(false, "header-loader"));
             })
             .catch((error)=>{
                 dispatch({
                     type : 'ERROR',
                     payload : error 
                 })
+                dispatch(loading(false, "header-loader"));
             })
     }, []);
 
     useEffect(() => {
+        dispatch(loading(true, "header-loader"));
+
         // SHOW LOADER
         API.WC_getWooTags(USER.token)
             .then((result)=>{
@@ -41,19 +54,42 @@ const AddProduct = ({dispatch , USER }) =>  {
                     dispatch(storeWooTags(result));
                     setIsTagsLoaded(true);
                 }
+                dispatch(loading(false, "header-loader"));
+
             })
             .catch((error)=>{
                 dispatch({
                     type : 'ERROR',
                     payload : error 
                 })
+                dispatch(loading(false, "header-loader"));
             })
     }, []);
 
+    const saveNewProduct = (payload) => {
+        console.log(payload);
+        
+        API.WC_createProduct(USER.token,  payload).then((data)=>{ 
+            console.log("Done");
+            console.log(data);
+            dispatch(loading(false, "header-loader"));
+            setIsNewProductSaved(true);
+            setProductID(data.id);
+        })
+        .catch((error)=>{
+            dispatch({
+                type : "ERROR",
+                payload : error
+            });
+            // HIDE LOADING
+            dispatch(loading(false, "header-loader"));
+        })
+    }
     return (
         <div id="add-product-page">
             <Header />
-            { isCategoriesLoaded && isTagsLoaded && <ProductForm /> }
+            { isNewProductSaved && productID !== false && <Redirect to={`/edit-produit/${productID}`} /> }
+            { isCategoriesLoaded && isTagsLoaded && <ProductForm saveProductAction={(productData) => saveNewProduct(productData)} /> }
             <Footer />
         </div>
     ); 

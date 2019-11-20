@@ -3,9 +3,9 @@ import {connect} from 'react-redux';
 import {    
         Container, 
         Grid , 
-        Paper , 
-        TextField , 
-        FormControlLabel , 
+        Paper , Input ,
+        TextField , Select ,
+        FormControlLabel , FormControl ,
         Switch , Typography , Checkbox ,
         Divider , Chip , Button ,
         ExpansionPanel , ExpansionPanelSummary , ExpansionPanelDetails} from '@material-ui/core';
@@ -14,32 +14,72 @@ import Icon from '@material-ui/core/Icon';
 import ProductsAutoComplete from '../../components/input-autocomplete/InputAutocomplete';
 import ButtonUploadImage from '../../components/button-upload/ButtonUpload';
 import EditableImage from '../../components/editable-image/EditableImage';
+import { loading , storeWooTags} from '../../store/actions/';
+import API from '../../API/'; 
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
 
-const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS,  toEdit=false , productData=null}) =>  {
+
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
+
+const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=false , productData=null , saveProductAction}) =>  {
 
     const tagInput = useRef(null);
 
-    const [productName,setProductName]                      = useState("");
-    const [productDescription,setProductDescription]        = useState("");
-    const [shortProductDescription,setShortProductDescription]        = useState("");
-    const [regularPrice,setRegularPrice]                    = useState(0);
-    const [salePrice,setSalePrice]                          = useState(0);
-    const [sku,setSku]                                      = useState("");
-    const [published,setPublished]                          = useState(false);
-    const [virtual,setVirtual]                              = useState(false);
-    const [downloadable,setDownloadable]                    = useState(false);
-    const [upSellsProducts,setUpSellsProducts]              = useState([]);
-    const [crossSellsProducts,setCrossSellsProducts]        = useState([]);
-    const [productImage,setProductImage]                    = useState(false);
-    const [productGallery,setProductGallery]                = useState([]);
-    const [productTags, setProductTags]                     = useState(WOO_TAGS);
-    const [productCategories, setProductCategories]                 = useState(WOO_CATEGORIES);
-    const [getProductCategories, setGetProductCategories]           = useState([]);
+    const [productID,setProductID]                                          = useState(false);
+    const [productName,setProductName]                                      = useState("");
+    const [productDescription,setProductDescription]                        = useState("");
+    const [shortProductDescription,setShortProductDescription]              = useState("");
+    const [regularPrice,setRegularPrice]                                    = useState(0);
+    const [salePrice,setSalePrice]                                          = useState(0);
+    const [sku,setSku]                                                      = useState("");
+    const [published,setPublished]                                          = useState(false);
+    const [virtual,setVirtual]                                              = useState(false);
+    const [downloadable,setDownloadable]                                    = useState(false);
+    const [upSellsProducts,setUpSellsProducts]                              = useState([]);
+    const [crossSellsProducts,setCrossSellsProducts]                        = useState([]);
+    const [upSellsProductsIds,setUpSellsProductsIds]                        = useState([]);
+    const [crossSellsProductsIds,setCrossSellsProductsIds]                  = useState([]);
+    const [productImage,setProductImage]                                    = useState(false);
+    const [productGallery,setProductGallery]                                = useState([]);
+    const [wooStoreTags, setWooStoreTags]                                   = useState([]);
+    const [productTags, setProductTags]                                     = useState([]);
+    const [wooStoreCategories, setWooStoreCategories]                       = useState([]);
+    const [getProductCategories, setGetProductCategories]                   = useState([]);
+    const [isThumbnailUploade,setIsThumbnailUploade]                        = useState(false);
+    const [tmpUploadedImageUrl,setTmpUploadedImageUrl]                      = useState("");
+    const [productDeletedImages, setProductDeletedImages]                   = useState([]);
+    const [crossSellsProductsDataReady, setCrossSellsProductsDataReady]     = useState(true);
+    const [upSellsProductsDataReady, setUpSellsProductsDataReady]           = useState(true);
 
     useEffect(()=>{
+        setWooStoreCategories(WOO_CATEGORIES);
+        setWooStoreTags(WOO_TAGS);
+
+        // WOO_TAGS.map(name => (console.log(name))) 
+
         if(toEdit === true){
-            const isPublished = (productData.status == "publish") ? true : false;
-            let galleryImages = productData.images.map(img => img.src);
+            const isPublished   = (productData.status === "publish") ? true : false;
+            let galleryImages   = productData.images.map(img => ({sourceUrl : img.src , id : img.id}));
+            if(productData.upsell_ids.length > 0)
+                setCrossSellsProductsDataReady(false);
+            if(productData.upsell_ids.length > 0)
+                setUpSellsProductsDataReady(false);
+
+            setUpSellsProductsIds(productData.upsell_ids);
+            setCrossSellsProductsIds(productData.cross_sell_ids);
+
+            setProductID(productData.id);
             setProductName(productData.name);
             setProductDescription(productData.description);
             setShortProductDescription(productData.short_description);
@@ -48,52 +88,203 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS,  toEdit=false
             setSku(productData.sku);
             setDownloadable(productData.downloadable);
             setVirtual(productData.virtual);
-            setProductTags(productData.tags);
+            setProductTags(productData.tags)
             setGetProductCategories(productData.categories);
 
             // Remove First Element For Featured Image :) 
             setProductImage(galleryImages.shift());
             setProductGallery(galleryImages);
             setPublished(isPublished);
+
         }
     },[]);
 
+    useEffect(()=>{
+        if(upSellsProductsIds.length > 0) 
+            getRelatedProductData(upSellsProductsIds,'upSellsProducts')
+        if (crossSellsProductsIds.length > 0)
+            getRelatedProductData(crossSellsProductsIds,'crossSellsProducts')
+    },[upSellsProductsIds, crossSellsProductsIds]);
+
+    useEffect(()=>{
+        if(upSellsProducts.length > 0){
+            setUpSellsProductsDataReady(true)
+        }
+        if(crossSellsProducts.length > 0){
+            setCrossSellsProductsDataReady(true)
+        }
+
+    },[upSellsProducts, crossSellsProducts]);
+
+    
+
+    const getRelatedProductData = async (relatedProducts,relatedType) => {
+        const listProductsData = [];
+        for(let i = 0; i < relatedProducts.length ; i++){
+            let id = relatedProducts[i];
+            await API.WC_getWooProductById(USER.token, id)
+            .then((result)=>{
+                if( result !== undefined ){
+                    // HIDE LOADER
+                    let productItem = {id:result.id, name:result.name};
+                    listProductsData.push(productItem)
+                    dispatch(loading(false, "header-loader"));
+                }
+            })
+            .catch((error)=>{
+                dispatch({
+                    type : 'ERROR',
+                    payload : error
+                })
+                // HIDE LOADING
+                dispatch(loading(false, "header-loader"));
+            })
+        }
+        if(relatedType === "upSellsProducts")
+            setUpSellsProducts(listProductsData);
+        if(relatedType === "crossSellsProducts")
+            setCrossSellsProducts(listProductsData);
+    }
+
     useEffect(() => {
-        if(toEdit === true){
-            if(getProductCategories.length > 0){
+        if(toEdit === true ){
+            if(getProductCategories.length > 0 && wooStoreCategories.length > 0){
                 const tmpCats = getProductCategories.map(category => ({
                     ...category,
                     selected: true
                 }));
-                const selectedCategories = [...WOO_CATEGORIES.filter(item1 => !tmpCats.find(item2 => item1.id === item2.id)), ...tmpCats]
-                setProductCategories(selectedCategories);
+                const selectedCategories = [...WOO_CATEGORIES.filter(item1 => !tmpCats.find(item2 => item1.id === item2.id)), ...tmpCats];
+                setWooStoreCategories(selectedCategories);
             }
         }
-    }, [getProductCategories]);
+    }, [getProductCategories ]);
 
     useEffect(()=>{
         tagInput.current.value = "";
-    },[productTags]);
+        // console.log(productTags)
+    },[productTags])
+
+    useEffect(()=>{
+        if(isThumbnailUploade && tmpUploadedImageUrl !== ""){
+            const productGalleryObj = productGallery.map(a => a.isUloading === true ? { ...a, isUloading : false , sourceUrl : tmpUploadedImageUrl} : a);
+            setProductGallery(productGalleryObj);
+            setTmpUploadedImageUrl(""); 
+            setIsThumbnailUploade(false);
+        }
+    },[productGallery,isThumbnailUploade])
+
+    const uploadProductImage = (file,imgType="gallery") => {
+        let imageObject = file.imageObject;
+        let formData    = new FormData();
+
+        formData.append( 'file', imageObject );
+        if(productID !== false)
+            formData.append( 'post', productID);
+        
+        dispatch(loading(true, "header-loader"));
+        return API.WP_uploadImage(USER.token, formData).then((data)=>{ 
+            if(imgType == 'thumbnail'){
+                setProductImage(data.source_url);
+                setIsThumbnailUploade(true);
+                dispatch(loading(false, "header-loader"));
+            }else{
+                return data;
+            }
+        })
+        .catch((error)=>{
+            dispatch({
+                type : "ERROR",
+                payload : error
+            });
+            // HIDE LOADING
+            dispatch(loading(false, "header-loader"));
+
+        })
+    }
+
+    const handleThumbnailProduct = (file) =>{
+        let imageObj = {id : file.name, name : file.name, isUloading : true, imageObject : file};
+        setProductImage(imageObj);
+        uploadProductImage(imageObj,'thumbnail');
+    }
+
+    const handleProductGallery = async (gallery) => {
+        const selectedImages = gallery.target.files;
+        for(let i = 0; i < selectedImages.length ; i++){
+            let productImage = selectedImages[i];
+            let id = i+productImage.name;
+            let imageObj = {id, name : productImage.name, isUloading : true, imageObject : productImage};
+            setIsThumbnailUploade(false);
+            setProductGallery( currentGallery => [...currentGallery,  imageObj]);
+            
+            await uploadProductImage(imageObj).then((data)=>{
+                setTmpUploadedImageUrl(data.source_url); 
+                setIsThumbnailUploade(true);
+            })
+        }
+        dispatch(loading(false, "header-loader"));
+    }
+
+    const removeGallery = (imageToDelete) => {
+        setProductGallery(imagesGallery => imagesGallery.filter(image => image !== imageToDelete));
+        if(typeof imgObject !== "string"){
+            setProductDeletedImages(currentDeletedImages => [...currentDeletedImages, imageToDelete])
+        }
+    }
+    
+    const deleteThumbnailImage = (imgObject) => {
+        setProductImage(false);
+        if(typeof imgObject !== "string"){
+            setProductDeletedImages(currentDeletedImages => [...currentDeletedImages, imgObject])
+        }
+    }
+    
+    const addTagToWoo = (payload) => {
+        API.WC_createWooTags(USER.token,payload).then((data)=>{ 
+            setProductTags(currentTags => [...currentTags, data])
+            dispatch(storeWooTags([...WOO_TAGS, data]));
+            dispatch(loading(false, "header-loader"));
+        })
+        .catch((error)=>{
+            dispatch({
+                type : "ERROR",
+                payload : error
+            });
+            // HIDE LOADING
+            dispatch(loading(false, "header-loader"));
+        })
+    }
 
     const handleAddTag = (e) => {
-        if(tagInput.current.value.trim() != '' && e.keyCode === 13){
-            setProductTags(currentTags => [...currentTags, {name: tagInput.current.value }]);
+        if(tagInput.current.value.trim() !== '' && e.keyCode === 13){
+            let wooStoreTags    = WOO_TAGS.filter(tag => tag.name === tagInput.current.value.trim() ).map(t => ({id : t.id , name : t.name}));
+            let isTagExist      = productTags.filter(tag => tag.name === tagInput.current.value.trim() )
+            if(isTagExist.length > 0){
+                tagInput.current.value = "";
+                return;
+            }
+            if(wooStoreTags.length > 0)
+                setProductTags(currentTags => [...currentTags, ...wooStoreTags])
+            else {
+                addTagToWoo({name : tagInput.current.value.trim()});
+            }
+
         }
     }
 
     const handleDeleteTag = chipToDelete => () => {
-        setProductTags(chips => chips.filter(chip => chip.name !== chipToDelete.name));
-    };
+        setProductTags(productTags => productTags.filter(tag => tag.name !== chipToDelete.name));
+    }
 
     const checkCategory = index => {
-        const newCategoryList = [...productCategories]; 
+        const newCategoryList = [...wooStoreCategories]; 
         newCategoryList[index].selected = ! newCategoryList[index].selected;
-        setProductCategories(newCategoryList);
-    };
+        setWooStoreCategories(newCategoryList);
+    }
 
     const renderCategoriesList = () => {
         return(
-            productCategories.map((category,i)=>(
+            wooStoreCategories.map((category,i)=>(
                 <FormControlLabel
                     control={ <Checkbox checked={category.selected} 
                     onChange={() => checkCategory(i) } value={category.selected} /> }
@@ -104,21 +295,48 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS,  toEdit=false
         )
     }
 
-    const handleUploadThumbnail = (thumbnail) => {
-        setProductImage(thumbnail.target.files[0]);
-    }
+    
+    const productPayLoadData = () => {
+        
+        dispatch(loading(true, "header-loader"));
+        
+        let galleryImages       = productGallery.map(img => ({src : img.sourceUrl}));
+        let productCategories   = wooStoreCategories.filter(cat => cat.selected ).map(c => ({id : c.id}));
+        let productUpSells      = upSellsProducts.map(ups =>  ups.id );
+        let productCrossSells   = crossSellsProducts.map(ups =>  ups.id );
 
-    const handleProductGallery = (gallery) => {
-        const selectedImages = gallery.target.files;
-        setProductGallery( currentGallery => [...currentGallery,  ...selectedImages ]);
-    }
+        if( productImage !== undefined && productImage !== false){
+            if(toEdit === true && typeof productImage !== "string")
+                galleryImages.unshift({src : productImage.sourceUrl});
+            else
+                galleryImages.unshift({src : productImage});
+        }
+        
+        let payload = {
+            sale_price          : salePrice.toString(),
+            status              : (published)  ? 'publish' : 'draft',
+            short_description   : shortProductDescription,
+            sku                 : sku,
+            categories          : productCategories,
+            tags                : productTags,
+            virtual             : virtual,
+            downloadable        : downloadable,
+            upsell_ids          : productUpSells,
+            cross_sell_ids      : productCrossSells,
+            // related_ids      : 'EMPTY',
+        };
 
-    const removeGallery = (imageToDelete) => {
-        setProductGallery(imagesGallery => imagesGallery.filter(image => image.name !== imageToDelete.name));
+        payload = {...payload, regular_price : regularPrice.toString()};
+        payload = {...payload, name          : productName};
+        payload = {...payload, description   : productDescription};
+        payload = {...payload, images        : galleryImages};
+
+        // If new product
+        (toEdit === true) ? saveProductAction({ productId : productID , payload }) : saveProductAction(payload);
     }
 
     return (
-        <Container maxWidth="lg">
+        <Container maxWidth="lg" id="product-form-container">
                 <Grid container spacing={3}>
                     <Grid item xs={12} sm={8}>
                         <Paper className="product-form">
@@ -143,7 +361,6 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS,  toEdit=false
                                 variant="outlined"
                                 multiline
                                 rows="8"
-                                margin="normal"
                                 value={productDescription} 
                                 onChange={(e) => setProductDescription(e.target.value)}
                             />
@@ -237,17 +454,17 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS,  toEdit=false
                                 </ExpansionPanelSummary>
                                 <ExpansionPanelDetails className="panel-form">
                                     <div className="autocomplete-container">
-                                        <ProductsAutoComplete fieldLabel="UpSells" onChangeAuto={(upsellsvalue) => setUpSellsProducts(upsellsvalue)}/>
+                                        { upSellsProductsDataReady      && <ProductsAutoComplete fieldLabel="UpSells" currentProduct={upSellsProducts} onChangeAuto={(upsellsvalue) => setUpSellsProducts(upsellsvalue)}/> }
                                     </div>
                                     <div className="autocomplete-container">
-                                        <ProductsAutoComplete fieldLabel="Cross-Sells"  onChangeAuto={(crosssellsvalue) => setCrossSellsProducts(crosssellsvalue)} />
+                                        { crossSellsProductsDataReady   && <ProductsAutoComplete fieldLabel="Cross-Sells"  currentProduct={crossSellsProducts} onChangeAuto={(crosssellsvalue) => setCrossSellsProducts(crosssellsvalue)} /> }
                                     </div>
                                 </ExpansionPanelDetails>
                             </ExpansionPanel>
                         </div>
                         <Paper className="product-form">
-                            <Button variant="contained" color="primary">
-                                { (toEdit === true) ? "Save Porduct" : "Add Product" } 
+                            <Button variant="contained" onClick={()=>productPayLoadData('Add Product')} color="primary">
+                                { (toEdit === true)  ? 'Save Porduct' : 'Add Porduct' }
                             </Button>
                         </Paper>
                     </Grid>
@@ -275,9 +492,8 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS,  toEdit=false
                             </Typography>
                             <Divider className="paper-divider" />
                             <div className="featured-image">
-                                {/* To be diccussed with MEhdi */}
-                                { productImage  ? <EditableImage imageObject={productImage} removeImageFunc={() => setProductImage(false)} /> 
-                                                : <ButtonUploadImage typeImage="thumbnail" onChange ={ (var1) => handleUploadThumbnail(var1) } /> }
+                                { productImage  ? <EditableImage imageObject={productImage} removeImageFunc={() =>deleteThumbnailImage(productImage)} />  
+                                                : <ButtonUploadImage typeImage="thumbnail" onChange ={ (thumbnail) => handleThumbnailProduct(thumbnail.target.files[0],'thumbnail') } /> }
                             </div>    
                         </Paper>
                         <Paper className="product-form" elevation={2}>
@@ -305,7 +521,7 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS,  toEdit=false
                                 Product Tags
                             </Typography>
                             <Divider className="paper-divider" />
-                            <div>
+                            {/* <div>
                                 {productTags.length > 0 && productTags.map((data,i) => {
                                     return (
                                     <Chip
@@ -317,13 +533,40 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS,  toEdit=false
                                     />
                                     );
                                 })}
+                            </div> */}
+                            <div>
+                                <FormControl className="form-control">
+                                    <InputLabel id="demo-mutiple-chip-label">Chip</InputLabel>
+                                    <Select
+                                        labelid="demo-mutiple-chip-label"
+                                        id="demo-mutiple-chip"
+                                        multiple
+                                        value={productTags}
+                                        onChange={(event) => setProductTags(event.target.value)}
+                                        input={<Input id="select-multiple-chip" />}
+                                        renderValue={productTags => (
+                                            <div className="chips">
+                                                {productTags.map(tag => (
+                                                    <Chip key={tag.id} label={tag.name}  className="product-tag" color="primary"  />
+                                                ))}
+                                            </div>
+                                        )}
+                                        MenuProps={MenuProps}
+                                        >
+                                        { WOO_TAGS.map(tag => (
+                                            <MenuItem key={tag.id} value={tag} >
+                                                {tag.name}
+                                            </MenuItem>
+                                        )) }
+                                    </Select>
+                                </FormControl>
                             </div>
                             <div className="add-tag">
                                 <TextField
                                     id="product-name"
                                     inputRef={tagInput}
                                     onKeyDown={(e)=>handleAddTag(e)}
-                                    label="Add Tag"
+                                    label="Add New Tag"
                                     fullWidth={true}
                                 />
                             </div>
@@ -334,6 +577,6 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS,  toEdit=false
     ); 
 }
 
-const mapStateToProps = ({ USER , WOO_CATEGORIES , WOO_TAGS  }) => ({ USER , WOO_CATEGORIES , WOO_TAGS });
+const mapStateToProps = ({ USER , WOO_CATEGORIES , WOO_TAGS }) => ({ USER , WOO_CATEGORIES , WOO_TAGS });
 
 export default   connect(mapStateToProps)(ProductForm) ;

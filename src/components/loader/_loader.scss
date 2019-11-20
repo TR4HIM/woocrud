@@ -1,0 +1,35 @@
+#root{
+    #root-loader{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-top: -14px;
+        margin-left: -14px;
+        z-index: 1;
+
+        [role="progressbar"]{
+            color : $black !important
+        }
+    }
+}
+#header{
+    .loader{
+        top: 15px;
+        z-index: 1;
+        position: absolute;
+        left: 50%;
+        margin-left : -14px;
+        &.linear{
+            top: auto;
+            left: 0;
+            right: 0;
+            margin: 0;
+            bottom : -3px;
+            // opacity: .3;
+        }
+        .linear-loader{
+            // height : 62px; 
+        }
+    }
+    
+}

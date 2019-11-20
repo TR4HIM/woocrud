@@ -11,12 +11,12 @@ import { Redirect } from 'react-router';
 import {login, loading} from './store/actions/';
 
 // PAGES 
-import Login from './pages/login/Login';
-import Products from './pages/products/Products';
+import Login from './pages/login';
+import Products from './pages/products';
 import AddProduct from './pages/add-product';
 import EditProductPage from './pages/edit-product';
-import Page404 from './pages/not-found/';
-import UserProfile from './pages/user/';
+import Page404 from './pages/not-found';
+import UserProfile from './pages/user-settings';
 
 import API from './API/';
 

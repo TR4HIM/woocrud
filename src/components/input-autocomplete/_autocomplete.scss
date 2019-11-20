@@ -2,3 +2,33 @@
     width: 100%;
     margin-bottom: 20px;
 }
+#product-auto-complete {
+    .page-root {
+        flex-grow: 1;
+    }
+    .page-container {
+        flex-grow: 1;
+        position: 'relative';
+    }
+    .auto-complete-paper {
+        position: 'absolute';
+        z-index: 10;
+        margin-top: 10px;
+        left: 0;
+        right: 0;
+        width:'100%'
+    }
+    .auto-complete-chip {
+        margin: 10px 15px;
+    }
+    .auto-complete-input-root {
+        flex-wrap: 'wrap';
+    }
+    .auto-complete-input {
+        width: 'auto';
+        flex-grow: 1;
+    }
+    .divider {
+        height: 20px;
+    }
+}

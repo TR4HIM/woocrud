@@ -8,7 +8,7 @@ const ButtonUploadImage = ({ typeImage , onChange }) => {
   return (
     <div className="upload-image-holder">
         <input accept="image/*" id={inputKey} multiple={typeImage !== "thumbnail"} type="file" className="hide-upload-input" onChange={ (e) => onChange && onChange(e)   }/>
-        <span>
+        <span className="add-icon">
             <label htmlFor={inputKey}>
                 <Icon fontSize="large" color="primary">add_circle</Icon>
             </label>

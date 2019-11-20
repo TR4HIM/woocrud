@@ -1,0 +1,14 @@
+#product-form-container {
+    .form-control {
+        margin: 10px;
+        min-width: 120px;
+        width: 100%;
+    }
+    .chips {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .product-tag {
+        margin: 2px;
+    } 
+}

@@ -4,12 +4,16 @@ import Header from '../../components/header/Header';
 import Footer from '../../components/footer/Footer';
 import ProductForm from '../../components/product-form/ProductForm';
 import API from '../../API/'; 
-import {loading , storeWooProducts , clearStoreWooProducts, storeWooCategories , storeWooTags} from '../../store/actions/';
+import {loading , storeWooCategories , storeWooTags} from '../../store/actions/';
   
-const EditProductPage = ({dispatch , USER , match}) =>  {
-    const { params } = match;
-    const [product,setProduct] = useState(null);
+const EditProductPage = ({dispatch , USER , WOO_CATEGORIES , match}) =>  {
     
+    const { params } = match;
+    const [ product,setProduct] = useState(null);
+    const [ isCategoriesLoaded, setIsCategoriesLoaded] = useState(false);
+    const [isTagsLoaded,setIsTagsLoaded] = useState(false);
+    dispatch(loading(true, "header-loader"));
+
     useEffect(()=>{
         API.WC_getWooProductById(USER.token, params.productId)
         .then((result)=>{
@@ -41,6 +45,7 @@ const EditProductPage = ({dispatch , USER , match}) =>  {
                         selected: false
                     }));
                     dispatch(storeWooCategories(productCategories));
+                    setIsCategoriesLoaded(true)
                 }
             })
             .catch((error)=>{
@@ -50,33 +55,56 @@ const EditProductPage = ({dispatch , USER , match}) =>  {
                 })
             })
     }, []);
-
+    
     useEffect(() => {
+        dispatch(loading(true, "header-loader"));
+
         // SHOW LOADER
         API.WC_getWooTags(USER.token)
             .then((result)=>{
                 if( result !== undefined ){
                     dispatch(storeWooTags(result));
+                    setIsTagsLoaded(true);
                 }
+                dispatch(loading(false, "header-loader"));
+
             })
             .catch((error)=>{
                 dispatch({
                     type : 'ERROR',
                     payload : error 
                 })
+                dispatch(loading(false, "header-loader"));
             })
     }, []);
 
+    const saveEditedProduct = (payload) => {
+        console.log(payload);
+        
+        API.WC_updateProduct(USER.token,  payload.productId , payload.payload ).then((data)=>{ 
+            console.log("Done");
+            console.log(data);
+            dispatch(loading(false, "header-loader"));
+        })
+        .catch((error)=>{
+            dispatch({
+                type : "ERROR",
+                payload : error
+            });
+            // HIDE LOADING
+            dispatch(loading(false, "header-loader"));
+        })
+    }
 
     return (
         <div id="add-product-page">
             <Header />
-                { (product !== null ) ? <ProductForm toEdit={true} productData={ product }/> : false }
+                { (product !== null && isCategoriesLoaded  && isTagsLoaded) ? <ProductForm toEdit={true} productData={ product } saveProductAction={(productData) => saveEditedProduct(productData)}/> : false }
             <Footer />
         </div>
     ); 
 }
 
-const mapStateToProps = ({ USER  }) => ({ USER });
+const mapStateToProps = ({ USER , WOO_CATEGORIES  }) => ({ USER , WOO_CATEGORIES});
 
-export default   connect(mapStateToProps)(EditProductPage) ;
+export default connect(mapStateToProps)(EditProductPage) ;
