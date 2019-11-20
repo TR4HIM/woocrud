@@ -1,4 +1,26 @@
-.autocomplete-container {
+.upload-image-holder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border: 1px solid gray;
+    border-radius: 10px;
     width: 100%;
-    margin-bottom: 20px;
+    height: 100%;
+    padding-top: 100%;
+    position: relative;
+    overflow: hidden;
+    .add-icon {
+        cursor: pointer;
+        display: block;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 36px;
+        height: 36px;
+        transform: translate(-50%, -50%);
+        label {
+            cursor: pointer;
+        }
+    }
 }

@@ -11,6 +11,7 @@ const EditProductPage = ({dispatch , USER , WOO_CATEGORIES , match}) =>  {
     const { params } = match;
     const [ product,setProduct] = useState(null);
     const [ isCategoriesLoaded, setIsCategoriesLoaded] = useState(false);
+    const [isTagsLoaded,setIsTagsLoaded] = useState(false);
     dispatch(loading(true, "header-loader"));
 
     useEffect(()=>{
@@ -54,26 +55,28 @@ const EditProductPage = ({dispatch , USER , WOO_CATEGORIES , match}) =>  {
                 })
             })
     }, []);
-    // useEffect(()=>{
-    //     console.log(WOO_CATEGORIES);
-    //     // if(isCategoriesLoaded)
+    
+    useEffect(() => {
+        dispatch(loading(true, "header-loader"));
 
-    // },[isCategoriesLoaded])
-    // useEffect(() => {
-    //     // SHOW LOADER
-    //     API.WC_getWooTags(USER.token)
-    //         .then((result)=>{
-    //             if( result !== undefined ){
-    //                 dispatch(storeWooTags(result));
-    //             }
-    //         })
-    //         .catch((error)=>{
-    //             dispatch({
-    //                 type : 'ERROR',
-    //                 payload : error 
-    //             })
-    //         })
-    // }, []);
+        // SHOW LOADER
+        API.WC_getWooTags(USER.token)
+            .then((result)=>{
+                if( result !== undefined ){
+                    dispatch(storeWooTags(result));
+                    setIsTagsLoaded(true);
+                }
+                dispatch(loading(false, "header-loader"));
+
+            })
+            .catch((error)=>{
+                dispatch({
+                    type : 'ERROR',
+                    payload : error 
+                })
+                dispatch(loading(false, "header-loader"));
+            })
+    }, []);
 
     const saveEditedProduct = (payload) => {
         console.log(payload);
@@ -96,7 +99,7 @@ const EditProductPage = ({dispatch , USER , WOO_CATEGORIES , match}) =>  {
     return (
         <div id="add-product-page">
             <Header />
-                { (product !== null && isCategoriesLoaded) ? <ProductForm toEdit={true} productData={ product } saveProductAction={(productData) => saveEditedProduct(productData)}/> : false }
+                { (product !== null && isCategoriesLoaded  && isTagsLoaded) ? <ProductForm toEdit={true} productData={ product } saveProductAction={(productData) => saveEditedProduct(productData)}/> : false }
             <Footer />
         </div>
     ); 

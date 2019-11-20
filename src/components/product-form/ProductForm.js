@@ -521,7 +521,7 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=fals
                                 Product Tags
                             </Typography>
                             <Divider className="paper-divider" />
-                            <div>
+                            {/* <div>
                                 {productTags.length > 0 && productTags.map((data,i) => {
                                     return (
                                     <Chip
@@ -533,31 +533,31 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=fals
                                     />
                                     );
                                 })}
-                            </div>
+                            </div> */}
                             <div>
                                 <FormControl className="form-control">
                                     <InputLabel id="demo-mutiple-chip-label">Chip</InputLabel>
                                     <Select
-                                    labelid="demo-mutiple-chip-label"
-                                    id="demo-mutiple-chip"
-                                    multiple
-                                    value={productTags}
-                                    onChange={(event) => setProductTags(event.target.value)}
-                                    input={<Input id="select-multiple-chip" />}
-                                    renderValue={productTags => (
-                                        <div>
-                                        {productTags.map(tag => (
-                                            <Chip key={tag.id} label={tag.name}  className="product-tag" color="primary" onDelete={handleDeleteTag(tag)} />
-                                        ))}
-                                        </div>
-                                    )}
-                                    MenuProps={MenuProps}
-                                    >
-                                    { WOO_TAGS.map(tag => (
-                                        <MenuItem key={tag.id} value={tag} >
-                                        {tag.name}
-                                        </MenuItem>
-                                    )) }
+                                        labelid="demo-mutiple-chip-label"
+                                        id="demo-mutiple-chip"
+                                        multiple
+                                        value={productTags}
+                                        onChange={(event) => setProductTags(event.target.value)}
+                                        input={<Input id="select-multiple-chip" />}
+                                        renderValue={productTags => (
+                                            <div className="chips">
+                                                {productTags.map(tag => (
+                                                    <Chip key={tag.id} label={tag.name}  className="product-tag" color="primary"  />
+                                                ))}
+                                            </div>
+                                        )}
+                                        MenuProps={MenuProps}
+                                        >
+                                        { WOO_TAGS.map(tag => (
+                                            <MenuItem key={tag.id} value={tag} >
+                                                {tag.name}
+                                            </MenuItem>
+                                        )) }
                                     </Select>
                                 </FormControl>
                             </div>
@@ -566,7 +566,7 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=fals
                                     id="product-name"
                                     inputRef={tagInput}
                                     onKeyDown={(e)=>handleAddTag(e)}
-                                    label="Add Tag"
+                                    label="Add New Tag"
                                     fullWidth={true}
                                 />
                             </div>

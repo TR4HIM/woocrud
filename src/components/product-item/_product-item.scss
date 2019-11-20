@@ -1,3 +1,225 @@
+#products-list{
+    -ms-box-orient: horizontal;
+    display: flex;
+    flex-flow: row wrap;
+    align-items: stretch;
+    padding: 0 10px 10px;
+    margin-bottom: 10px;
+    &.few-products{
+        .product{
+            max-width: 200px;
+        }
+    }
+    .product{
+        background: white;
+        width: 200px;
+        max-width: 300px;
+        padding: 10px;
+        margin: 2px;
+        text-align: center;
+        position: relative;
+        flex-grow: 1;
+        
+        &.checked{
+            opacity: .7;
+            .thumbnail{
+                filter: grayscale(.7);
+            }
+            &.checkable:before{
+                border-color: $secondary;
+                transition: .2s border-color ease-out;
+            }
+        }
+        &.checkable{
+            cursor: pointer;
+            &:after{
+                display: none;
+            }
+            &:before{
+                content: "";
+                border: 2px solid rgba($gray, .3);
+                transition: .2s border-color ease-out;
+                position: absolute;
+                left: 0;
+                right: 0;
+                top: 0;
+                bottom: 0;
+                z-index: 1;
+            }
+            
+            &:hover:before{
+                border-color: $secondary;
+                transition: .2s border-color ease-out;
+            }
+        }
+        .thumbnail{
+            display: block;
+            position: relative;
+            width: 100%;
+            margin : 0 auto 10px;
+            overflow: hidden;
+            padding: 100% 0  0 0;
+            background-size: cover;
+            background-position: center;
+            // height: 250px;
+            &::before {
+                content: '';
+                width: 100%;
+                height: 100%;
+                background-color: rgba(white,0);
+                position: absolute;
+                z-index: 1;
+                left: 0;
+                top: 0;
+                display: block;
+                transition: .3s all;
+            }
+            &.visual-loaded{
+                &:after{
+                    display: none;
+                    animation : none;
+                }
+            }
+            .visual{
+                // position: absolute;
+                width: 100%;
+                // left: 0;
+                // right: 0;
+                margin: 0 auto;
+                z-index: 2;
+                font-size: 12px;
+                display: none;
+                
+            }
+            .mold{
+                width: 100%;
+                display: block;
+                margin: 0 auto;
+                display: none;
+            }
+        }
+        .title{
+            font-size: 12px;
+            font-weight: 500;
+            text-align: left;
+            line-height: 15px;
+        }
+       
+        .check-icon{
+            position: absolute;
+            top: 5px;
+            right: 5px;
+        }
+        
+        .edit-btn {
+            position: absolute;
+            z-index: 5;
+            left: 0;
+            top: 90px;
+            right: 0;
+            padding: 10px 10px;
+            border: 1px solid #333;
+            margin: auto;
+            width: 75%;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 1);
+            transition: .2s opacity ease-out;
+            text-transform: uppercase;
+            font-size: 13px;
+            color: #CDDC39;
+            font-weight: bold;
+            z-index: 10;
+            opacity: 0;
+            cursor: pointer;
+            a {
+                color: black;
+            }
+        }
+        .adv-edit-btn {
+            position: absolute;
+            z-index: 5;
+            right: 0;
+            top: 0;
+            padding: 0;
+            border: 1px solid #CDDC39;
+            margin: auto;
+            height: 30px;
+            width: 30px;
+            border-radius: 100%;
+            background: #CDDC39;
+            transition: .2s opacity ease-out;
+            display: block;
+            line-height: 35px;
+            z-index: 10;
+            transition: .3s all;
+            cursor: pointer;
+        }
+        &:hover{
+            .thumbnail {
+                &::before {
+                    background-color: rgba(white,.5);
+                }
+            }
+            .edit-btn , .adv-edit-btn {
+                opacity: 1;
+            }
+        }
+        .private-icon{
+            position: absolute;
+            top: 11px;
+            right: 11px;
+            position: absolute;
+            background: rgba(red, 0.9);
+            color: white;
+            z-index: 3;
+            font-size: 11px;
+            padding: 3px 5px;
+            border-radius: 14px;
+            font-weight: bold;
+        }
+        .details{
+            overflow: hidden;
+            padding-top: 10px;
+            text-align: right;
+            display: block;
+            &.in-promo{
+                .price{
+                    &.regular{
+                        text-decoration: line-through;
+                        opacity: .5;
+                        font-weight: normal
+                    }
+                    &.promo{
+                        margin-left: 10px;
+                        display: inline-block;
+                        text-decoration: none;
+                    }
+                }
+                
+            }
+            .price{
+                font-weight: 700;
+                font-size: 15px;
+                // color: $secondary;
+                display: inline-block;
+                small{
+                    font-size: 14px;
+                    margin-left: -2px;
+                }
+            }
+        }
+    }
+
+    .product-item-updated {
+        animation-name: productUpdatedAnimation;
+        animation-duration: 2s;
+        animation-iteration-count: 1;
+        animation-timing-function: ease-in-out;
+    } 
+}
+
+
+
 @keyframes productUpdatedAnimation {
     0% {
         background-color: $success;
@@ -7,9 +229,3 @@
     }
 }
     
-.product-item-updated {
-    animation-name: productUpdatedAnimation;
-    animation-duration: 2s;
-    animation-iteration-count: 1;
-    animation-timing-function: ease-in-out;
-} 

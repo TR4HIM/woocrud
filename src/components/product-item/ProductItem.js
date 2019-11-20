@@ -3,22 +3,24 @@ import {connect} from 'react-redux';
 import { Link} from "react-router-dom";
 import { editWooProduct } from '../../store/actions/';
 import ToggleDisplay from 'react-toggle-display';
+import Icon from '@material-ui/core/Icon';
 
 const WooProduct = ({dispatch , data }) => {
 
     const [visualLoaded,setVisualLoaded]    = useState(false);
 
-
     const openModalEdit = () => {
-        dispatch(editWooProduct(true,data));
+        dispatch(editWooProduct(true,data)); 
     }
     
+    let imgUrl = (data.images.length>0 && data.images[0].src !== false) ? data.images[0].src : `${process.env.PUBLIC_URL}/img/product-image-mold.png`;
+
     return (
         <li 
             className={`product ${(data.isUpdated) ? 'product-item-updated' : ''}`} 
             id={data.id} 
         >
-            <div className={`thumbnail ${visualLoaded ? 'visual-loaded' : ''}`}>
+            <div className={`thumbnail ${visualLoaded ? 'visual-loaded' : ''}`} style={{backgroundImage: `url(${imgUrl})`}}>
                 { (data.images.length>0 && data.images[0].src !== false) ? <img className="visual" src={data.images[0].src} alt="" onLoad={()=>setVisualLoaded(true)} /> : "" }
                 <img className="mold" src={`${process.env.PUBLIC_URL}/img/product-image-mold.png`} alt="" />
             </div>
@@ -35,12 +37,12 @@ const WooProduct = ({dispatch , data }) => {
                 { (data.bargain) ? <small className="bargain-icon" >BARGAIN_TEXT</small> : null }
                 { (data.fake) ? <small className="fake-icon" >FAKE_TEXT</small> : null }
             </div>
-            <span className="edit-btn" onClick={openModalEdit}>
-                EDIT
+            <span className="adv-edit-btn" onClick={openModalEdit}>
+                <Icon fontSize="large" color="primary" style={{ fontSize: 18 }}>edit</Icon>
             </span>
             <span className="edit-btn">
                 <Link to={`/edit-produit/${data.id}`}>
-                    ADV EDIT 
+                    Advanced Edit
                 </Link>
             </span>
         </li>
