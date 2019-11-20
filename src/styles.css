@@ -530,6 +530,11 @@ button.btn {
   width: 100%;
   margin-bottom: 20px; }
 
+#product-form-container .form-control {
+  margin: 10px;
+  min-width: 120px;
+  width: 100%; }
+
 .edit-modal-title {
   position: relative; }
 

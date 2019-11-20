@@ -3,9 +3,9 @@ import {connect} from 'react-redux';
 import {    
         Container, 
         Grid , 
-        Paper , 
-        TextField , 
-        FormControlLabel , 
+        Paper , Input ,
+        TextField , Select ,
+        FormControlLabel , FormControl ,
         Switch , Typography , Checkbox ,
         Divider , Chip , Button ,
         ExpansionPanel , ExpansionPanelSummary , ExpansionPanelDetails} from '@material-ui/core';
@@ -16,7 +16,21 @@ import ButtonUploadImage from '../../components/button-upload/ButtonUpload';
 import EditableImage from '../../components/editable-image/EditableImage';
 import { loading , storeWooTags} from '../../store/actions/';
 import API from '../../API/'; 
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
 
+
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
 
 const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=false , productData=null , saveProductAction}) =>  {
 
@@ -51,6 +65,8 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=fals
     useEffect(()=>{
         setWooStoreCategories(WOO_CATEGORIES);
         setWooStoreTags(WOO_TAGS);
+
+        // WOO_TAGS.map(name => (console.log(name))) 
 
         if(toEdit === true){
             const isPublished   = (productData.status === "publish") ? true : false;
@@ -145,7 +161,7 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=fals
 
     useEffect(()=>{
         tagInput.current.value = "";
-
+        // console.log(productTags)
     },[productTags])
 
     useEffect(()=>{
@@ -257,7 +273,7 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=fals
     }
 
     const handleDeleteTag = chipToDelete => () => {
-        setWooStoreTags(chips => chips.filter(chip => chip.name !== chipToDelete.name));
+        setProductTags(productTags => productTags.filter(tag => tag.name !== chipToDelete.name));
     }
 
     const checkCategory = index => {
@@ -283,7 +299,6 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=fals
     const productPayLoadData = () => {
         
         dispatch(loading(true, "header-loader"));
-
         
         let galleryImages       = productGallery.map(img => ({src : img.sourceUrl}));
         let productCategories   = wooStoreCategories.filter(cat => cat.selected ).map(c => ({id : c.id}));
@@ -310,20 +325,18 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=fals
             cross_sell_ids      : productCrossSells,
             // related_ids      : 'EMPTY',
         };
+
         payload = {...payload, regular_price : regularPrice.toString()};
         payload = {...payload, name          : productName};
         payload = {...payload, description   : productDescription};
         payload = {...payload, images        : galleryImages};
 
-
         // If new product
         (toEdit === true) ? saveProductAction({ productId : productID , payload }) : saveProductAction(payload);
-        
-        
     }
-    return (
 
-        <Container maxWidth="lg">
+    return (
+        <Container maxWidth="lg" id="product-form-container">
                 <Grid container spacing={3}>
                     <Grid item xs={12} sm={8}>
                         <Paper className="product-form">
@@ -520,6 +533,33 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=fals
                                     />
                                     );
                                 })}
+                            </div>
+                            <div>
+                                <FormControl className="form-control">
+                                    <InputLabel id="demo-mutiple-chip-label">Chip</InputLabel>
+                                    <Select
+                                    labelid="demo-mutiple-chip-label"
+                                    id="demo-mutiple-chip"
+                                    multiple
+                                    value={productTags}
+                                    onChange={(event) => setProductTags(event.target.value)}
+                                    input={<Input id="select-multiple-chip" />}
+                                    renderValue={productTags => (
+                                        <div>
+                                        {productTags.map(tag => (
+                                            <Chip key={tag.id} label={tag.name}  className="product-tag" color="primary" onDelete={handleDeleteTag(tag)} />
+                                        ))}
+                                        </div>
+                                    )}
+                                    MenuProps={MenuProps}
+                                    >
+                                    { WOO_TAGS.map(tag => (
+                                        <MenuItem key={tag.id} value={tag} >
+                                        {tag.name}
+                                        </MenuItem>
+                                    )) }
+                                    </Select>
+                                </FormControl>
                             </div>
                             <div className="add-tag">
                                 <TextField
