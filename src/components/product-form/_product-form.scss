@@ -1,4 +1,12 @@
 #product-form-container {
+    .product-form {
+        position: relative;
+        .delete-product-btn {
+            position: absolute;
+            right:15px;
+            top: 7px;
+        }
+    }
     .form-control {
         margin: 10px;
         min-width: 120px;

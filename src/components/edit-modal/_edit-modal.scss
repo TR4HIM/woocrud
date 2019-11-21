@@ -1,12 +1,26 @@
-.edit-modal-title {
-    position: relative;
-}
 
 
-// Modal Loading
-#edit-modal-loading {
-    width: 100%;
-    position: absolute;
-    bottom: -4px;
-    left: 0;
+#edit-modal-container {
+    
+    .edit-modal-title {
+        position: relative;
+    }
+    // Modal Loading
+    #edit-modal-loading {
+        width: 100%;
+        position: absolute;
+        bottom: -4px;
+        left: 0;
+    }
+    
+    .modal-button {
+        text-align: right;
+        button {
+            margin-right: 15px;
+            color: black;
+            a {
+                color:black;
+            }
+        }
+    }
 }

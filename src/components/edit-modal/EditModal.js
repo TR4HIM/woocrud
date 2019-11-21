@@ -2,7 +2,7 @@ import React , {useState , useEffect} from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import {connect} from 'react-redux';
-import { loading , editWooProduct, updateWooProudct} from '../../store/actions/';
+import { loading , editWooProduct, updateWooProudct , deleteWooProudct} from '../../store/actions/';
 import {    
     Grid , 
     TextField , 
@@ -215,6 +215,26 @@ const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
         })
     }
 
+    const deleteProduct = () => {
+        dispatch(loading(true, "header-loading"));
+        handleClose();
+        API.WC_deleteProduct(USER.token, productId).then((data)=>{ 
+            console.log(data);
+            dispatch(deleteWooProudct(data.id));
+            dispatch(loading(false, "header-loading"));
+        })
+        .catch((error)=>{
+            dispatch({
+                type : "ERROR",
+                payload : error
+            });
+
+            // HIDE LOADING
+            dispatch(loading(false, "header-loading"));
+
+        })
+        // handleClose()
+    }
     return (
         <form>
         <Dialog
@@ -225,17 +245,23 @@ const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
             aria-labelledby="max-width-dialog-title"
             scroll="body"
             className="edit-modal-container"
+            id="edit-modal-container"
         >
             <MuiDialogTitle disableTypography className="edit-modal-title">
                 <Typography variant="h6">
                     Edit [ { productName } ]
                 </Typography>
                 {/* Redirect */}
-                <Button variant="outlined" color="secondary" className="modal-button" onClick={ handleClose }>
-                    <Link to={`/edit-produit/${productId}`}>
-                        Advanced Edit 
-                    </Link>
-                </Button>
+                <div className="modal-button">
+                    <Button variant="outlined" color="primary" onClick={ handleClose }>
+                        <Link to={`/edit-produit/${productId}`}>
+                            Advanced Edit 
+                        </Link>
+                    </Button>
+                    <Button variant="outlined" color="secondary" onClick={ deleteProduct }>
+                        Delete Product
+                    </Button>
+                </div>
                 <Loader id="edit-modal-loading"  type="linear" />
             </MuiDialogTitle>
             <DialogContent dividers>

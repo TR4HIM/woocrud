@@ -551,6 +551,13 @@ button.btn {
     .upload-image-holder .add-icon label {
       cursor: pointer; }
 
+#product-form-container .product-form {
+  position: relative; }
+  #product-form-container .product-form .delete-product-btn {
+    position: absolute;
+    right: 15px;
+    top: 7px; }
+
 #product-form-container .form-control {
   margin: 10px;
   min-width: 120px;
@@ -571,14 +578,22 @@ button.btn {
   padding: 15px 10px;
   text-align: center; }
 
-.edit-modal-title {
+#edit-modal-container .edit-modal-title {
   position: relative; }
 
-#edit-modal-loading {
+#edit-modal-container #edit-modal-loading {
   width: 100%;
   position: absolute;
   bottom: -4px;
   left: 0; }
+
+#edit-modal-container .modal-button {
+  text-align: right; }
+  #edit-modal-container .modal-button button {
+    margin-right: 15px;
+    color: black; }
+    #edit-modal-container .modal-button button a {
+      color: black; }
 
 #products-list {
   -ms-box-orient: horizontal;
@@ -665,26 +680,32 @@ button.btn {
       position: absolute;
       top: 5px;
       right: 5px; }
-    #products-list .product .edit-btn {
+    #products-list .product .product-edit-btns {
       position: absolute;
       z-index: 5;
       left: 0;
-      top: 90px;
-      right: 0;
+      top: 50%;
+      width: 100%;
+      transform: translateY(-50%); }
+    #products-list .product .edit-btn {
+      display: block;
       padding: 10px 10px;
       border: 1px solid #333;
-      margin: auto;
+      margin: 5px auto;
       width: 75%;
       border-radius: 4px;
       background: white;
       transition: .2s opacity ease-out;
       text-transform: uppercase;
       font-size: 13px;
-      color: #CDDC39;
+      color: #000;
       font-weight: bold;
       z-index: 10;
       opacity: 0;
       cursor: pointer; }
+      #products-list .product .edit-btn:hover {
+        background: #CDDC39;
+        border-color: #CDDC39; }
       #products-list .product .edit-btn a {
         color: black; }
     #products-list .product .adv-edit-btn {

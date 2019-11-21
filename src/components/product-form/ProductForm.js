@@ -14,11 +14,11 @@ import Icon from '@material-ui/core/Icon';
 import ProductsAutoComplete from '../../components/input-autocomplete/InputAutocomplete';
 import ButtonUploadImage from '../../components/button-upload/ButtonUpload';
 import EditableImage from '../../components/editable-image/EditableImage';
-import { loading , storeWooTags , storeWooCategories} from '../../store/actions/';
+import { loading , storeWooTags , storeWooCategories , deleteWooProudct} from '../../store/actions/';
 import API from '../../API/'; 
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-
+import { Redirect } from 'react-router';
 
 
 const ITEM_HEIGHT = 48;
@@ -65,12 +65,11 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=fals
 
     const [addNewTagActive, setAddNewTagActive]                             = useState(false);
     const [addNewCategoryActive, setAddNewCategoryActive]                   = useState(false);
+    const [isProductDeleted, setIsProductDeleted]                   = useState(false);
 
     useEffect(()=>{
         setWooStoreCategories(WOO_CATEGORIES);
         setWooStoreTags(WOO_TAGS);
-
-        // WOO_TAGS.map(name => (console.log(name))) 
 
         if(toEdit === true){
             const isPublished   = (productData.status === "publish") ? true : false;
@@ -120,8 +119,6 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=fals
 
     },[upSellsProducts, crossSellsProducts]);
 
-    
-
     const getRelatedProductData = async (relatedProducts,relatedType) => {
         const listProductsData = [];
         for(let i = 0; i < relatedProducts.length ; i++){
@@ -169,8 +166,6 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=fals
         if(addNewTagActive)
             tagInput.current.value = "";
     },[productTags])
-
- 
 
     useEffect(()=>{
         if(isThumbnailUploade && tmpUploadedImageUrl !== ""){
@@ -334,7 +329,7 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=fals
                     control={ <Checkbox checked={category.selected} 
                     onChange={() => checkCategory(category) } value={category.selected} /> }
                     label={category.name}
-                    key={i}
+                    key={category.id}
                 />)
             )  
         )
@@ -380,12 +375,34 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=fals
         (toEdit === true) ? saveProductAction({ productId : productID , payload }) : saveProductAction(payload);
     }
 
+    const deleteProduct = () => {
+        dispatch(loading(true, "header-loading"));
+        API.WC_deleteProduct(USER.token, productID).then((data)=>{ 
+            setIsProductDeleted(true)
+            dispatch(deleteWooProudct(productID));
+            dispatch(loading(false, "header-loading"));
+        })
+        .catch((error)=>{
+            dispatch({
+                type : "ERROR",
+                payload : error
+            });
+
+            // HIDE LOADING
+            dispatch(loading(false, "header-loading"));
+
+        })
+        // handleClose()
+    }
+
     return (
         <Container maxWidth="lg" id="product-form-container">
+                {isProductDeleted && toEdit && <Redirect to={`/mes-produits`} />}
                 <Grid container spacing={3}>
                     <Grid item xs={12} sm={8}>
                         <Paper className="product-form">
-                            <Typography variant="subtitle2" className="paper-title" gutterBottom>
+                            { toEdit && <Button variant="outlined" color="secondary" className="delete-product-btn" onClick={ deleteProduct }> Delete Product </Button> }
+                            <Typography variant="subtitle2" className="paper-title" gutterBottom> 
                                 Product Informations 
                             </Typography>
                             <Divider className="paper-divider" />
@@ -590,7 +607,7 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=fals
                                         )}
                                         MenuProps={MenuProps}
                                         >
-                                        { WOO_TAGS.map(tag => (
+                                        { wooStoreTags.map(tag => (
                                             <MenuItem key={tag.id} value={tag} >
                                                 {tag.name}
                                             </MenuItem>

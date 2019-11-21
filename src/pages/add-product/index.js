@@ -67,11 +67,7 @@ const AddProduct = ({dispatch , USER }) =>  {
     }, []);
 
     const saveNewProduct = (payload) => {
-        console.log(payload);
-        
         API.WC_createProduct(USER.token,  payload).then((data)=>{ 
-            console.log("Done");
-            console.log(data);
             dispatch(loading(false, "header-loader"));
             setIsNewProductSaved(true);
             setProductID(data.id);
@@ -85,6 +81,7 @@ const AddProduct = ({dispatch , USER }) =>  {
             dispatch(loading(false, "header-loader"));
         })
     }
+
     return (
         <div id="add-product-page">
             <Header />

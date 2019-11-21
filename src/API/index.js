@@ -206,6 +206,18 @@ const WC_updateProduct = (token, id, property)=>{
 
 }
 
+const WC_deleteProduct = (token, id)=> {
+    return axios.delete( `${WC}/products/${id}?force=true`, {
+        headers : {
+            "Authorization" : `Bearer ${token}`,
+        }
+    })
+    .then((result)=>{
+        return result.data
+    });
+
+}
+
 const WC_createProduct = (token, property)=>{
     let data = {
         ...property
@@ -256,6 +268,7 @@ export default {
     WC_getWooProductByName,
     WP_uploadImage,
     WC_createProduct,
+    WC_deleteProduct,
     WC_createWooTags,
     WC_createWooCategories,
     WP_deleteImage

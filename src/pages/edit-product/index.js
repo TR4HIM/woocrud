@@ -58,7 +58,6 @@ const EditProductPage = ({dispatch , USER , WOO_CATEGORIES , match}) =>  {
     
     useEffect(() => {
         dispatch(loading(true, "header-loader"));
-
         // SHOW LOADER
         API.WC_getWooTags(USER.token)
             .then((result)=>{
@@ -79,11 +78,7 @@ const EditProductPage = ({dispatch , USER , WOO_CATEGORIES , match}) =>  {
     }, []);
 
     const saveEditedProduct = (payload) => {
-        console.log(payload);
-        
         API.WC_updateProduct(USER.token,  payload.productId , payload.payload ).then((data)=>{ 
-            console.log("Done");
-            console.log(data);
             dispatch(loading(false, "header-loader"));
         })
         .catch((error)=>{

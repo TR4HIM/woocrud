@@ -56,6 +56,8 @@ export const WOO_PRODUCTS = (state = [], action)=>{
 
     else if( action.type === TYPES.UPDATE_WOO_PRODUCT )
         return state.map((product)=> (product.id === action.payload.id) ? { ...product, ...action.payload } :  product );
+    else if(action.type === TYPES.DELETE_WOO_PRODUCT)
+        return state.filter((product)=>product.id !== action.payload)
 
     return state;
 }

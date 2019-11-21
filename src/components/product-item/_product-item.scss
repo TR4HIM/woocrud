@@ -111,26 +111,34 @@
             right: 5px;
         }
         
-        .edit-btn {
+        .product-edit-btns {
             position: absolute;
             z-index: 5;
             left: 0;
-            top: 90px;
-            right: 0;
+            top: 50%;
+            width: 100%;
+            transform: translateY(-50%);
+        }
+        .edit-btn {
+            display: block;
             padding: 10px 10px;
             border: 1px solid #333;
-            margin: auto;
+            margin: 5px auto;
             width: 75%;
             border-radius: 4px;
             background: rgba(255, 255, 255, 1);
             transition: .2s opacity ease-out;
             text-transform: uppercase;
             font-size: 13px;
-            color: #CDDC39;
+            color: #000;
             font-weight: bold;
             z-index: 10;
             opacity: 0;
             cursor: pointer;
+            &:hover {
+                background: #CDDC39;
+                border-color: #CDDC39;
+            }
             a {
                 color: black;
             }
