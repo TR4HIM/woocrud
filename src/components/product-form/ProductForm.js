@@ -14,7 +14,7 @@ import Icon from '@material-ui/core/Icon';
 import ProductsAutoComplete from '../../components/input-autocomplete/InputAutocomplete';
 import ButtonUploadImage from '../../components/button-upload/ButtonUpload';
 import EditableImage from '../../components/editable-image/EditableImage';
-import { loading , storeWooTags} from '../../store/actions/';
+import { loading , storeWooTags , storeWooCategories} from '../../store/actions/';
 import API from '../../API/'; 
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -35,6 +35,7 @@ const MenuProps = {
 const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=false , productData=null , saveProductAction}) =>  {
 
     const tagInput = useRef(null);
+    const categoryInput = useRef(null);
 
     const [productID,setProductID]                                          = useState(false);
     const [productName,setProductName]                                      = useState("");
@@ -61,6 +62,9 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=fals
     const [productDeletedImages, setProductDeletedImages]                   = useState([]);
     const [crossSellsProductsDataReady, setCrossSellsProductsDataReady]     = useState(true);
     const [upSellsProductsDataReady, setUpSellsProductsDataReady]           = useState(true);
+
+    const [addNewTagActive, setAddNewTagActive]                             = useState(false);
+    const [addNewCategoryActive, setAddNewCategoryActive]                   = useState(false);
 
     useEffect(()=>{
         setWooStoreCategories(WOO_CATEGORIES);
@@ -157,12 +161,16 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=fals
                 setWooStoreCategories(selectedCategories);
             }
         }
-    }, [getProductCategories ]);
+        if(addNewCategoryActive)
+            categoryInput.current.value = "";
+    }, [getProductCategories]);
 
     useEffect(()=>{
-        tagInput.current.value = "";
-        // console.log(productTags)
+        if(addNewTagActive)
+            tagInput.current.value = "";
     },[productTags])
+
+ 
 
     useEffect(()=>{
         if(isThumbnailUploade && tmpUploadedImageUrl !== ""){
@@ -255,6 +263,23 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=fals
         })
     }
 
+    const addCategoryToWoo = (payload) => {
+        API.WC_createWooCategories(USER.token,payload).then((data)=>{ 
+            setWooStoreCategories(currentTags => [...currentTags, {...data,selected:true}])
+            dispatch(storeWooCategories([...WOO_CATEGORIES, {...data,selected:true}]));
+            dispatch(loading(false, "header-loader"));
+            categoryInput.current.value = "";
+        })
+        .catch((error)=>{
+            dispatch({
+                type : "ERROR",
+                payload : error
+            });
+            // HIDE LOADING
+            dispatch(loading(false, "header-loader"));
+        })
+    }
+
     const handleAddTag = (e) => {
         if(tagInput.current.value.trim() !== '' && e.keyCode === 13){
             let wooStoreTags    = WOO_TAGS.filter(tag => tag.name === tagInput.current.value.trim() ).map(t => ({id : t.id , name : t.name}));
@@ -272,13 +297,33 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=fals
         }
     }
 
+    const handleAddCategory = (e) => {
+        if(categoryInput.current.value.trim() !== '' && e.keyCode === 13){
+            let cat    = wooStoreCategories.filter(cat => cat.name.toLowerCase() === categoryInput.current.value.trim().toLowerCase() ).map(t => ({...t}));
+
+            if(cat.length > 0){
+                categoryInput.current.value = "";
+                let  newCategoryList = wooStoreCategories.map(function(category) {
+                    if (category.id === cat[0].id) category.selected = true;
+                    return category;
+                });
+                setWooStoreCategories(newCategoryList);
+            }
+            else 
+                addCategoryToWoo({name : categoryInput.current.value.trim()});
+
+        }
+    }
+
     const handleDeleteTag = chipToDelete => () => {
         setProductTags(productTags => productTags.filter(tag => tag.name !== chipToDelete.name));
     }
 
-    const checkCategory = index => {
-        const newCategoryList = [...wooStoreCategories]; 
-        newCategoryList[index].selected = ! newCategoryList[index].selected;
+    const checkCategory = cat => {
+        let  newCategoryList = wooStoreCategories.map(function(category) {
+            if (category.id === cat.id) category.selected = !category.selected;
+            return category;
+        });
         setWooStoreCategories(newCategoryList);
     }
 
@@ -287,7 +332,7 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=fals
             wooStoreCategories.map((category,i)=>(
                 <FormControlLabel
                     control={ <Checkbox checked={category.selected} 
-                    onChange={() => checkCategory(i) } value={category.selected} /> }
+                    onChange={() => checkCategory(category) } value={category.selected} /> }
                     label={category.name}
                     key={i}
                 />)
@@ -514,29 +559,21 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=fals
                             </Typography>
                             <Divider className="paper-divider" />
                             { renderCategoriesList() }
-                            
+                            <div className="add-tag">
+                                {(addNewCategoryActive) ? <TextField id="product-name" inputRef={categoryInput} onKeyDown={(e)=>handleAddCategory(e)} label="Create New Category" fullWidth={true} />
+                                                   : <Button variant="outlined" color="secondary" onClick={()=>setAddNewCategoryActive(true)}>Create New Category</Button>}
+                            </div>
                         </Paper>
                         <Paper id="product-tags" className="product-form">
                             <Typography variant="subtitle2" className="paper-title" gutterBottom>
                                 Product Tags
                             </Typography>
                             <Divider className="paper-divider" />
-                            {/* <div>
-                                {productTags.length > 0 && productTags.map((data,i) => {
-                                    return (
-                                    <Chip
-                                        key={i}
-                                        label={data.name}
-                                        onDelete={handleDeleteTag(data)}
-                                        color="primary"
-                                        className="product-tag"
-                                    />
-                                    );
-                                })}
-                            </div> */}
                             <div>
                                 <FormControl className="form-control">
-                                    <InputLabel id="demo-mutiple-chip-label">Chip</InputLabel>
+                                    <InputLabel id="demo-mutiple-chip-label">
+                                        Select Product Tags
+                                    </InputLabel>
                                     <Select
                                         labelid="demo-mutiple-chip-label"
                                         id="demo-mutiple-chip"
@@ -562,13 +599,8 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=fals
                                 </FormControl>
                             </div>
                             <div className="add-tag">
-                                <TextField
-                                    id="product-name"
-                                    inputRef={tagInput}
-                                    onKeyDown={(e)=>handleAddTag(e)}
-                                    label="Add New Tag"
-                                    fullWidth={true}
-                                />
+                                {(addNewTagActive) ? <TextField id="product-name" inputRef={tagInput} onKeyDown={(e)=>handleAddTag(e)} label="Create New Tag" fullWidth={true} />
+                                                   : <Button variant="outlined" color="secondary" onClick={()=>setAddNewTagActive(true)}>Create New Tag</Button>}
                             </div>
                         </Paper>
                     </Grid>

@@ -563,6 +563,14 @@ button.btn {
 #product-form-container .product-tag {
   margin: 2px; }
 
+#product-form-container .product-tag {
+  margin-right: 5px;
+  margin-bottom: 5px; }
+
+#product-form-container .add-tag {
+  padding: 15px 10px;
+  text-align: center; }
+
 .edit-modal-title {
   position: relative; }
 
@@ -882,9 +890,6 @@ button.btn {
 .product-tag {
   margin-right: 5px;
   margin-bottom: 5px; }
-
-.add-tag {
-  padding: 15px 10px; }
 
 .featured-image {
   width: 200px;
