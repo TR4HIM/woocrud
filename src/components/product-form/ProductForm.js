@@ -20,18 +20,6 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import { Redirect } from 'react-router';
 
-
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
-
 const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=false , productData=null , saveProductAction}) =>  {
 
     const tagInput = useRef(null);
@@ -310,9 +298,9 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=fals
         }
     }
 
-    const handleDeleteTag = chipToDelete => () => {
-        setProductTags(productTags => productTags.filter(tag => tag.name !== chipToDelete.name));
-    }
+    // const handleDeleteTag = chipToDelete => () => {
+    //     setProductTags(productTags => productTags.filter(tag => tag.name !== chipToDelete.name));
+    // }
 
     const checkCategory = cat => {
         let  newCategoryList = wooStoreCategories.map(function(category) {
@@ -605,7 +593,6 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=fals
                                                 ))}
                                             </div>
                                         )}
-                                        MenuProps={MenuProps}
                                         >
                                         { wooStoreTags.map(tag => (
                                             <MenuItem key={tag.id} value={tag} >
