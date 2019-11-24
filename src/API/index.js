@@ -179,7 +179,7 @@ const WC_createWooCategories = (token,data)=>{
     })
 }
 
-const WP_getProfileInfo = (token, idUser)=>{
+const WP_getProfileInfo = (token)=>{
     return axios.get( `${WP}/users/me?context=edit`, {
         headers : {
             "Authorization" : `Bearer ${token}`,
@@ -189,6 +189,33 @@ const WP_getProfileInfo = (token, idUser)=>{
         return result.data
     });
 }
+
+const WP_updateProfileInfo = (token, data)=>{
+
+    return axios.post( `${WP}/users/${data.id}`, data , {
+        headers : {
+            "Authorization" : `Bearer ${token}`
+        }
+    })
+    .then((result)=>{
+        return result.data
+    });
+
+}
+
+const WP_change_password = (token, payload)=>{
+
+    // /current-user/${payload.id}/change_password/
+    return axios.put( `${WP}/current-user/${payload.id}/change_password`, payload , {
+        headers : {
+            "Authorization" : `Bearer ${token}`
+        }
+    })
+    .then((result)=>{
+        return result.data
+    });
+}
+
 
 const WC_updateProduct = (token, id, property)=>{
     let data = {
@@ -264,6 +291,8 @@ export default {
     WC_getWooTags,
     WC_getWooProductById,
     WP_getProfileInfo,
+    WP_updateProfileInfo,
+    WP_change_password,
     WC_updateProduct,
     WC_getWooProductByName,
     WP_uploadImage,
