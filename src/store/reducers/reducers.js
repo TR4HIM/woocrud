@@ -25,9 +25,11 @@ export const AUTHORIZED = (state = false, action)=>{
 
     if(action.type === TYPES.LOGIN)
         return action.payload;
-    
-    
+    if(action.type === TYPES.LOGOUT)
+        return null;
+
     return state;
+    
 }
 
 export const USER_PROFILE = (state = null, action)=>{

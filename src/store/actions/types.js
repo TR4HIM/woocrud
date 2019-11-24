@@ -10,5 +10,6 @@ export default {
 	EDIT_WOO_PRODUCT  			    : 'EDIT_WOO_PRODUCT',
 	UPDATE_WOO_PRODUCT  			: 'UPDATE_WOO_PRODUCT',
 	DELETE_WOO_PRODUCT  			: 'DELETE_WOO_PRODUCT',
-	LOADING  			            : 'LOADING'
+	LOADING  			            : 'LOADING',
+	LOGOUT  			            : 'LOGOUT'
 };

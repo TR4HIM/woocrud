@@ -371,7 +371,140 @@ button.btn {
   top: 0;
   text-align: center;
   margin-bottom: 20px;
-  z-index: 99999; }
+  z-index: 10; }
+  #header #logo {
+    display: inline-block;
+    max-width: 45px;
+    padding: 1px 0; }
+    #header #logo img {
+      width: 100%; }
+  #header #menu-icon {
+    color: #333;
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%); }
+  #header #search-icon {
+    color: #333;
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%); }
+  #header #category-icon {
+    color: #333;
+    position: absolute;
+    top: 50%;
+    right: 60px;
+    transform: translateY(-50%); }
+
+#main-menu > div:last-child {
+  width: 100%;
+  max-width: 250px; }
+
+#main-menu ul {
+  padding: 0 !important;
+  min-width: 250px; }
+
+#main-menu #connected-user {
+  padding: 6px 15px !important;
+  display: block;
+  background: #333;
+  text-align: left;
+  font-style: italic;
+  cursor: default;
+  font-size: 13px;
+  color: white;
+  width: 100%; }
+  .kibo-lang-ar #main-menu #connected-user {
+    text-align: right;
+    font-family: "Cairo", sans-serif; }
+
+#main-menu li {
+  padding: 0 !important;
+  height: auto !important; }
+  #main-menu li a {
+    color: #333;
+    display: block;
+    width: 100%;
+    padding: 10px 40px;
+    font-weight: 500;
+    font-size: 14px;
+    position: relative; }
+    #main-menu li a.selected {
+      color: #333;
+      background: #27ae60;
+      cursor: default; }
+  #main-menu li.logout {
+    border-top: 1px solid #ccc;
+    font-size: 15px; }
+    #main-menu li.logout button {
+      display: block;
+      width: 100%;
+      padding: 12px 40px;
+      background: none;
+      border: none;
+      color: #f44336;
+      text-align: left;
+      font-weight: 500;
+      cursor: pointer;
+      font-size: 14px;
+      text-transform: uppercase; }
+      .kibo-lang-ar #main-menu li.logout button {
+        text-align: right;
+        font-family: "Cairo", sans-serif; }
+  #main-menu li.language {
+    font-size: 15px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0; }
+    #main-menu li.language button {
+      display: block;
+      width: 100%;
+      padding: 12px 15px;
+      border: none;
+      color: #333;
+      font-weight: 500;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: bold;
+      text-align: center;
+      background: #ddd; }
+  #main-menu li #goto-shop {
+    position: relative; }
+    #main-menu li #goto-shop svg {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 21px;
+      fill: #333;
+      right: 10px; }
+
+@media screen and (max-width: 680px) {
+  #header {
+    height: 54px;
+    text-align: left; }
+    #header #logo {
+      padding: 5px 0;
+      max-width: 60px;
+      margin-left: 40px; }
+    #header #menu-icon, #header #search-icon, #header #category-icon {
+      padding: 6px; } }
+
+@media screen and (max-width: 480px) {
+  #header {
+    margin-bottom: 10px; } }
+
+#header {
+  border-bottom: 1px solid #e7e7e7;
+  height: 60px;
+  background: white;
+  padding: 7px 0;
+  position: sticky;
+  top: 0;
+  text-align: center;
+  margin-bottom: 20px;
+  z-index: 10; }
   #header #logo {
     display: inline-block;
     max-width: 45px;
