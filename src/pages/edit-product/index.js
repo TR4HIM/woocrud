@@ -8,10 +8,9 @@ import {loading , storeWooCategories , storeWooTags} from '../../store/actions/'
   
 const EditProductPage = ({dispatch , USER , WOO_CATEGORIES , match}) =>  {
     
-    const { params } = match;
+    const { params }            = match;
     const [ product,setProduct] = useState(null);
-    const [ isCategoriesLoaded, setIsCategoriesLoaded] = useState(false);
-    const [isTagsLoaded,setIsTagsLoaded] = useState(false);
+
     dispatch(loading(true, "header-loader"));
 
     useEffect(()=>{
@@ -34,49 +33,6 @@ const EditProductPage = ({dispatch , USER , WOO_CATEGORIES , match}) =>  {
 
     },[]);
 
-    /* FOR DEV ONLY THIS SHOULD BE SHARED */
-    useEffect(() => {
-        // SHOW LOADER
-        API.WC_getWooCategories(USER.token)
-            .then((result)=>{
-                if( result !== undefined ){
-                    const productCategories = result.map(category => ({
-                        ...category,
-                        selected: false
-                    }));
-                    dispatch(storeWooCategories(productCategories));
-                    setIsCategoriesLoaded(true)
-                }
-            })
-            .catch((error)=>{
-                dispatch({
-                    type : 'ERROR',
-                    payload : error 
-                })
-            })
-    }, []);
-    
-    useEffect(() => {
-        dispatch(loading(true, "header-loader"));
-        // SHOW LOADER
-        API.WC_getWooTags(USER.token)
-            .then((result)=>{
-                if( result !== undefined ){
-                    dispatch(storeWooTags(result));
-                    setIsTagsLoaded(true);
-                }
-                dispatch(loading(false, "header-loader"));
-
-            })
-            .catch((error)=>{
-                dispatch({
-                    type : 'ERROR',
-                    payload : error 
-                })
-                dispatch(loading(false, "header-loader"));
-            })
-    }, []);
-
     const saveEditedProduct = (payload) => {
         API.WC_updateProduct(USER.token,  payload.productId , payload.payload ).then((data)=>{ 
             dispatch(loading(false, "header-loader"));
@@ -94,7 +50,7 @@ const EditProductPage = ({dispatch , USER , WOO_CATEGORIES , match}) =>  {
     return (
         <div id="add-product-page">
             <Header />
-                { (product !== null && isCategoriesLoaded  && isTagsLoaded) ? <ProductForm toEdit={true} productData={ product } saveProductAction={(productData) => saveEditedProduct(productData)}/> : false }
+                { (product !== null) ? <ProductForm toEdit={true} productData={ product } saveProductAction={(productData) => saveEditedProduct(productData)}/> : false }
             <Footer />
         </div>
     ); 

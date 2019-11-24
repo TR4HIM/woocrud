@@ -32,11 +32,28 @@ const Login = ({dispatch, AUTHORIZED , history }) => {
         };
         API.LOGIN(payload)
             .then((data)=>{
-                localStorage.setItem('woo-app', JSON.stringify(data));
-                dispatch(login(true));
-                dispatch(storeUserData(data));
-                dispatch(loading( false, 'login-loader' ));
-                history.push(APP_ROUTES.MY_PRODUCTS);
+                API.WP_getProfileInfo(data.token).then((res)=>{
+                    let userData = {...data ,  roles : res.roles };
+                    
+                    console.log(userData)
+                    //Rolse : administrator  , shop_manager
+                    if(userData.roles.indexOf('administrator') !== -1 || userData.roles.indexOf('shop_manager') !== -1){
+                        localStorage.setItem('woo-app', JSON.stringify(userData));
+                        dispatch(login(true));
+                        dispatch(storeUserData(res));
+                        dispatch(loading( false, 'login-loader' ));
+                        history.push(APP_ROUTES.MY_PRODUCTS);
+                    }else{
+                        console.log('Not Authorized');
+                        // CLEAR THE LOCALSTORAGE
+                        localStorage.removeItem('woo-app');
+                        // LOGOUT
+                        dispatch(login(false));
+                        // DISPATCH THE LOGOUT ACTION TO CLEAR THE STORE
+                        dispatch({ type : "LOGOUT"});
+                        dispatch(loading( false, 'login-loader' ));
+                    }
+                })
             })
             .catch((error)=>{
                 dispatch({

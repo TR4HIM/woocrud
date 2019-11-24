@@ -53,42 +53,94 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=fals
 
     const [addNewTagActive, setAddNewTagActive]                             = useState(false);
     const [addNewCategoryActive, setAddNewCategoryActive]                   = useState(false);
-    const [isProductDeleted, setIsProductDeleted]                   = useState(false);
+    const [isProductDeleted, setIsProductDeleted]                           = useState(false);
+
+    const [ isCategoriesLoaded, setIsCategoriesLoaded] = useState(false);
+    const [ isTagsLoaded,setIsTagsLoaded] = useState(false);
+
+ 
+    useEffect(() => {
+        if(WOO_CATEGORIES.length <= 0){
+            API.WC_getWooCategories(USER.token)
+            .then((result)=>{
+                if( result !== undefined ){
+                    const productCategories = result.map(category => ({
+                        ...category,
+                        selected: false
+                    }));
+                    dispatch(storeWooCategories(productCategories));
+                    setIsCategoriesLoaded(true)
+                }
+            })
+            .catch((error)=>{
+                dispatch({
+                    type : 'ERROR',
+                    payload : error 
+                })
+            })
+        }
+        else
+            setIsCategoriesLoaded(true)
+    }, []);
+    
+    useEffect(() => {
+        if(WOO_TAGS.length <= 0){
+            API.WC_getWooTags(USER.token)
+            .then((result)=>{
+                if( result !== undefined ){
+                    dispatch(storeWooTags(result));
+                    setIsTagsLoaded(true);
+                }
+                dispatch(loading(false, "header-loader"));
+
+            })
+            .catch((error)=>{
+                dispatch({
+                    type : 'ERROR',
+                    payload : error 
+                })
+                dispatch(loading(false, "header-loader"));
+            })
+        }
+        else
+            setIsTagsLoaded(true);
+    }, []);
 
     useEffect(()=>{
-        setWooStoreCategories(WOO_CATEGORIES);
-        setWooStoreTags(WOO_TAGS);
-
-        if(toEdit === true){
-            const isPublished   = (productData.status === "publish") ? true : false;
-            let galleryImages   = productData.images.map(img => ({sourceUrl : img.src , id : img.id}));
-            if(productData.upsell_ids.length > 0)
-                setCrossSellsProductsDataReady(false);
-            if(productData.upsell_ids.length > 0)
-                setUpSellsProductsDataReady(false);
-
-            setUpSellsProductsIds(productData.upsell_ids);
-            setCrossSellsProductsIds(productData.cross_sell_ids);
-
-            setProductID(productData.id);
-            setProductName(productData.name);
-            setProductDescription(productData.description);
-            setShortProductDescription(productData.short_description);
-            setRegularPrice(productData.regular_price);
-            setSalePrice(productData.sale_price);
-            setSku(productData.sku);
-            setDownloadable(productData.downloadable);
-            setVirtual(productData.virtual);
-            setProductTags(productData.tags)
-            setGetProductCategories(productData.categories);
-
-            // Remove First Element For Featured Image :) 
-            setProductImage(galleryImages.shift());
-            setProductGallery(galleryImages);
-            setPublished(isPublished);
-
+        if(isCategoriesLoaded && isTagsLoaded){
+            setWooStoreCategories(WOO_CATEGORIES);
+            setWooStoreTags(WOO_TAGS);
+    
+            if(toEdit === true){
+                const isPublished   = (productData.status === "publish") ? true : false;
+                let galleryImages   = productData.images.map(img => ({sourceUrl : img.src , id : img.id}));
+                if(productData.upsell_ids.length > 0)
+                    setCrossSellsProductsDataReady(false);
+                if(productData.upsell_ids.length > 0)
+                    setUpSellsProductsDataReady(false);
+    
+                setUpSellsProductsIds(productData.upsell_ids);
+                setCrossSellsProductsIds(productData.cross_sell_ids);
+    
+                setProductID(productData.id);
+                setProductName(productData.name);
+                setProductDescription(productData.description);
+                setShortProductDescription(productData.short_description);
+                setRegularPrice(productData.regular_price);
+                setSalePrice(productData.sale_price);
+                setSku(productData.sku);
+                setDownloadable(productData.downloadable);
+                setVirtual(productData.virtual);
+                setProductTags(productData.tags)
+                setGetProductCategories(productData.categories);
+    
+                // Remove First Element For Featured Image :) 
+                setProductImage(galleryImages.shift());
+                setProductGallery(galleryImages);
+                setPublished(isPublished);
+            }
         }
-    },[]);
+    },[isCategoriesLoaded, isTagsLoaded]);
 
     useEffect(()=>{
         if(upSellsProductsIds.length > 0) 

@@ -10,61 +10,8 @@ import { Redirect } from 'react-router';
 
 const AddProduct = ({dispatch , USER }) =>  {
 
-    const [isCategoriesLoaded,setIsCategoriesLoaded] = useState(false);
-    const [isTagsLoaded,setIsTagsLoaded] = useState(false);
     const [isNewProductSaved, setIsNewProductSaved]                         = useState(false);
     const [productID,setProductID]                                          = useState(false);
-
-
-    dispatch(loading(true, "header-loader"));
-
-    /* FOR DEV ONLY THIS SHOULD BE SHARED */
-    useEffect(() => {
-        dispatch(loading(true, "header-loader"));
-
-        // SHOW LOADER
-        API.WC_getWooCategories(USER.token)
-            .then((result)=>{
-                if( result !== undefined ){
-                    const productCategories = result.map(category => ({
-                        ...category,
-                        selected: false
-                    }));
-                    dispatch(storeWooCategories(productCategories));
-                    setIsCategoriesLoaded(true);
-                }
-                dispatch(loading(false, "header-loader"));
-            })
-            .catch((error)=>{
-                dispatch({
-                    type : 'ERROR',
-                    payload : error 
-                })
-                dispatch(loading(false, "header-loader"));
-            })
-    }, []);
-
-    useEffect(() => {
-        dispatch(loading(true, "header-loader"));
-
-        // SHOW LOADER
-        API.WC_getWooTags(USER.token)
-            .then((result)=>{
-                if( result !== undefined ){
-                    dispatch(storeWooTags(result));
-                    setIsTagsLoaded(true);
-                }
-                dispatch(loading(false, "header-loader"));
-
-            })
-            .catch((error)=>{
-                dispatch({
-                    type : 'ERROR',
-                    payload : error 
-                })
-                dispatch(loading(false, "header-loader"));
-            })
-    }, []);
 
     const saveNewProduct = (payload) => {
         API.WC_createProduct(USER.token,  payload).then((data)=>{ 
@@ -86,7 +33,7 @@ const AddProduct = ({dispatch , USER }) =>  {
         <div id="add-product-page">
             <Header />
             { isNewProductSaved && productID !== false && <Redirect to={`/edit-produit/${productID}`} /> }
-            { isCategoriesLoaded && isTagsLoaded && <ProductForm saveProductAction={(productData) => saveNewProduct(productData)} /> }
+            { <ProductForm saveProductAction={(productData) => saveNewProduct(productData)} /> }
             <Footer />
         </div>
     ); 

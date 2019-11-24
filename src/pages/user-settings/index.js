@@ -8,7 +8,7 @@ import {  Paper, Typography, TextField, Button, FormControl,
 
 import API from '../../API/'; 
 
-import {loading , updateUser , storeUserProfile} from '../../store/actions/';
+import {loading , updateUser , storeUserProfile , storeUserData} from '../../store/actions/';
 
 import ToggleDisplay from 'react-toggle-display';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
@@ -26,15 +26,15 @@ const UserSettings = ({ dispatch , USER , USER_PROFILE}) => {
     const [confirmationNewPassword,setConfirmationNewPassword]       = useState("")
     const [showSubmitButton,setShowSubmitButton]                     = useState( false)
     const [validEmail,setValidEmail]                                 = useState( false)
-    const [userEmail,setUserEmail]                                   = useState(false)
+    const [userID,setUserId]                                         = useState("");
     const [userName,setUserName]                                     = useState("")
+    const [userEmail,setUserEmail]                                   = useState("")
     const [firstName,setFirstName]                                   = useState("")
     const [lastName,setLastName]                                     = useState("")
     const [userUrl,setUserUrl]                                       = useState("")
     const [userAvatar,setUserAvatar]                                 = useState("")
     const [successPasswordChange,setSuccessPasswordChange]           = useState( false)
     const [isLoaded,setIsLoaded]                                     = useState(false)
-    const [userID,setUserId]                                         = useState("");
 
     ValidatorForm.addValidationRule('isPasswordMatch', (value) => {
         return (value !== newPassword) ? false : true;
@@ -55,32 +55,42 @@ const UserSettings = ({ dispatch , USER , USER_PROFILE}) => {
 
     useEffect(()=>{
       // SHOW LOADER
-      dispatch(loading(true, "header-loader"));
-
-      API.WP_getProfileInfo(USER.token)
-          .then((result)=>{
-              // HIDE LOADER
-              setUserId(result.id);
-              setUserName(result.username);
-              setUserEmail(result.email);
-              setFirstName(result.first_name);
-              setLastName(result.last_name);
-              setUserUrl(result.url);
-              setUserAvatar(result.avatar_urls['96']);
-              setIsLoaded(true);
-              dispatch(loading(false, "header-loader"));
-          })
-          .catch((error)=>{
-
-              dispatch(({
-                  type    : 'ERROR',
-                  payload : error
-              }))
-
-              // HIDE LOADER
-              dispatch(loading(false, "header-loader"));
-          })
+      if(USER_PROFILE == null){
+            dispatch(loading(true, "header-loader"));
+            API.WP_getProfileInfo(USER.token)
+            .then((result)=>{
+                // HIDE LOADER
+                setUserId(result.id);
+                setUserName(result.username);
+                setUserEmail(result.email);
+                setFirstName(result.first_name);
+                setLastName(result.last_name);
+                setUserUrl(result.url);
+                setIsLoaded(true);
+                dispatch(loading(false, "header-loader"));
+                dispatch(storeUserData(result));
+            })
+            .catch((error)=>{
+    
+                dispatch(({
+                    type    : 'ERROR',
+                    payload : error
+                }))
+    
+                // HIDE LOADER
+                dispatch(loading(false, "header-loader"));
+            })
+        }else{
+            setUserId(USER_PROFILE.id);
+            setUserName(USER_PROFILE.username);
+            setUserEmail(USER_PROFILE.email);
+            setFirstName(USER_PROFILE.first_name);
+            setLastName(USER_PROFILE.last_name);
+            setUserUrl(USER_PROFILE.url);
+            setIsLoaded(true);
+        }
     },[])
+   
 
     function updateProfile(property){   
         
@@ -96,11 +106,12 @@ const UserSettings = ({ dispatch , USER , USER_PROFILE}) => {
             last_name       : lastName,
             url             : userUrl,
         };
-
+        let dataStore = {...USER_PROFILE , ...data };
         API.WP_updateProfileInfo(USER.token, data )
             .then((result)=>{
                 // HIDE LOADER
                 dispatch(loading(false, "header-loader"));
+                dispatch(storeUserData(dataStore));
             })
             .catch((error)=>{
                 dispatch(({
@@ -147,20 +158,6 @@ const UserSettings = ({ dispatch , USER , USER_PROFILE}) => {
                 // HIDE LOADER
                 dispatch(loading(false, "header-loader"));
             })
-    }
-    
-    function renderShopHeader(){
-        return (
-            <Fragment  >
-                <Paper id="shop-header-container" className="container-inner shop shop-header"  elevation={1}>
-                    <div className="shop-brand" style={{ backgroundImage: `url(${userAvatar})`}} >
-                        <div className="shop-brand-edit" onClick={() => console.log('Go To Gravatar.com')}>
-                            Gravata.com
-                        </div>
-                    </div>
-                </Paper>
-            </Fragment> 
-        );
     }
 
     function renderContent(){
@@ -352,7 +349,6 @@ const UserSettings = ({ dispatch , USER , USER_PROFILE}) => {
         <div id="profile-page">
             <Header />
             <div id="container">
-                { isLoaded && renderShopHeader() }
                 { isLoaded && renderContent() }
             </div>
         </div>
