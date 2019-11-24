@@ -108,8 +108,9 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=fals
 
     useEffect(()=>{
         if(isCategoriesLoaded && isTagsLoaded){
-            setWooStoreCategories(WOO_CATEGORIES);
-            setWooStoreTags(WOO_TAGS);
+            // Intersting
+            setWooStoreCategories(JSON.parse(JSON.stringify(WOO_CATEGORIES)));
+            setWooStoreTags(JSON.parse(JSON.stringify(WOO_TAGS)));
     
             if(toEdit === true){
                 const isPublished   = (productData.status === "publish") ? true : false;
@@ -194,8 +195,8 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=fals
                     ...category,
                     selected: true
                 }));
-                const selectedCategories = [...WOO_CATEGORIES.filter(item1 => !tmpCats.find(item2 => item1.id === item2.id)), ...tmpCats];
-                setWooStoreCategories(selectedCategories);
+                const selectedCategories = [...wooStoreCategories.filter(item1 => !tmpCats.find(item2 => item1.id === item2.id)), ...tmpCats];
+                setWooStoreCategories([...selectedCategories]);
             }
         }
         if(addNewCategoryActive)
@@ -301,7 +302,7 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=fals
     const addCategoryToWoo = (payload) => {
         API.WC_createWooCategories(USER.token,payload).then((data)=>{ 
             setWooStoreCategories(currentTags => [...currentTags, {...data,selected:true}])
-            dispatch(storeWooCategories([...WOO_CATEGORIES, {...data,selected:true}]));
+            dispatch(storeWooCategories([...wooStoreCategories, {...data,selected:false}]));
             dispatch(loading(false, "header-loader"));
             categoryInput.current.value = "";
         })
@@ -359,7 +360,7 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=fals
             if (category.id === cat.id) category.selected = !category.selected;
             return category;
         });
-        setWooStoreCategories(newCategoryList);
+        setWooStoreCategories([...newCategoryList]);
     }
 
     const renderCategoriesList = () => {
@@ -615,7 +616,7 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=fals
                                 Categories
                             </Typography>
                             <Divider className="paper-divider" />
-                            { renderCategoriesList() }
+                            { wooStoreCategories.length && renderCategoriesList() }
                             <div className="add-tag">
                                 {(addNewCategoryActive) ? <TextField id="product-name" inputRef={categoryInput} onKeyDown={(e)=>handleAddCategory(e)} label="Create New Category" fullWidth={true} />
                                                    : <Button variant="outlined" color="secondary" onClick={()=>setAddNewCategoryActive(true)}>Create New Category</Button>}

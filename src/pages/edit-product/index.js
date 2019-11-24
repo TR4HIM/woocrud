@@ -56,6 +56,6 @@ const EditProductPage = ({dispatch , USER , WOO_CATEGORIES , match}) =>  {
     ); 
 }
 
-const mapStateToProps = ({ USER , WOO_CATEGORIES  }) => ({ USER , WOO_CATEGORIES});
+const mapStateToProps = ({ USER }) => ({ USER });
 
 export default connect(mapStateToProps)(EditProductPage) ;
