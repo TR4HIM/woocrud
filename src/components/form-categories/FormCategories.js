@@ -64,26 +64,38 @@ const FormCategories = ({dispatch , USER , WOO_CATEGORIES  ,  toEdit=false , cur
     useEffect(()=>{
         if(WOO_CATEGORIES.length > 0)
             setWooStoreCategories(JSON.parse(JSON.stringify(WOO_CATEGORIES)));
-        
     },[WOO_CATEGORIES])
 
    
 
     useEffect(()=>{
-        // const seleTags = wooStoreTags.filter(item1 => productTags.find(item2 => item1.id === item2)); 
-        console.log(currentCategories)
         if(currentCategories.length > 0){
             setGetProductCategories(currentCategories);
         }
     },[])
 
+    useEffect(() => {
+        if(toEdit === true ){
+            if(getProductCategories.length > 0 && WOO_CATEGORIES.length > 0 ){
+                const tmpCats = getProductCategories.map(category => ({
+                    ...category,
+                    selected: true
+                }));
+                const selectedCategories = [...WOO_CATEGORIES.filter(item1 => !tmpCats.find(item2 => item1.id === item2.id)), ...tmpCats];
+                setWooStoreCategories([...selectedCategories]);
+            }
+        }
+        if(addNewCategoryActive)
+            categoryInput.current.value = "";
+    }, [getProductCategories, WOO_CATEGORIES]);
+
     useEffect(()=>{
         // const seleTags = wooStoreTags.filter(item1 => productTags.find(item2 => item1.id === item2)); 
-        if(wooStoreCategories.length > 0){
+        if(wooStoreCategories.length > 0 && WOO_CATEGORIES.length > 0){
             const payloadCategories = wooStoreCategories.filter(cat => cat.selected ).map(c => ({id : c.id}));
             updateSelectedCategories(payloadCategories);
         }
-    },[wooStoreCategories])
+    },[wooStoreCategories , WOO_CATEGORIES])
 
     useEffect(() => {
         if(WOO_CATEGORIES.length <= 0){
@@ -109,24 +121,9 @@ const FormCategories = ({dispatch , USER , WOO_CATEGORIES  ,  toEdit=false , cur
             setIsCategoriesLoaded(true)
     }, []);
 
-    useEffect(() => {
-        if(toEdit === true ){
-            if(getProductCategories.length > 0 && wooStoreCategories.length > 0){
-                const tmpCats = getProductCategories.map(category => ({
-                    ...category,
-                    selected: true
-                }));
-                const selectedCategories = [...wooStoreCategories.filter(item1 => !tmpCats.find(item2 => item1.id === item2.id)), ...tmpCats];
-                setWooStoreCategories([...selectedCategories]);
-            }
-        }
-        if(addNewCategoryActive)
-            categoryInput.current.value = "";
-    }, [getProductCategories]);
-
     const addCategoryToWoo = (payload) => {
         API.WC_createWooCategories(USER.token,payload).then((data)=>{ 
-            setWooStoreCategories(currentTags => [...currentTags, {...data,selected:true}]);
+            setGetProductCategories(currentTags => [...currentTags, {...data,selected:true}]);
             dispatch(storeWooCategories([...wooStoreCategories, {...data,selected:false}]));
             dispatch(loading(false, "header-loader"));
             categoryInput.current.value = "";

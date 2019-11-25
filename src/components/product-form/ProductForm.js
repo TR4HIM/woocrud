@@ -60,68 +60,40 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES  ,  toEdit=false , produc
     const [ isCategoriesLoaded, setIsCategoriesLoaded] = useState(false);
     const [ isCurrentCategories, setIsCurrentCategories] = useState(false);
     const [ isTagsLoaded,setIsTagsLoaded] = useState(false);
+    const [ isEditedProductLoaded,setIsEditedProductLoaded] = useState(false);
 
- 
-    useEffect(() => {
-        if(WOO_CATEGORIES.length <= 0){
-            API.WC_getWooCategories(USER.token)
-            .then((result)=>{
-                if( result !== undefined ){
-                    const productCategories = result.map(category => ({
-                        ...category,
-                        selected: false
-                    }));
-                    dispatch(storeWooCategories(productCategories));
-                    setIsCategoriesLoaded(true)
-                }
-            })
-            .catch((error)=>{
-                dispatch({
-                    type : 'ERROR',
-                    payload : error 
-                })
-            })
-        }
-        else
-            setIsCategoriesLoaded(true)
-    }, []);
 
     useEffect(()=>{
-        if(isCategoriesLoaded){
-            // Intersting
-            setWooStoreCategories(JSON.parse(JSON.stringify(WOO_CATEGORIES)));
-    
-            if(toEdit === true){
-                const isPublished   = (productData.status === "publish") ? true : false;
-                let galleryImages   = productData.images.map(img => ({sourceUrl : img.src , id : img.id}));
-                if(productData.upsell_ids.length > 0)
-                    setCrossSellsProductsDataReady(false);
-                if(productData.upsell_ids.length > 0)
-                    setUpSellsProductsDataReady(false);
-    
-                setUpSellsProductsIds(productData.upsell_ids);
-                setCrossSellsProductsIds(productData.cross_sell_ids);
-    
-                setProductID(productData.id);
-                setProductName(productData.name);
-                setProductDescription(productData.description);
-                setShortProductDescription(productData.short_description);
-                setRegularPrice(productData.regular_price);
-                setSalePrice(productData.sale_price);
-                setSku(productData.sku);
-                setDownloadable(productData.downloadable);
-                setVirtual(productData.virtual);
-                setProductTags(productData.tags);
-                setGetProductCategories(productData.categories);
-    
-                // Remove First Element For Featured Image :) 
-                setProductImage(galleryImages.shift());
-                setProductGallery(galleryImages);
-                setPublished(isPublished);
-            }
-            setIsCurrentCategories(true);
+        if(toEdit === true){
+            const isPublished   = (productData.status === "publish") ? true : false;
+            let galleryImages   = productData.images.map(img => ({sourceUrl : img.src , id : img.id}));
+            if(productData.upsell_ids.length > 0)
+                setCrossSellsProductsDataReady(false);
+            if(productData.upsell_ids.length > 0)
+                setUpSellsProductsDataReady(false);
+
+            setUpSellsProductsIds(productData.upsell_ids);
+            setCrossSellsProductsIds(productData.cross_sell_ids);
+
+            setProductID(productData.id);
+            setProductName(productData.name);
+            setProductDescription(productData.description);
+            setShortProductDescription(productData.short_description);
+            setRegularPrice(productData.regular_price);
+            setSalePrice(productData.sale_price);
+            setSku(productData.sku);
+            setDownloadable(productData.downloadable);
+            setVirtual(productData.virtual);
+            setProductTags(productData.tags);
+            setGetProductCategories(productData.categories);
+
+            // Remove First Element For Featured Image :) 
+            setProductImage(galleryImages.shift());
+            setProductGallery(galleryImages);
+            setPublished(isPublished);
         }
-    },[isCategoriesLoaded, isTagsLoaded]);
+        setIsEditedProductLoaded(true);
+    },[]);
 
     useEffect(()=>{
         if(upSellsProductsIds.length > 0) 
@@ -167,26 +139,6 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES  ,  toEdit=false , produc
         if(relatedType === "crossSellsProducts")
             setCrossSellsProducts(listProductsData);
     }
-
-    useEffect(() => {
-        if(toEdit === true ){
-            if(getProductCategories.length > 0 && wooStoreCategories.length > 0){
-                const tmpCats = getProductCategories.map(category => ({
-                    ...category,
-                    selected: true
-                }));
-                const selectedCategories = [...wooStoreCategories.filter(item1 => !tmpCats.find(item2 => item1.id === item2.id)), ...tmpCats];
-                setWooStoreCategories([...selectedCategories]);
-            }
-        }
-        if(addNewCategoryActive)
-            categoryInput.current.value = "";
-    }, [getProductCategories]);
-
-    useEffect(()=>{
-        if(addNewTagActive)
-            tagInput.current.value = "";
-    },[productTags])
 
     useEffect(()=>{
         if(isThumbnailUploade && tmpUploadedImageUrl !== ""){
@@ -262,70 +214,13 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES  ,  toEdit=false , produc
             setProductDeletedImages(currentDeletedImages => [...currentDeletedImages, imgObject])
         }
     }
-
-    const addCategoryToWoo = (payload) => {
-        API.WC_createWooCategories(USER.token,payload).then((data)=>{ 
-            setWooStoreCategories(currentTags => [...currentTags, {...data,selected:true}]);
-            dispatch(storeWooCategories([...wooStoreCategories, {...data,selected:false}]));
-            dispatch(loading(false, "header-loader"));
-            categoryInput.current.value = "";
-        })
-        .catch((error)=>{
-            dispatch({
-                type : "ERROR",
-                payload : error
-            });
-            // HIDE LOADING
-            dispatch(loading(false, "header-loader"));
-        })
-    }
-
-    const handleAddCategory = (e) => {
-        if(categoryInput.current.value.trim() !== '' && e.keyCode === 13){
-            let cat    = wooStoreCategories.filter(cat => cat.name.toLowerCase() === categoryInput.current.value.trim().toLowerCase() ).map(t => ({...t}));
-
-            if(cat.length > 0){
-                categoryInput.current.value = "";
-                let  newCategoryList = wooStoreCategories.map(function(category) {
-                    if (category.id === cat[0].id) category.selected = true;
-                    return category;
-                });
-                setWooStoreCategories(newCategoryList);
-            }
-            else 
-                addCategoryToWoo({name : categoryInput.current.value.trim()});
-
-        }
-    }
-
-    const checkCategory = cat => {
-        let  newCategoryList = wooStoreCategories.map(function(category) {
-            if (category.id === cat.id) category.selected = !category.selected;
-            return category;
-        });
-        setWooStoreCategories([...newCategoryList]);
-    }
-
-    const renderCategoriesList = () => {
-        return(
-            wooStoreCategories.map((category,i)=>(
-                <FormControlLabel
-                    control={ <Checkbox checked={category.selected} 
-                    onChange={() => checkCategory(category) } value={category.selected} /> }
-                    label={category.name}
-                    key={category.id}
-                />)
-            )  
-        )
-    }
-
     
     const productPayLoadData = () => {
         
         dispatch(loading(true, "header-loader"));
         
         let galleryImages       = productGallery.map(img => ({src : img.sourceUrl}));
-        let productCategories   = wooStoreCategories.filter(cat => cat.selected ).map(c => ({id : c.id}));
+        // let productCategories   = wooStoreCategories.filter(cat => cat.selected ).map(c => ({id : c.id}));
         let productUpSells      = upSellsProducts.map(ups =>  ups.id );
         let productCrossSells   = crossSellsProducts.map(ups =>  ups.id );
 
@@ -336,6 +231,7 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES  ,  toEdit=false , produc
                 galleryImages.unshift({src : productImage});
         }
         
+        console.log(wooStoreCategories);
         let payload = {
             sale_price          : salePrice.toString(),
             status              : (published)  ? 'publish' : 'draft',
@@ -354,7 +250,7 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES  ,  toEdit=false , produc
         payload = {...payload, name          : productName};
         payload = {...payload, description   : productDescription};
         payload = {...payload, images        : galleryImages};
-
+        console.log(payload);
         // If new product
         (toEdit === true) ? saveProductAction({ productId : productID , payload }) : saveProductAction(payload);
     }
@@ -554,19 +450,8 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES  ,  toEdit=false , produc
                                 </li>
                             </ul>    
                         </Paper>
-                        {/* <Paper className="product-form">
-                            <Typography variant="subtitle2" className="paper-title" gutterBottom>
-                                Categories
-                            </Typography>
-                            <Divider className="paper-divider" />
-                            { wooStoreCategories.length && renderCategoriesList() }
-                            <div className="add-tag">
-                                {(addNewCategoryActive) ? <TextField id="product-name" inputRef={categoryInput} onKeyDown={(e)=>handleAddCategory(e)} label="Create New Category" fullWidth={true} />
-                                                   : <Button variant="outlined" color="secondary" onClick={()=>setAddNewCategoryActive(true)}>Create New Category</Button>}
-                            </div>
-                        </Paper> */}
-                        { isCurrentCategories && <FormCategories toEdit={toEdit} currentCategories={getProductCategories} updateSelectedCategories={(selectedCategories) => setWooStoreCategories(selectedCategories)} /> }
-                        { isCurrentCategories && <FormTags toEdit={toEdit} currentTags={productTags} updateSelectedTags={(selectedTags)=>setProductTags(selectedTags)} /> }
+                            { isEditedProductLoaded && <FormCategories toEdit={toEdit} currentCategories={getProductCategories} updateSelectedCategories={(selectedCategories) => setWooStoreCategories([...selectedCategories])} /> }
+{ isEditedProductLoaded && <FormTags toEdit={toEdit} currentTags={productTags} updateSelectedTags={(selectedTags)=>setProductTags(selectedTags)} /> }
                     </Grid>
                 </Grid>
             </Container>

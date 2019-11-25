@@ -118,7 +118,7 @@ const WC_getWooSearchProducts = ()=>{
 }
 
 const WC_getWooCategories = (token)=>{
-    return axios.get( `${WC}/products/categories`, {
+    return axios.get( `${WC}/products/categories?per_page=100`, {
         headers : {
             "Authorization" : `Bearer ${token}`
         }
@@ -133,7 +133,7 @@ const WC_getWooCategories = (token)=>{
 }
 
 const WC_getWooTags = (token)=>{
-    return axios.get( `${WC}/products/tags`, {
+    return axios.get( `${WC}/products/tags?per_page=100`, {
         headers : {
             "Authorization" : `Bearer ${token}`
         }

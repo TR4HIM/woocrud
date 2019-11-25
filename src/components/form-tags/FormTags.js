@@ -16,7 +16,8 @@ const FormTags = ({dispatch , USER , WOO_TAGS ,  toEdit=false , updateSelectedTa
     const [wooStoreTags, setWooStoreTags]                                   = useState([]);
     const [productTags, setProductTags]                                     = useState([]);
     const [addNewTagActive, setAddNewTagActive]                             = useState(false);
-    const [ isTagsLoaded,setIsTagsLoaded] = useState(false);
+    const [isTagsLoaded,setIsTagsLoaded] = useState(false);
+    const [chipsSelectedTags,setChipsSelectedTags] = useState(false);
 
     
  
@@ -33,9 +34,14 @@ const FormTags = ({dispatch , USER , WOO_TAGS ,  toEdit=false , updateSelectedTa
     },[WOO_TAGS])
 
     useEffect(()=>{
-        const seleTags = wooStoreTags.filter(item1 => productTags.find(item2 => item1.id === item2)); 
-        updateSelectedTags(seleTags);
-    },[productTags])
+        if(wooStoreTags.length > 0 && productTags.length > 0){
+            const seleTags = wooStoreTags.filter(item1 => productTags.find(item2 => item1.id === item2)); 
+            console.log(seleTags)
+            updateSelectedTags(seleTags);
+        }
+    },[productTags , wooStoreTags])
+
+    
     
     useEffect(() => {
         if(WOO_TAGS.length <= 0){
@@ -56,8 +62,6 @@ const FormTags = ({dispatch , USER , WOO_TAGS ,  toEdit=false , updateSelectedTa
                 dispatch(loading(false, "header-loader"));
             })
         }
-        else
-            setIsTagsLoaded(true);
     }, []);
 
     useEffect(()=>{
@@ -65,11 +69,19 @@ const FormTags = ({dispatch , USER , WOO_TAGS ,  toEdit=false , updateSelectedTa
             tagInput.current.value = "";
     },[productTags])
     
+    useEffect(()=>{
+        if(wooStoreTags.length > 0 && productTags.length > 0){
+            const seleTags = wooStoreTags.filter(item1 => productTags.find(item2 => item1.id === item2)); 
+            setChipsSelectedTags(seleTags)
+            setIsTagsLoaded(true);
+        }
+        
+    },[wooStoreTags,productTags])
+
     const addTagToWoo = (payload) => {
         API.WC_createWooTags(USER.token,payload).then((data)=>{ 
-            console.log(data);
-            setWooStoreTags([...wooStoreTags,data]);
             setProductTags(currentTags => [...currentTags, data.id]);
+            setWooStoreTags([...wooStoreTags,data]);
             dispatch(storeWooTags([...WOO_TAGS, data]));
             dispatch(loading(false, "header-loader"));
         })
@@ -103,12 +115,12 @@ const FormTags = ({dispatch , USER , WOO_TAGS ,  toEdit=false , updateSelectedTa
 
     const handleOnChangeTag = (event) => {
         let newValue = event.target.value;
+        console.log(newValue)
         setProductTags([...newValue])
     }
 
     const tagChips = () => {
-        const seleTags = wooStoreTags.filter(item1 => productTags.find(item2 => item1.id === item2)); 
-        return seleTags.map(tag => (<Chip key={tag.id} label={tag.name}  className="product-tag" color="primary"  />))
+        return chipsSelectedTags.map(tag => (<Chip key={tag.id} label={tag.name}  className="product-tag" color="primary"  />))
     }
     return (
         <Paper id="product-tags" className="product-form">
@@ -130,7 +142,7 @@ const FormTags = ({dispatch , USER , WOO_TAGS ,  toEdit=false , updateSelectedTa
                         input={<Input id="select-multiple-chip" />}
                         renderValue={productTagsValue => (
                             <div className="chips">
-                                {tagChips()}
+                                { isTagsLoaded && tagChips()}
                             </div>
                         )}
                         >
