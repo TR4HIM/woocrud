@@ -1,3 +1,4 @@
+- products pagination
 - TAG SELECT/Checkboxes -Done
 - Loading bar for Components (tags,images,linked products)
 - Redirect after created with STORE CURRENT PRODUCT 

@@ -14,6 +14,7 @@ import Icon from '@material-ui/core/Icon';
 import ProductsAutoComplete from '../../components/input-autocomplete/InputAutocomplete';
 import ButtonUploadImage from '../../components/button-upload/ButtonUpload';
 import EditableImage from '../../components/editable-image/EditableImage';
+import FormTags from '../../components/form-tags/FormTags';
 import { loading , storeWooTags , storeWooCategories , deleteWooProudct} from '../../store/actions/';
 import API from '../../API/'; 
 import InputLabel from '@material-ui/core/InputLabel';
@@ -56,6 +57,7 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=fals
     const [isProductDeleted, setIsProductDeleted]                           = useState(false);
 
     const [ isCategoriesLoaded, setIsCategoriesLoaded] = useState(false);
+    const [ isCurrentCategories, setIsCurrentCategories] = useState(false);
     const [ isTagsLoaded,setIsTagsLoaded] = useState(false);
 
  
@@ -132,7 +134,7 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=fals
                 setSku(productData.sku);
                 setDownloadable(productData.downloadable);
                 setVirtual(productData.virtual);
-                setProductTags(productData.tags)
+                setProductTags(productData.tags);
                 setGetProductCategories(productData.categories);
     
                 // Remove First Element For Featured Image :) 
@@ -140,6 +142,7 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=fals
                 setProductGallery(galleryImages);
                 setPublished(isPublished);
             }
+            setIsCurrentCategories(true);
         }
     },[isCategoriesLoaded, isTagsLoaded]);
 
@@ -285,7 +288,7 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=fals
     
     const addTagToWoo = (payload) => {
         API.WC_createWooTags(USER.token,payload).then((data)=>{ 
-            setProductTags(currentTags => [...currentTags, data])
+            // setProductTags(currentTags => [...currentTags, data])
             dispatch(storeWooTags([...WOO_TAGS, data]));
             dispatch(loading(false, "header-loader"));
         })
@@ -301,7 +304,7 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=fals
 
     const addCategoryToWoo = (payload) => {
         API.WC_createWooCategories(USER.token,payload).then((data)=>{ 
-            setWooStoreCategories(currentTags => [...currentTags, {...data,selected:true}])
+            setWooStoreCategories(currentTags => [...currentTags, {...data,selected:true}]);
             dispatch(storeWooCategories([...wooStoreCategories, {...data,selected:false}]));
             dispatch(loading(false, "header-loader"));
             categoryInput.current.value = "";
@@ -316,22 +319,22 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=fals
         })
     }
 
-    const handleAddTag = (e) => {
-        if(tagInput.current.value.trim() !== '' && e.keyCode === 13){
-            let wooStoreTags    = WOO_TAGS.filter(tag => tag.name === tagInput.current.value.trim() ).map(t => ({id : t.id , name : t.name}));
-            let isTagExist      = productTags.filter(tag => tag.name === tagInput.current.value.trim() )
-            if(isTagExist.length > 0){
-                tagInput.current.value = "";
-                return;
-            }
-            if(wooStoreTags.length > 0)
-                setProductTags(currentTags => [...currentTags, ...wooStoreTags])
-            else {
-                addTagToWoo({name : tagInput.current.value.trim()});
-            }
+    // const handleAddTag = (e) => {
+    //     if(tagInput.current.value.trim() !== '' && e.keyCode === 13){
+    //         let wooStoreTags    = WOO_TAGS.filter(tag => tag.name === tagInput.current.value.trim() ).map(t => ({id : t.id , name : t.name}));
+    //         let isTagExist      = productTags.filter(tag => tag.name === tagInput.current.value.trim() )
+    //         if(isTagExist.length > 0){
+    //             tagInput.current.value = "";
+    //             return;
+    //         }
+    //         if(wooStoreTags.length > 0)
+    //             setProductTags(currentTags => [...currentTags, ...wooStoreTags])
+    //         else {
+    //             addTagToWoo({name : tagInput.current.value.trim()});
+    //         }
 
-        }
-    }
+    //     }
+    // }
 
     const handleAddCategory = (e) => {
         if(categoryInput.current.value.trim() !== '' && e.keyCode === 13){
@@ -350,10 +353,6 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=fals
 
         }
     }
-
-    // const handleDeleteTag = chipToDelete => () => {
-    //     setProductTags(productTags => productTags.filter(tag => tag.name !== chipToDelete.name));
-    // }
 
     const checkCategory = cat => {
         let  newCategoryList = wooStoreCategories.map(function(category) {
@@ -622,7 +621,7 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=fals
                                                    : <Button variant="outlined" color="secondary" onClick={()=>setAddNewCategoryActive(true)}>Create New Category</Button>}
                             </div>
                         </Paper>
-                        <Paper id="product-tags" className="product-form">
+                        {/* <Paper id="product-tags" className="product-form">
                             <Typography variant="subtitle2" className="paper-title" gutterBottom>
                                 Product Tags
                             </Typography>
@@ -659,7 +658,8 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=fals
                                 {(addNewTagActive) ? <TextField id="product-name" inputRef={tagInput} onKeyDown={(e)=>handleAddTag(e)} label="Create New Tag" fullWidth={true} />
                                                    : <Button variant="outlined" color="secondary" onClick={()=>setAddNewTagActive(true)}>Create New Tag</Button>}
                             </div>
-                        </Paper>
+                        </Paper> */}
+                        { isCurrentCategories && <FormTags toEdit={toEdit} currentTags={productTags} updateSelectedTags={(selectedTags)=>setProductTags(selectedTags)} /> }
                     </Grid>
                 </Grid>
             </Container>
