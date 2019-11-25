@@ -15,13 +15,14 @@ import ProductsAutoComplete from '../../components/input-autocomplete/InputAutoc
 import ButtonUploadImage from '../../components/button-upload/ButtonUpload';
 import EditableImage from '../../components/editable-image/EditableImage';
 import FormTags from '../../components/form-tags/FormTags';
+import FormCategories from '../../components/form-categories/FormCategories';
 import { loading , storeWooTags , storeWooCategories , deleteWooProudct} from '../../store/actions/';
 import API from '../../API/'; 
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import { Redirect } from 'react-router';
 
-const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=false , productData=null , saveProductAction}) =>  {
+const ProductForm = ({dispatch , USER , WOO_CATEGORIES  ,  toEdit=false , productData=null , saveProductAction}) =>  {
 
     const tagInput = useRef(null);
     const categoryInput = useRef(null);
@@ -84,35 +85,11 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=fals
         else
             setIsCategoriesLoaded(true)
     }, []);
-    
-    useEffect(() => {
-        if(WOO_TAGS.length <= 0){
-            API.WC_getWooTags(USER.token)
-            .then((result)=>{
-                if( result !== undefined ){
-                    dispatch(storeWooTags(result));
-                    setIsTagsLoaded(true);
-                }
-                dispatch(loading(false, "header-loader"));
-
-            })
-            .catch((error)=>{
-                dispatch({
-                    type : 'ERROR',
-                    payload : error 
-                })
-                dispatch(loading(false, "header-loader"));
-            })
-        }
-        else
-            setIsTagsLoaded(true);
-    }, []);
 
     useEffect(()=>{
-        if(isCategoriesLoaded && isTagsLoaded){
+        if(isCategoriesLoaded){
             // Intersting
             setWooStoreCategories(JSON.parse(JSON.stringify(WOO_CATEGORIES)));
-            setWooStoreTags(JSON.parse(JSON.stringify(WOO_TAGS)));
     
             if(toEdit === true){
                 const isPublished   = (productData.status === "publish") ? true : false;
@@ -285,22 +262,6 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=fals
             setProductDeletedImages(currentDeletedImages => [...currentDeletedImages, imgObject])
         }
     }
-    
-    const addTagToWoo = (payload) => {
-        API.WC_createWooTags(USER.token,payload).then((data)=>{ 
-            // setProductTags(currentTags => [...currentTags, data])
-            dispatch(storeWooTags([...WOO_TAGS, data]));
-            dispatch(loading(false, "header-loader"));
-        })
-        .catch((error)=>{
-            dispatch({
-                type : "ERROR",
-                payload : error
-            });
-            // HIDE LOADING
-            dispatch(loading(false, "header-loader"));
-        })
-    }
 
     const addCategoryToWoo = (payload) => {
         API.WC_createWooCategories(USER.token,payload).then((data)=>{ 
@@ -318,23 +279,6 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=fals
             dispatch(loading(false, "header-loader"));
         })
     }
-
-    // const handleAddTag = (e) => {
-    //     if(tagInput.current.value.trim() !== '' && e.keyCode === 13){
-    //         let wooStoreTags    = WOO_TAGS.filter(tag => tag.name === tagInput.current.value.trim() ).map(t => ({id : t.id , name : t.name}));
-    //         let isTagExist      = productTags.filter(tag => tag.name === tagInput.current.value.trim() )
-    //         if(isTagExist.length > 0){
-    //             tagInput.current.value = "";
-    //             return;
-    //         }
-    //         if(wooStoreTags.length > 0)
-    //             setProductTags(currentTags => [...currentTags, ...wooStoreTags])
-    //         else {
-    //             addTagToWoo({name : tagInput.current.value.trim()});
-    //         }
-
-    //     }
-    // }
 
     const handleAddCategory = (e) => {
         if(categoryInput.current.value.trim() !== '' && e.keyCode === 13){
@@ -397,7 +341,7 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=fals
             status              : (published)  ? 'publish' : 'draft',
             short_description   : shortProductDescription,
             sku                 : sku,
-            categories          : productCategories,
+            categories          : wooStoreCategories,
             tags                : productTags,
             virtual             : virtual,
             downloadable        : downloadable,
@@ -610,7 +554,7 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=fals
                                 </li>
                             </ul>    
                         </Paper>
-                        <Paper className="product-form">
+                        {/* <Paper className="product-form">
                             <Typography variant="subtitle2" className="paper-title" gutterBottom>
                                 Categories
                             </Typography>
@@ -620,45 +564,8 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=fals
                                 {(addNewCategoryActive) ? <TextField id="product-name" inputRef={categoryInput} onKeyDown={(e)=>handleAddCategory(e)} label="Create New Category" fullWidth={true} />
                                                    : <Button variant="outlined" color="secondary" onClick={()=>setAddNewCategoryActive(true)}>Create New Category</Button>}
                             </div>
-                        </Paper>
-                        {/* <Paper id="product-tags" className="product-form">
-                            <Typography variant="subtitle2" className="paper-title" gutterBottom>
-                                Product Tags
-                            </Typography>
-                            <Divider className="paper-divider" />
-                            <div>
-                                <FormControl className="form-control">
-                                    <InputLabel id="demo-mutiple-chip-label">
-                                        Select Product Tags
-                                    </InputLabel>
-                                    <Select
-                                        labelid="demo-mutiple-chip-label"
-                                        id="demo-mutiple-chip"
-                                        multiple
-                                        value={productTags}
-                                        onChange={(event) => setProductTags(event.target.value)}
-                                        input={<Input id="select-multiple-chip" />}
-                                        renderValue={productTags => (
-                                            <div className="chips">
-                                                {productTags.map(tag => (
-                                                    <Chip key={tag.id} label={tag.name}  className="product-tag" color="primary"  />
-                                                ))}
-                                            </div>
-                                        )}
-                                        >
-                                        { wooStoreTags.map(tag => (
-                                            <MenuItem key={tag.id} value={tag} >
-                                                {tag.name}
-                                            </MenuItem>
-                                        )) }
-                                    </Select>
-                                </FormControl>
-                            </div>
-                            <div className="add-tag">
-                                {(addNewTagActive) ? <TextField id="product-name" inputRef={tagInput} onKeyDown={(e)=>handleAddTag(e)} label="Create New Tag" fullWidth={true} />
-                                                   : <Button variant="outlined" color="secondary" onClick={()=>setAddNewTagActive(true)}>Create New Tag</Button>}
-                            </div>
                         </Paper> */}
+                        { isCurrentCategories && <FormCategories toEdit={toEdit} currentCategories={getProductCategories} updateSelectedCategories={(selectedCategories) => setWooStoreCategories(selectedCategories)} /> }
                         { isCurrentCategories && <FormTags toEdit={toEdit} currentTags={productTags} updateSelectedTags={(selectedTags)=>setProductTags(selectedTags)} /> }
                     </Grid>
                 </Grid>
@@ -666,6 +573,6 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=fals
     ); 
 }
 
-const mapStateToProps = ({ USER , WOO_CATEGORIES , WOO_TAGS }) => ({ USER , WOO_CATEGORIES , WOO_TAGS });
+const mapStateToProps = ({ USER , WOO_CATEGORIES }) => ({ USER , WOO_CATEGORIES });
 
 export default   connect(mapStateToProps)(ProductForm) ;

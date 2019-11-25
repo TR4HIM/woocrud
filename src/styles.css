@@ -1701,7 +1701,7 @@ label.Mui-focused {
 #profile-page #container {
   max-width: 600px;
   margin: 0 auto;
-  padding-top: 50px; }
+  padding-top: 20px; }
 
 .kibo-lang-ar #profile-page .user h4 {
   text-align: right;
