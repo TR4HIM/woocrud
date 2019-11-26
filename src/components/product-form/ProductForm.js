@@ -3,11 +3,11 @@ import {connect} from 'react-redux';
 import {    
         Container, 
         Grid , 
-        Paper , Input ,
-        TextField , Select ,
-        FormControlLabel , FormControl ,
+        Paper , 
+        TextField , 
+        FormControlLabel ,  
         Switch , Typography , Checkbox ,
-        Divider , Chip , Button ,
+        Divider  , Button ,
         ExpansionPanel , ExpansionPanelSummary , ExpansionPanelDetails} from '@material-ui/core';
 
 import Icon from '@material-ui/core/Icon';
@@ -16,16 +16,11 @@ import ButtonUploadImage from '../../components/button-upload/ButtonUpload';
 import EditableImage from '../../components/editable-image/EditableImage';
 import FormTags from '../../components/form-tags/FormTags';
 import FormCategories from '../../components/form-categories/FormCategories';
-import { loading , storeWooTags , storeWooCategories , deleteWooProudct} from '../../store/actions/';
+import { loading , deleteWooProudct} from '../../store/actions/';
 import API from '../../API/'; 
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
 import { Redirect } from 'react-router';
 
-const ProductForm = ({dispatch , USER , WOO_CATEGORIES  ,  toEdit=false , productData=null , saveProductAction}) =>  {
-
-    const tagInput = useRef(null);
-    const categoryInput = useRef(null);
+const ProductForm = ({dispatch , USER ,  toEdit=false , productData=null , saveProductAction}) =>  {
 
     const [productID,setProductID]                                          = useState(false);
     const [productName,setProductName]                                      = useState("");
@@ -43,34 +38,20 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES  ,  toEdit=false , produc
     const [crossSellsProductsIds,setCrossSellsProductsIds]                  = useState([]);
     const [productImage,setProductImage]                                    = useState(false);
     const [productGallery,setProductGallery]                                = useState([]);
-    const [wooStoreTags, setWooStoreTags]                                   = useState([]);
     const [productTags, setProductTags]                                     = useState([]);
     const [wooStoreCategories, setWooStoreCategories]                       = useState([]);
     const [getProductCategories, setGetProductCategories]                   = useState([]);
     const [isThumbnailUploade,setIsThumbnailUploade]                        = useState(false);
     const [tmpUploadedImageUrl,setTmpUploadedImageUrl]                      = useState("");
     const [productDeletedImages, setProductDeletedImages]                   = useState([]);
-    const [crossSellsProductsDataReady, setCrossSellsProductsDataReady]     = useState(true);
-    const [upSellsProductsDataReady, setUpSellsProductsDataReady]           = useState(true);
-
-    const [addNewTagActive, setAddNewTagActive]                             = useState(false);
-    const [addNewCategoryActive, setAddNewCategoryActive]                   = useState(false);
     const [isProductDeleted, setIsProductDeleted]                           = useState(false);
-
-    const [ isCategoriesLoaded, setIsCategoriesLoaded] = useState(false);
-    const [ isCurrentCategories, setIsCurrentCategories] = useState(false);
-    const [ isTagsLoaded,setIsTagsLoaded] = useState(false);
-    const [ isEditedProductLoaded,setIsEditedProductLoaded] = useState(false);
+    const [ isEditedProductLoaded,setIsEditedProductLoaded]                 = useState(false);
 
 
     useEffect(()=>{
         if(toEdit === true){
             const isPublished   = (productData.status === "publish") ? true : false;
             let galleryImages   = productData.images.map(img => ({sourceUrl : img.src , id : img.id}));
-            if(productData.upsell_ids.length > 0)
-                setCrossSellsProductsDataReady(false);
-            if(productData.upsell_ids.length > 0)
-                setUpSellsProductsDataReady(false);
 
             setUpSellsProductsIds(productData.upsell_ids);
             setCrossSellsProductsIds(productData.cross_sell_ids);
@@ -94,51 +75,6 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES  ,  toEdit=false , produc
         }
         setIsEditedProductLoaded(true);
     },[]);
-
-    useEffect(()=>{
-        if(upSellsProductsIds.length > 0) 
-            getRelatedProductData(upSellsProductsIds,'upSellsProducts')
-        if (crossSellsProductsIds.length > 0)
-            getRelatedProductData(crossSellsProductsIds,'crossSellsProducts')
-    },[upSellsProductsIds, crossSellsProductsIds]);
-
-    useEffect(()=>{
-        if(upSellsProducts.length > 0){
-            setUpSellsProductsDataReady(true)
-        }
-        if(crossSellsProducts.length > 0){
-            setCrossSellsProductsDataReady(true)
-        }
-
-    },[upSellsProducts, crossSellsProducts]);
-
-    const getRelatedProductData = async (relatedProducts,relatedType) => {
-        const listProductsData = [];
-        for(let i = 0; i < relatedProducts.length ; i++){
-            let id = relatedProducts[i];
-            await API.WC_getWooProductById(USER.token, id)
-            .then((result)=>{
-                if( result !== undefined ){
-                    // HIDE LOADER
-                    let productItem = {id:result.id, name:result.name};
-                    listProductsData.push(productItem)
-                    dispatch(loading(false, "header-loader"));
-                }
-            })
-            .catch((error)=>{
-                dispatch({
-                    type : 'ERROR',
-                    payload : error
-                })
-                // HIDE LOADING
-                dispatch(loading(false, "header-loader"));
-            })
-        }
-        if(relatedType === "upSellsProducts")
-            setUpSellsProducts(listProductsData);
-        if(relatedType === "crossSellsProducts")
-            setCrossSellsProducts(listProductsData);
-    }
 
     useEffect(()=>{
         if(isThumbnailUploade && tmpUploadedImageUrl !== ""){
@@ -172,9 +108,7 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES  ,  toEdit=false , produc
                 type : "ERROR",
                 payload : error
             });
-            // HIDE LOADING
             dispatch(loading(false, "header-loader"));
-
         })
     }
 
@@ -220,9 +154,6 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES  ,  toEdit=false , produc
         dispatch(loading(true, "header-loader"));
         
         let galleryImages       = productGallery.map(img => ({src : img.sourceUrl}));
-        // let productCategories   = wooStoreCategories.filter(cat => cat.selected ).map(c => ({id : c.id}));
-        let productUpSells      = upSellsProducts.map(ups =>  ups.id );
-        let productCrossSells   = crossSellsProducts.map(ups =>  ups.id );
 
         if( productImage !== undefined && productImage !== false){
             if(toEdit === true && typeof productImage !== "string")
@@ -231,7 +162,6 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES  ,  toEdit=false , produc
                 galleryImages.unshift({src : productImage});
         }
         
-        console.log(wooStoreCategories);
         let payload = {
             sale_price          : salePrice.toString(),
             status              : (published)  ? 'publish' : 'draft',
@@ -241,16 +171,15 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES  ,  toEdit=false , produc
             tags                : productTags,
             virtual             : virtual,
             downloadable        : downloadable,
-            upsell_ids          : productUpSells,
-            cross_sell_ids      : productCrossSells,
-            // related_ids      : 'EMPTY',
+            upsell_ids          : upSellsProducts,
+            cross_sell_ids      : crossSellsProducts,
         };
 
         payload = {...payload, regular_price : regularPrice.toString()};
         payload = {...payload, name          : productName};
         payload = {...payload, description   : productDescription};
         payload = {...payload, images        : galleryImages};
-        console.log(payload);
+
         // If new product
         (toEdit === true) ? saveProductAction({ productId : productID , payload }) : saveProductAction(payload);
     }
@@ -267,12 +196,8 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES  ,  toEdit=false , produc
                 type : "ERROR",
                 payload : error
             });
-
-            // HIDE LOADING
             dispatch(loading(false, "header-loading"));
-
         })
-        // handleClose()
     }
 
     return (
@@ -396,10 +321,10 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES  ,  toEdit=false , produc
                                 </ExpansionPanelSummary>
                                 <ExpansionPanelDetails className="panel-form">
                                     <div className="autocomplete-container">
-                                        { upSellsProductsDataReady      && <ProductsAutoComplete fieldLabel="UpSells" currentProduct={upSellsProducts} onChangeAuto={(upsellsvalue) => setUpSellsProducts(upsellsvalue)}/> }
+                                        { isEditedProductLoaded      && <ProductsAutoComplete fieldLabel="UpSells" currentProduct={upSellsProductsIds} onChangeAuto={(upsellsvalue) => setUpSellsProducts(upsellsvalue)}/> }
                                     </div>
                                     <div className="autocomplete-container">
-                                        { crossSellsProductsDataReady   && <ProductsAutoComplete fieldLabel="Cross-Sells"  currentProduct={crossSellsProducts} onChangeAuto={(crosssellsvalue) => setCrossSellsProducts(crosssellsvalue)} /> }
+                                        { isEditedProductLoaded   && <ProductsAutoComplete fieldLabel="Cross-Sells"  currentProduct={crossSellsProductsIds} onChangeAuto={(crosssellsvalue) => setCrossSellsProducts(crosssellsvalue)} /> }
                                     </div>
                                 </ExpansionPanelDetails>
                             </ExpansionPanel>
@@ -451,13 +376,13 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES  ,  toEdit=false , produc
                             </ul>    
                         </Paper>
                             { isEditedProductLoaded && <FormCategories toEdit={toEdit} currentCategories={getProductCategories} updateSelectedCategories={(selectedCategories) => setWooStoreCategories([...selectedCategories])} /> }
-{ isEditedProductLoaded && <FormTags toEdit={toEdit} currentTags={productTags} updateSelectedTags={(selectedTags)=>setProductTags(selectedTags)} /> }
+                            { isEditedProductLoaded && <FormTags toEdit={toEdit} currentTags={productTags} updateSelectedTags={(selectedTags)=>setProductTags(selectedTags)} /> }
                     </Grid>
                 </Grid>
             </Container>
     ); 
 }
 
-const mapStateToProps = ({ USER , WOO_CATEGORIES }) => ({ USER , WOO_CATEGORIES });
+const mapStateToProps = ({ USER }) => ({ USER });
 
 export default   connect(mapStateToProps)(ProductForm) ;

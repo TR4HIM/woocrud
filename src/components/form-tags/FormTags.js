@@ -8,7 +8,6 @@ import { loading , storeWooTags} from '../../store/actions/';
 import API from '../../API/'; 
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import { Redirect } from 'react-router';
 
 const FormTags = ({dispatch , USER , WOO_TAGS ,  toEdit=false , updateSelectedTags , currentTags }) =>  {
 
@@ -18,8 +17,6 @@ const FormTags = ({dispatch , USER , WOO_TAGS ,  toEdit=false , updateSelectedTa
     const [addNewTagActive, setAddNewTagActive]                             = useState(false);
     const [isTagsLoaded,setIsTagsLoaded] = useState(false);
     const [chipsSelectedTags,setChipsSelectedTags] = useState(false);
-
-    
  
     useEffect(()=>{
         if(toEdit){
@@ -36,12 +33,9 @@ const FormTags = ({dispatch , USER , WOO_TAGS ,  toEdit=false , updateSelectedTa
     useEffect(()=>{
         if(wooStoreTags.length > 0 && productTags.length > 0){
             const seleTags = wooStoreTags.filter(item1 => productTags.find(item2 => item1.id === item2)); 
-            console.log(seleTags)
             updateSelectedTags(seleTags);
         }
     },[productTags , wooStoreTags])
-
-    
     
     useEffect(() => {
         if(WOO_TAGS.length <= 0){
@@ -99,12 +93,10 @@ const FormTags = ({dispatch , USER , WOO_TAGS ,  toEdit=false , updateSelectedTa
             let wooStoreTags    = WOO_TAGS.filter(tag => tag.name === tagInput.current.value.trim() ).map(t => ({id : t.id , name : t.name}));
             if(wooStoreTags.length > 0 && productTags.indexOf(wooStoreTags[0].id) !== -1){
                 tagInput.current.value = "";
-                console.log('Here')
                 return;
             }
             if(wooStoreTags.length > 0){
                 setProductTags(currentTags => [...currentTags, wooStoreTags[0].id])
-                console.log('Here2')
                 tagInput.current.value = "";
             }
             else {
@@ -115,7 +107,6 @@ const FormTags = ({dispatch , USER , WOO_TAGS ,  toEdit=false , updateSelectedTa
 
     const handleOnChangeTag = (event) => {
         let newValue = event.target.value;
-        console.log(newValue)
         setProductTags([...newValue])
     }
 

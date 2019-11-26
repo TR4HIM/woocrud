@@ -1,72 +1,26 @@
 import React , {useState , useRef , useEffect } from 'react';
 import {connect} from 'react-redux';
 import {    
-        Container, 
-        Grid , 
-        Paper , Input ,
-        TextField , Select ,
-        FormControlLabel , FormControl ,
-        Switch , Typography , Checkbox ,
-        Divider , Chip , Button ,
-        ExpansionPanel , ExpansionPanelSummary , ExpansionPanelDetails} from '@material-ui/core';
-
-import Icon from '@material-ui/core/Icon';
-import ProductsAutoComplete from '../../components/input-autocomplete/InputAutocomplete';
-import ButtonUploadImage from '../../components/button-upload/ButtonUpload';
-import EditableImage from '../../components/editable-image/EditableImage';
-import FormTags from '../../components/form-tags/FormTags';
-import { loading , storeWooTags , storeWooCategories , deleteWooProudct} from '../../store/actions/';
+        Paper , 
+        TextField , 
+        FormControlLabel , 
+        Typography , Checkbox ,
+        Divider , Button } from '@material-ui/core';
+import { loading  , storeWooCategories } from '../../store/actions/';
 import API from '../../API/'; 
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import { Redirect } from 'react-router';
 
 const FormCategories = ({dispatch , USER , WOO_CATEGORIES  ,  toEdit=false , currentCategories=null , updateSelectedCategories}) =>  {
 
-    const tagInput = useRef(null);
     const categoryInput = useRef(null);
 
-    const [productID,setProductID]                                          = useState(false);
-    const [productName,setProductName]                                      = useState("");
-    const [productDescription,setProductDescription]                        = useState("");
-    const [shortProductDescription,setShortProductDescription]              = useState("");
-    const [regularPrice,setRegularPrice]                                    = useState(0);
-    const [salePrice,setSalePrice]                                          = useState(0);
-    const [sku,setSku]                                                      = useState("");
-    const [published,setPublished]                                          = useState(false);
-    const [virtual,setVirtual]                                              = useState(false);
-    const [downloadable,setDownloadable]                                    = useState(false);
-    const [upSellsProducts,setUpSellsProducts]                              = useState([]);
-    const [crossSellsProducts,setCrossSellsProducts]                        = useState([]);
-    const [upSellsProductsIds,setUpSellsProductsIds]                        = useState([]);
-    const [crossSellsProductsIds,setCrossSellsProductsIds]                  = useState([]);
-    const [productImage,setProductImage]                                    = useState(false);
-    const [productGallery,setProductGallery]                                = useState([]);
-    const [wooStoreTags, setWooStoreTags]                                   = useState([]);
-    const [productTags, setProductTags]                                     = useState([]);
     const [wooStoreCategories, setWooStoreCategories]                       = useState([]);
     const [getProductCategories, setGetProductCategories]                   = useState([]);
-    const [isThumbnailUploade,setIsThumbnailUploade]                        = useState(false);
-    const [tmpUploadedImageUrl,setTmpUploadedImageUrl]                      = useState("");
-    const [productDeletedImages, setProductDeletedImages]                   = useState([]);
-    const [crossSellsProductsDataReady, setCrossSellsProductsDataReady]     = useState(true);
-    const [upSellsProductsDataReady, setUpSellsProductsDataReady]           = useState(true);
-
-    const [addNewTagActive, setAddNewTagActive]                             = useState(false);
     const [addNewCategoryActive, setAddNewCategoryActive]                   = useState(false);
-    const [isProductDeleted, setIsProductDeleted]                           = useState(false);
-
-    const [ isCategoriesLoaded, setIsCategoriesLoaded] = useState(false);
-    const [ isCurrentCategories, setIsCurrentCategories] = useState(false);
-    const [ isTagsLoaded,setIsTagsLoaded] = useState(false);
-
     
     useEffect(()=>{
         if(WOO_CATEGORIES.length > 0)
             setWooStoreCategories(JSON.parse(JSON.stringify(WOO_CATEGORIES)));
     },[WOO_CATEGORIES])
-
-   
 
     useEffect(()=>{
         if(currentCategories.length > 0){
@@ -90,7 +44,6 @@ const FormCategories = ({dispatch , USER , WOO_CATEGORIES  ,  toEdit=false , cur
     }, [getProductCategories, WOO_CATEGORIES]);
 
     useEffect(()=>{
-        // const seleTags = wooStoreTags.filter(item1 => productTags.find(item2 => item1.id === item2)); 
         if(wooStoreCategories.length > 0 && WOO_CATEGORIES.length > 0){
             const payloadCategories = wooStoreCategories.filter(cat => cat.selected ).map(c => ({id : c.id}));
             updateSelectedCategories(payloadCategories);
@@ -107,7 +60,6 @@ const FormCategories = ({dispatch , USER , WOO_CATEGORIES  ,  toEdit=false , cur
                         selected: false
                     }));
                     dispatch(storeWooCategories(productCategories));
-                    setIsCategoriesLoaded(true)
                 }
             })
             .catch((error)=>{
@@ -117,8 +69,6 @@ const FormCategories = ({dispatch , USER , WOO_CATEGORIES  ,  toEdit=false , cur
                 })
             })
         }
-        else
-            setIsCategoriesLoaded(true)
     }, []);
 
     const addCategoryToWoo = (payload) => {
