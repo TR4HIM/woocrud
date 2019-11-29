@@ -1,4 +1,4 @@
-import React , {useState , useRef , useEffect } from 'react';
+import React , { useState , useEffect } from 'react';
 import {connect} from 'react-redux';
 import {    
         Container, 
@@ -9,16 +9,16 @@ import {
         Switch , Typography , Checkbox ,
         Divider  , Button ,
         ExpansionPanel , ExpansionPanelSummary , ExpansionPanelDetails} from '@material-ui/core';
-
+import { loading , deleteWooProudct} from '../../store/actions/';
+import { Redirect } from 'react-router';
+import API  from '../../API/'; 
 import Icon from '@material-ui/core/Icon';
 import ProductsAutoComplete from '../../components/input-autocomplete/InputAutocomplete';
-import ButtonUploadImage from '../../components/button-upload/ButtonUpload';
-import EditableImage from '../../components/editable-image/EditableImage';
-import FormTags from '../../components/form-tags/FormTags';
-import FormCategories from '../../components/form-categories/FormCategories';
-import { loading , deleteWooProudct} from '../../store/actions/';
-import API from '../../API/'; 
-import { Redirect } from 'react-router';
+import ButtonUploadImage    from '../../components/button-upload/ButtonUpload';
+import EditableImage        from '../../components/editable-image/EditableImage';
+import FormTags             from '../../components/form-tags/FormTags';
+import FormCategories       from '../../components/form-categories/FormCategories';
+import FormGallery          from '../../components/form-gallery/FormGallery';
 
 const ProductForm = ({dispatch , USER ,  toEdit=false , productData=null , saveProductAction}) =>  {
 
@@ -38,13 +38,13 @@ const ProductForm = ({dispatch , USER ,  toEdit=false , productData=null , saveP
     const [crossSellsProductsIds,setCrossSellsProductsIds]                  = useState([]);
     const [productImage,setProductImage]                                    = useState(false);
     const [productGallery,setProductGallery]                                = useState([]);
-    const [productTags, setProductTags]                                     = useState([]);
-    const [wooStoreCategories, setWooStoreCategories]                       = useState([]);
-    const [getProductCategories, setGetProductCategories]                   = useState([]);
+    const [productTags,setProductTags]                                      = useState([]);
+    const [wooStoreCategories,setWooStoreCategories]                        = useState([]);
+    const [getProductCategories,setGetProductCategories]                    = useState([]);
     const [isThumbnailUploade,setIsThumbnailUploade]                        = useState(false);
     const [tmpUploadedImageUrl,setTmpUploadedImageUrl]                      = useState("");
-    const [productDeletedImages, setProductDeletedImages]                   = useState([]);
-    const [isProductDeleted, setIsProductDeleted]                           = useState(false);
+    const [productDeletedImages,setProductDeletedImages]                    = useState([]);
+    const [isProductDeleted,setIsProductDeleted]                            = useState(false);
     const [ isEditedProductLoaded,setIsEditedProductLoaded]                 = useState(false);
 
 
@@ -70,7 +70,7 @@ const ProductForm = ({dispatch , USER ,  toEdit=false , productData=null , saveP
 
             // Remove First Element For Featured Image :) 
             setProductImage(galleryImages.shift());
-            setProductGallery(galleryImages);
+            setProductGallery(productData.images);
             setPublished(isPublished);
         }
         setIsEditedProductLoaded(true);
@@ -85,23 +85,21 @@ const ProductForm = ({dispatch , USER ,  toEdit=false , productData=null , saveP
         }
     },[productGallery,isThumbnailUploade])
 
-    const uploadProductImage = (file,imgType="gallery") => {
-        let imageObject = file.imageObject;
+    const handleThumbnailProduct = (file) =>{
+        let imageObj = {id : file.name, name : file.name, isUloading : true, imageObject : file};
+
+        setProductImage(imageObj);
+
         let formData    = new FormData();
 
-        formData.append( 'file', imageObject );
-        if(productID !== false)
-            formData.append( 'post', productID);
+        formData.append( 'file', file );
         
         dispatch(loading(true, "header-loader"));
-        return API.WP_uploadImage(USER.token, formData).then((data)=>{ 
-            if(imgType == 'thumbnail'){
-                setProductImage(data.source_url);
-                setIsThumbnailUploade(true);
-                dispatch(loading(false, "header-loader"));
-            }else{
-                return data;
-            }
+
+        API.WP_uploadImage(USER.token, formData).then((data)=>{ 
+            setProductImage(data.source_url);
+            setIsThumbnailUploade(true);
+            dispatch(loading(false, "header-loader"));
         })
         .catch((error)=>{
             dispatch({
@@ -110,36 +108,6 @@ const ProductForm = ({dispatch , USER ,  toEdit=false , productData=null , saveP
             });
             dispatch(loading(false, "header-loader"));
         })
-    }
-
-    const handleThumbnailProduct = (file) =>{
-        let imageObj = {id : file.name, name : file.name, isUloading : true, imageObject : file};
-        setProductImage(imageObj);
-        uploadProductImage(imageObj,'thumbnail');
-    }
-
-    const handleProductGallery = async (gallery) => {
-        const selectedImages = gallery.target.files;
-        for(let i = 0; i < selectedImages.length ; i++){
-            let productImage = selectedImages[i];
-            let id = i+productImage.name;
-            let imageObj = {id, name : productImage.name, isUloading : true, imageObject : productImage};
-            setIsThumbnailUploade(false);
-            setProductGallery( currentGallery => [...currentGallery,  imageObj]);
-            
-            await uploadProductImage(imageObj).then((data)=>{
-                setTmpUploadedImageUrl(data.source_url); 
-                setIsThumbnailUploade(true);
-            })
-        }
-        dispatch(loading(false, "header-loader"));
-    }
-
-    const removeGallery = (imageToDelete) => {
-        setProductGallery(imagesGallery => imagesGallery.filter(image => image !== imageToDelete));
-        if(typeof imgObject !== "string"){
-            setProductDeletedImages(currentDeletedImages => [...currentDeletedImages, imageToDelete])
-        }
     }
     
     const deleteThumbnailImage = (imgObject) => {
@@ -360,23 +328,12 @@ const ProductForm = ({dispatch , USER ,  toEdit=false , productData=null , saveP
                             <Divider className="paper-divider" />
                             <div className="featured-image">
                                 { productImage  ? <EditableImage imageObject={productImage} removeImageFunc={() =>deleteThumbnailImage(productImage)} />  
-                                                : <ButtonUploadImage typeImage="thumbnail" onChange ={ (thumbnail) => handleThumbnailProduct(thumbnail.target.files[0],'thumbnail') } /> }
+                                                : <ButtonUploadImage typeImage="thumbnail" onChange ={ (thumbnail) => handleThumbnailProduct(thumbnail.target.files[0]) } /> }
                             </div>    
                         </Paper>
-                        <Paper className="product-form" elevation={2}>
-                            <Typography variant="subtitle2" className="paper-title" gutterBottom>
-                                Product Gallery 
-                            </Typography>
-                            <Divider className="paper-divider" />
-                            <ul className="product-gallery">
-                                { productGallery.map((image,i)=> (<li key={i}><EditableImage imageObject={image} removeImageFunc={() => removeGallery(image)} /></li>) ) }
-                                <li>
-                                    <ButtonUploadImage typeImage="gallery"  onChange ={ (var2) => handleProductGallery(var2) } />
-                                </li>
-                            </ul>    
-                        </Paper>
-                            { isEditedProductLoaded && <FormCategories toEdit={toEdit} currentCategories={getProductCategories} updateSelectedCategories={(selectedCategories) => setWooStoreCategories([...selectedCategories])} /> }
-                            { isEditedProductLoaded && <FormTags toEdit={toEdit} currentTags={productTags} updateSelectedTags={(selectedTags)=>setProductTags(selectedTags)} /> }
+                        { isEditedProductLoaded && <FormGallery toEdit={toEdit} currentGallery={productGallery} saveProductGallery={(gallery)=> setProductGallery(gallery)}/> }
+                        { isEditedProductLoaded && <FormCategories toEdit={toEdit} currentCategories={getProductCategories} updateSelectedCategories={(selectedCategories) => setWooStoreCategories([...selectedCategories])} /> }
+                        { isEditedProductLoaded && <FormTags toEdit={toEdit} currentTags={productTags} updateSelectedTags={(selectedTags)=>setProductTags(selectedTags)} /> }
                     </Grid>
                 </Grid>
             </Container>
