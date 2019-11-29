@@ -1,9 +1,8 @@
-import React, {  useState , useEffect  } from 'react';
+import React, {  useState } from 'react';
 import {connect} from 'react-redux';
 import { Link} from "react-router-dom";
 import { editWooProduct } from '../../store/actions/';
 import ToggleDisplay from 'react-toggle-display';
-import Icon from '@material-ui/core/Icon';
 
 const WooProduct = ({dispatch , data }) => {
 

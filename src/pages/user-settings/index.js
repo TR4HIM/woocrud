@@ -2,21 +2,11 @@ import React, { useState, useEffect , Fragment } from 'react';
 import {connect} from 'react-redux';
 import Header from '../../components/header/Header';
 import Footer from '../../components/footer/Footer';
-
-import {  Paper, Typography, TextField, Button, FormControl, 
-          InputLabel, Select, FilledInput, MenuItem } from '@material-ui/core';
-
+import {  Paper, Typography, TextField, Button} from '@material-ui/core';
 import API from '../../API/'; 
-
-import {loading , updateUser , storeUserProfile , storeUserData} from '../../store/actions/';
-
+import {loading , storeUserData} from '../../store/actions/';
 import ToggleDisplay from 'react-toggle-display';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
-import Slide from '@material-ui/core/Slide';
-
-const Transition = (props) =>{
-    return <Slide direction="up" {...props} />;
-}
 
 const UserSettings = ({ dispatch , USER , USER_PROFILE}) => {
         
@@ -32,7 +22,6 @@ const UserSettings = ({ dispatch , USER , USER_PROFILE}) => {
     const [firstName,setFirstName]                                   = useState("")
     const [lastName,setLastName]                                     = useState("")
     const [userUrl,setUserUrl]                                       = useState("")
-    const [userAvatar,setUserAvatar]                                 = useState("")
     const [successPasswordChange,setSuccessPasswordChange]           = useState( false)
     const [isLoaded,setIsLoaded]                                     = useState(false)
 
@@ -351,6 +340,7 @@ const UserSettings = ({ dispatch , USER , USER_PROFILE}) => {
             <div id="container">
                 { isLoaded && renderContent() }
             </div>
+            <Footer />
         </div>
         
     );

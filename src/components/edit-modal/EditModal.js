@@ -11,7 +11,7 @@ import {
 
 import ButtonUploadImage from '../../components/button-upload/ButtonUpload'; 
 import EditableImage from '../../components/editable-image/EditableImage';
-import { Link , Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';

@@ -16,7 +16,6 @@ const FormGallery = ({dispatch , USER ,  toEdit=false , currentGallery=null , sa
     const [productGallery,setProductGallery]                = useState([]);
     const [isThumbnailUploade,setIsThumbnailUploade]        = useState(false);
     const [tmpUploadedImageUrl,setTmpUploadedImageUrl]      = useState("");
-    const [productDeletedImages, setProductDeletedImages]   = useState([]);
     const [isEditedProductLoaded,setIsEditedProductLoaded]  = useState(false);
 
 
@@ -83,9 +82,6 @@ const FormGallery = ({dispatch , USER ,  toEdit=false , currentGallery=null , sa
 
     const removeGallery = (imageToDelete) => {
         setProductGallery(imagesGallery => imagesGallery.filter(image => image !== imageToDelete));
-        if(typeof imgObject !== "string"){
-            setProductDeletedImages(currentDeletedImages => [...currentDeletedImages, imageToDelete])
-        }
     }
 
     return (

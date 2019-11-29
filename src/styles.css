@@ -1764,6 +1764,10 @@ label.Mui-focused {
     text-align: right;
     font-family: "Cairo", sans-serif; }
 
+.MuiInputLabel-outlined.MuiInputLabel-shrink {
+  padding: 0 15px;
+  background: white; }
+
 @media screen and (max-width: 680px) {
   #profile-page #shop-header-container.shop-header {
     margin-bottom: 40px; }

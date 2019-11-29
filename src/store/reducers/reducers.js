@@ -91,3 +91,31 @@ export const EDITING_WOO_PRODUCT = (state = { status : false , currentProduct : 
 
     return state;
 }
+
+export const ERROR = (state = { show : false } , action)=>{
+
+    if((action.type === TYPES.ERROR) && action.payload.response)
+        state = {
+            ...action.payload.response.data,
+            show : true
+        }
+    
+    else if((action.type === TYPES.ERROR) && !action.payload.response){
+        let payload = {
+            code : 'network_error',
+            message : 'NO INTERNET OR API SERVER IS NOT RUNNING !'
+        }
+        state = {
+            ...payload,
+            show : true
+        }
+    }
+    
+    else if(action.type === TYPES.HIDE_ERROR)
+        state = {
+            ...state,
+            show : false
+        }
+
+    return state;
+}

@@ -94,7 +94,7 @@ const Login = ({dispatch, AUTHORIZED , history }) => {
                             InputLabelProps={{ shrink: true }}
                         />
                         <div className="action">
-                            <Button variant="contained" color="primary" size="large" onClick={ submitFormLogin } >
+                            <Button variant="contained" color="primary" size="large" onClick={ (e) => submitFormLogin(e) } >
                                 Sign Up
                             </Button>
                         </div>
