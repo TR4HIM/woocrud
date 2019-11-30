@@ -35,14 +35,15 @@ const TOKEN_VALIDATE = (token)=>{
 
 }
 
-const WC_getWooProducts = (token)=>{
-    return axios.get( `${WC}/products?per_page=100`, {
+const WC_getWooProducts = (token,perpage,pager)=>{
+    return axios.get( `${WC}/products?per_page=${perpage}&page=${pager}`, {
         headers : {
             "Authorization" : `Bearer ${token}`
         }
     })
     .then((result)=>{
-        return result.data;
+        
+        return result;
     })
     .catch((error)=>{
         if ( !axios.isCancel(error)) 

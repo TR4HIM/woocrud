@@ -165,7 +165,8 @@ a {
   .rc-pagination li {
     display: inline-block;
     margin: 0 3px;
-    vertical-align: text-bottom; }
+    vertical-align: text-bottom;
+    outline: none !important; }
     .rc-pagination li a {
       display: block;
       padding: 3px;
@@ -174,7 +175,8 @@ a {
       border-radius: 50%;
       line-height: 28px;
       background: white;
-      cursor: pointer; }
+      cursor: pointer;
+      outline: none !important; }
     .rc-pagination li.rc-pagination-item-active a {
       font-weight: 600;
       background: #27ae60; }
