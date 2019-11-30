@@ -102,8 +102,8 @@ export const ERROR = (state = { show : false } , action)=>{
     
     else if((action.type === TYPES.ERROR) && !action.payload.response){
         let payload = {
-            code : 'network_error',
-            message : 'NO INTERNET OR API SERVER IS NOT RUNNING !'
+            code : 'DEFAULT_ERROR',
+            message : action.payload
         }
         state = {
             ...payload,

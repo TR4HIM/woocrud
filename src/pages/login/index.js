@@ -34,9 +34,6 @@ const Login = ({dispatch, AUTHORIZED , history }) => {
             .then((data)=>{
                 API.WP_getProfileInfo(data.token).then((res)=>{
                     let userData = {...data ,  roles : res.roles };
-                    
-                    console.log(userData)
-                    //Rolse : administrator  , shop_manager
                     if(userData.roles.indexOf('administrator') !== -1 || userData.roles.indexOf('shop_manager') !== -1){
                         localStorage.setItem('woo-app', JSON.stringify(userData));
                         dispatch(login(true));
@@ -44,21 +41,20 @@ const Login = ({dispatch, AUTHORIZED , history }) => {
                         dispatch(loading( false, 'login-loader' ));
                         history.push(APP_ROUTES.MY_PRODUCTS);
                     }else{
-                        console.log('Not Authorized');
                         // CLEAR THE LOCALSTORAGE
                         localStorage.removeItem('woo-app');
                         // LOGOUT
                         dispatch(login(false));
                         // DISPATCH THE LOGOUT ACTION TO CLEAR THE STORE
                         dispatch({ type : "LOGOUT"});
-                        dispatch(loading( false, 'login-loader' ));
+                        dispatch(loading( false, 'login-loader' )); 
                     }
                 })
             })
             .catch((error)=>{
                 dispatch({
                     type : 'ERROR',
-                    payload : error
+                    payload : 'Wrong Username or Password'
                 });
                 // HIDE LOADING
                 dispatch(loading( false, 'login-loader' ));

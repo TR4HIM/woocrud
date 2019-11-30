@@ -12,6 +12,6 @@ export default {
 	DELETE_WOO_PRODUCT  			: 'DELETE_WOO_PRODUCT',
 	LOADING  			            : 'LOADING',
 	ERROR  			            	: 'ERROR',
-	HIDE_ERROR  			            	: 'HIDE_ERROR',
+	HIDE_ERROR  			        : 'HIDE_ERROR',
 	LOGOUT  			            : 'LOGOUT'
 };

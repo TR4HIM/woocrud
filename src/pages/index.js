@@ -7,21 +7,14 @@ import Slide from '@material-ui/core/Slide';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 
-const Layout = ( {dispatch,ERROR}) => {
+const Layout = ( { dispatch , ERROR }) => {
 
     const snackbarHandleClose = () => {
         dispatch({ type : 'HIDE_ERROR' })
     }
 
-    const transitionRight = (props) => {
-        return <Slide {...props} direction="top" />;
-    }
-
     const renderSnackbarMessage = () => {
-
-        let message = ((process.env.NODE_ENV !== 'production')) ? `${ERROR.code} : ${ERROR.message}` : `${ERROR.message}`;
-        
-        return ( <span id="message-id">{ message }</span> );
+        return ( <span id="message-id">{ ERROR.message }</span> );
     }
 
     return (
