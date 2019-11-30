@@ -67,10 +67,10 @@ const Login = ({dispatch, AUTHORIZED , history }) => {
 
     return (
         <div id="login-page">
-            <Loader id="login-loader" />
             <div id="login-form" elevation={1}>
                 <img id="logo" src={`${process.env.PUBLIC_URL}/img/logo.png`} alt="kibo" />
                 <Paper id="paper" elevation={1}>
+                    <Loader id="login-loader" type="linear"/>
                     <form  className="form" >
                         <TextField
                             label="Username"

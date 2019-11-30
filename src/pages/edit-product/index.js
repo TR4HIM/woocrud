@@ -4,7 +4,7 @@ import Header from '../../components/header/Header';
 import Footer from '../../components/footer/Footer';
 import ProductForm from '../../components/product-form/ProductForm';
 import API from '../../API/'; 
-import {loading , storeWooCategories , storeWooTags} from '../../store/actions/';
+import {loading , updateWooProudct } from '../../store/actions/';
   
 const EditProductPage = ({dispatch , USER , WOO_CATEGORIES , match}) =>  {
     
@@ -35,7 +35,9 @@ const EditProductPage = ({dispatch , USER , WOO_CATEGORIES , match}) =>  {
 
     const saveEditedProduct = (payload) => {
         API.WC_updateProduct(USER.token,  payload.productId , payload.payload ).then((data)=>{ 
+            let currentProduct  = payload.payload;
             dispatch(loading(false, "header-loader"));
+            dispatch(updateWooProudct({id : payload.productId , ...currentProduct}));
         })
         .catch((error)=>{
             dispatch({

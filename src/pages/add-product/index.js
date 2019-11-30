@@ -4,11 +4,11 @@ import Header from '../../components/header/Header';
 import Footer from '../../components/footer/Footer';
 import ProductForm from '../../components/product-form/ProductForm';
 import API from '../../API/'; 
-import {loading} from '../../store/actions/';
+import {loading , storeWooProducts} from '../../store/actions/';
 import { Redirect } from 'react-router';
 
 
-const AddProduct = ({dispatch , USER }) =>  {
+const AddProduct = ({dispatch , USER , WOO_PRODUCTS }) =>  {
 
     const [isNewProductSaved, setIsNewProductSaved]                         = useState(false);
     const [productID,setProductID]                                          = useState(false);
@@ -18,6 +18,7 @@ const AddProduct = ({dispatch , USER }) =>  {
             dispatch(loading(false, "header-loader"));
             setIsNewProductSaved(true);
             setProductID(data.id);
+            dispatch(storeWooProducts([data , ...WOO_PRODUCTS]));
         })
         .catch((error)=>{
             dispatch({
@@ -39,6 +40,6 @@ const AddProduct = ({dispatch , USER }) =>  {
     ); 
 }
 
-const mapStateToProps = ({ USER  }) => ({ USER });
+const mapStateToProps = ({ USER , WOO_PRODUCTS  }) => ({ USER , WOO_PRODUCTS });
 
 export default   connect(mapStateToProps)(AddProduct) ;
