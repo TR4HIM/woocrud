@@ -242,6 +242,12 @@ a{
     display: none;
 }
 
+.editorClassName {
+    border:1px solid rgba(0, 0, 0, 0.23);
+    border-radius: 5px;
+    min-height: 150px;
+    max-height: 250px;
+}
 @media screen and (max-width : 959px){
     #snackbar{
         top: 0 !important;

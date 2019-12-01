@@ -17,6 +17,11 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import API from '../../API/'; 
 import Loader from '../loader/loader';
+import { EditorState , convertToRaw, ContentState  } from 'draft-js';
+import { Editor } from 'react-draft-wysiwyg';
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import draftToHtml from 'draftjs-to-html'; 
+import htmlToDraft from 'html-to-draftjs';
 
 
 const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
@@ -27,10 +32,12 @@ const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
     const [salePrice,setSalePrice]                      = useState(0);
     const [productName,setProductName]                  = useState("");
     const [productThumbnail,setProductThumbnail]        = useState(false); 
-    const [productDescription,setProductDescription]    = useState("");
+    const [productDescription,setProductDescription]    = useState(EditorState.createEmpty());
     const [isThumbnailUploade,setIsThumbnailUploade]    = useState(false);
     const [tmpUploadedImageUrl,setTmpUploadedImageUrl]  = useState("");
     const [tmpUploadedImageId,setTmpUploadedImageId]    = useState("");
+
+    const [editorState,setEditorState]                  = useState(EditorState.createEmpty());
 
     useEffect(() => {
         if(EDITING_WOO_PRODUCT.currentProduct){
@@ -44,7 +51,14 @@ const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
             }else{
                 setProductThumbnail(false);
             }
-            setProductDescription(EDITING_WOO_PRODUCT.currentProduct.short_description);
+
+            const blocksFromHtml = htmlToDraft(EDITING_WOO_PRODUCT.currentProduct.short_description);
+            const { contentBlocks, entityMap } = blocksFromHtml;
+            const contentState = ContentState.createFromBlockArray(contentBlocks, entityMap);
+            console.log(blocksFromHtml);
+            setProductDescription(EditorState.createWithContent(contentState));
+
+            // setProductDescription(EditorState.createWithContent(EDITING_WOO_PRODUCT.currentProduct.name));
             setPublished((EDITING_WOO_PRODUCT.currentProduct.status === 'publish'));
             let id = EDITING_WOO_PRODUCT.currentProduct.id;
             dispatch(updateWooProudct({id ,isUpdated : false}));
@@ -52,6 +66,11 @@ const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
              document.body.classList.add('overflow-hidden');
         }   
     },[EDITING_WOO_PRODUCT]);
+
+    useEffect(() => {
+       
+            console.log(productDescription) 
+    },[productDescription]);
 
     const handleClose = () => {
         document.body.classList.remove('overflow-hidden');
@@ -185,8 +204,12 @@ const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
             }
         }
         else if( field === "short_description" ){
+            let descContent = draftToHtml(convertToRaw(productDescription.getCurrentContent()));
+            console.log('Done');
+            console.log(descContent);
+            console.log('END');
             payload = {
-                short_description    : e.target.value,
+                short_description    : descContent,
             }
         }
         else if( field === "status" ){
@@ -235,6 +258,12 @@ const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
         })
         // handleClose()
     }
+
+    const onEditorStateChange = (editorState) => {
+        // console.log(draftToHtml(convertToRaw(editorState.getCurrentContent())))
+        setProductDescription(editorState)
+    }
+
     return (
         <form>
         <Dialog
@@ -252,7 +281,7 @@ const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
                     Edit [ { productName } ]
                 </Typography>
                 {/* Redirect */}
-                <div className="modal-button">
+                {/* <div className="modal-button">
                     <Button variant="outlined" color="primary" onClick={ handleClose }>
                         <Link to={`/edit-produit/${productId}`}>
                             Advanced Edit 
@@ -261,7 +290,7 @@ const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
                     <Button variant="outlined" color="secondary" onClick={ deleteProduct }>
                         Delete Product
                     </Button>
-                </div>
+                </div> */}
                 <Loader id="edit-modal-loading"  type="linear" />
             </MuiDialogTitle>
             <DialogContent dividers>
@@ -297,7 +326,7 @@ const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
                                 onChange={(e) => setSalePrice(e.target.value)}
                                 onBlur={(e)=> updateProductProperty(e, "sale_price")}
                             />
-                            <TextField
+                            {/* <TextField
                                 id="product-description"
                                 label="Short Product Description"
                                 className="default-wysiwyg" 
@@ -308,6 +337,16 @@ const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
                                 value={productDescription}
                                 onChange={(e) => setProductDescription(e.target.value)}
                                 onBlur={(e)=> updateProductProperty(e, "short_description")}
+                            /> */}
+                            <Editor
+                                editorState={productDescription}
+                                onEditorStateChange={onEditorStateChange}
+                                toolbarClassName="toolbarClassName"
+                                wrapperClassName="wrapperClassName"
+                                editorClassName="editorClassName"
+                                onFocus={(event) => {console.log('Focus')}}
+                                onBlur={(event, editorState) => updateProductProperty(editorState, "short_description")}
+                                onTab={(event) => {console.log('Tab')}}
                             />
                     </Grid>
                     <Grid item xs={12} sm={4}>

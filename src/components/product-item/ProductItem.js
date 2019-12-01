@@ -2,45 +2,90 @@ import React, {  useState } from 'react';
 import {connect} from 'react-redux';
 import { Link} from "react-router-dom";
 import { editWooProduct } from '../../store/actions/';
-import ToggleDisplay from 'react-toggle-display';
+import MoreVert from '@material-ui/icons/MoreVert';
+import Popover from '@material-ui/core/Popover';
+import Button from '@material-ui/core/Button';
 
-const WooProduct = ({dispatch , data }) => {
+const WooProduct = ({dispatch , data , deleteFunc }) => {
 
     const [visualLoaded,setVisualLoaded]    = useState(false);
+    const [anchorEl, setAnchorEl] =  useState(null);
 
     const openModalEdit = () => {
         dispatch(editWooProduct(true,data)); 
     }
-    
+
     let imgUrl = (data.images.length>0 && data.images[0].src !== false) ? data.images[0].src : `${process.env.PUBLIC_URL}/img/product-image-mold.png`;
+
+
+    const handleClick = event => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
+    const open = Boolean(anchorEl);
+    const id = open ? 'simple-popover' : undefined;
+
+    const deleteProduct = () => {
+        deleteFunc(data.id)
+    }
 
     return (
         <li 
             className={`product ${(data.isUpdated) ? 'product-item-updated' : ''}`} 
             id={data.id} 
         >
+            <div className="product-info">
+                <h3 className="title">
+                    {data.name}
+                </h3>
+                <div className="product-popover">
+                    <Button aria-describedby={id} onClick={handleClick} className="btn-popover">
+                        <MoreVert />
+                    </Button>
+                    <Popover
+                        id={id}
+                        open={open}
+                        anchorEl={anchorEl}
+                        onClose={handleClose}
+                        anchorOrigin={{
+                            vertical: 'top',
+                            horizontal: 'left',
+                          }}
+                          transformOrigin={{
+                            vertical: 'top',
+                            horizontal: 'right',
+                          }}
+                    >   
+                    <ul className="popover-links">
+                        <li>
+                            <a onClick={openModalEdit}>
+                                Quick Edit
+                            </a>
+                        </li>
+                        <li>
+                            <Link to={`/edit-produit/${data.id}`}>
+                                Advanced Edit
+                            </Link>
+                        </li>
+                        <li>
+                            <a onClick={deleteProduct} className="danger">
+                                Delete Product
+                            </a>
+                        </li>
+                    </ul>
+                    </Popover>
+                </div>
+            </div>
             <div className={`thumbnail ${visualLoaded ? 'visual-loaded' : ''}`} style={{backgroundImage: `url(${imgUrl})`}}>
                 { (data.images.length>0 && data.images[0].src !== false) ? <img className="visual" src={data.images[0].src} alt="" onLoad={()=>setVisualLoaded(true)} /> : "" }
                 <img className="mold" src={`${process.env.PUBLIC_URL}/img/product-image-mold.png`} alt="" />
-                <div className="product-edit-btns">
-                    <span className="edit-btn" onClick={openModalEdit}>
-                        Quick Edit
-                    </span>
-                    <span className="edit-btn">
-                        <Link to={`/edit-produit/${data.id}`}>
-                            Advanced Edit
-                        </Link>
-                    </span>
-                </div>
             </div>
-            <h3 className="title">{data.name}</h3>
-            <ToggleDisplay show={Boolean(data.regular_price.length) || Boolean(data.sale_price.length) } className={`details ${ ( data.sale_price && (data.regular_price !== data.sale_price ) )  ? 'in-promo' : ''}`}>
-                { data.regular_price ? <span className="price regular">{data.regular_price}<small> Dh</small></span> : null }
-                { ( data.sale_price && (data.regular_price !== data.sale_price ) ) ? <span className="price promo">{data.sale_price}<small> Dh</small></span> : null }
-            </ToggleDisplay>
         </li>
     );
-
 }
 
 export default connect()(WooProduct);

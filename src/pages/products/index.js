@@ -4,27 +4,31 @@ import Header from '../../components/header/Header';
 import Footer from '../../components/footer/Footer'; 
 import ProductItem from '../../components/product-item/ProductItem'; 
 import EditProductModal from '../../components/edit-modal/EditModal'; 
-import {loading , storeWooProducts} from '../../store/actions/';
+import {loading , storeWooProducts , deleteWooProudct} from '../../store/actions/';
 import API from '../../API/'; 
 import Pagination from 'rc-pagination';
 
-const DEFAULT_PER_PAGE          = 10;
+const DEFAULT_PER_PAGE          = 18;
 
 const Products = ({dispatch , USER , WOO_PRODUCTS  }) => {
-    
 
     const [pagesTotal,setPagesTotal]    = useState('');
     const [pager,setPager]              = useState(1);
     const [perPage,setPerPage]          = useState(DEFAULT_PER_PAGE);
-    // const [totalPages,setTotalPages]    = useState(1);
 
     useEffect(() => {
-        if(WOO_PRODUCTS.length <= 0){
+        if(WOO_PRODUCTS.length <= 0){ 
             dispatch(loading(true, "header-loader"));
             getWooProducts();
         }
-    }, []);
+    }, []); 
     
+    useEffect(() => {
+        if(WOO_PRODUCTS.length > 0){
+            getWooProducts(pager);
+        }
+    }, [pager]);
+
     const getWooProducts = (page) => {
         dispatch(loading(true, "header-loader"));
         API.WC_getWooProducts( USER.token , perPage ,pager )
@@ -45,8 +49,9 @@ const Products = ({dispatch , USER , WOO_PRODUCTS  }) => {
             dispatch(loading(false, "header-loader"));
         })
     }
+
     const renderProducts = () => {
-        return WOO_PRODUCTS.map((product, i)=> (<ProductItem key={i} data={product} />) );
+        return WOO_PRODUCTS.map((product, i)=> (<ProductItem key={i} data={product} deleteFunc={(id)=>deleteProduct(id)}/>) );
     }
     
     const renderProductsContainer = () => {
@@ -57,16 +62,28 @@ const Products = ({dispatch , USER , WOO_PRODUCTS  }) => {
         )
     }
 
-    useEffect(() => {
-        if(WOO_PRODUCTS.length > 0){
-            getWooProducts(pager);
-            console.log('Pages')
-        }
-    }, [pager]);
-
     const pageChangeHandler = (pg) => {
-        console.log(pg);
         setPager(pg);
+    }
+
+    const deleteProduct = (productId) => {
+        dispatch(loading(true, "header-loading"));
+        API.WC_deleteProduct(USER.token, productId).then((data)=>{ 
+            console.log(data);
+            dispatch(deleteWooProudct(data.id));
+            dispatch(loading(false, "header-loading"));
+        })
+        .catch((error)=>{
+            dispatch({
+                type : "ERROR",
+                payload : error
+            });
+
+            // HIDE LOADING
+            dispatch(loading(false, "header-loading"));
+
+        })
+        // handleClose()
     }
 
     return(

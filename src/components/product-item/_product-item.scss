@@ -20,43 +20,15 @@
         position: relative;
         flex-grow: 1;
         
-        &.checked{
-            opacity: .7;
-            .thumbnail{
-                filter: grayscale(.7);
-            }
-            &.checkable:before{
-                border-color: $secondary;
-                transition: .2s border-color ease-out;
-            }
-        }
-        &.checkable{
-            cursor: pointer;
-            &:after{
-                display: none;
-            }
-            &:before{
-                content: "";
-                border: 2px solid rgba($gray, .3);
-                transition: .2s border-color ease-out;
-                position: absolute;
-                left: 0;
-                right: 0;
-                top: 0;
-                bottom: 0;
-                z-index: 1;
-            }
-            
-            &:hover:before{
-                border-color: $secondary;
-                transition: .2s border-color ease-out;
-            }
+        .product-info {
+            margin-bottom: 10px;
+            position: relative;
+            padding-right: 20px;
         }
         .thumbnail{
             display: block;
             position: relative;
             width: 100%;
-            margin : 0 auto 10px;
             overflow: hidden;
             padding: 100% 0  0 0;
             background-size: cover;
@@ -103,14 +75,10 @@
             font-weight: 500;
             text-align: left;
             line-height: 15px;
+            padding-top: 2px;
+            height: 35px;
         }
-       
-        .check-icon{
-            position: absolute;
-            top: 5px;
-            right: 5px;
-        }
-        
+
         .product-edit-btns {
             position: absolute;
             z-index: 5;
@@ -187,8 +155,7 @@
         }
         .details{
             overflow: hidden;
-            padding-top: 10px;
-            text-align: right;
+            text-align: left;
             display: block;
             &.in-promo{
                 .price{
@@ -223,7 +190,44 @@
         animation-duration: 2s;
         animation-iteration-count: 1;
         animation-timing-function: ease-in-out;
-    } 
+    }
+
+    .product-popover {
+        display: block;
+        width: 100%;
+        .btn-popover {
+            position: absolute;
+            right:-8px;
+            top:-3px;
+            width: 25px;
+            min-width: auto;
+            padding: 0;
+        }
+    }
+}
+.popover-links {
+    display: block;
+    padding: 10px;
+    width: 150px;
+    li {
+        display: block;
+        cursor: pointer;
+        a {
+            font-size: 14px;
+            padding: 5px; 
+            color: black;
+            display: block;
+            font-weight: 400;
+            border-radius: 5px;
+
+            &:hover {
+                background-color: rgba($secondary,.1)
+            }
+            &.danger {
+                color:#cc0514;
+            }
+        }
+    }
 }
 
 
