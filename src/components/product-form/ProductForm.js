@@ -26,6 +26,8 @@ import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
+import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
+
 const ProductForm = ({dispatch , USER ,  toEdit=false , productData=null , saveProductAction}) =>  {
 
     const [productID,setProductID]                                          = useState(false);
@@ -53,6 +55,11 @@ const ProductForm = ({dispatch , USER ,  toEdit=false , productData=null , saveP
     const [isProductDeleted,setIsProductDeleted]                            = useState(false);
     const [ isEditedProductLoaded,setIsEditedProductLoaded]                 = useState(false);
 
+    useEffect(()=>{
+        ValidatorForm.addValidationRule('isSalePriceValide', (value) => {
+            return (parseInt(salePrice) >= parseInt(regularPrice)) ? false : true;
+        });
+    })
 
     useEffect(()=>{
         if(toEdit === true){
@@ -160,7 +167,6 @@ const ProductForm = ({dispatch , USER ,  toEdit=false , productData=null , saveP
         payload = {...payload, name          : productName};
         payload = {...payload, description   : draftToHtml(convertToRaw(productDescription.getCurrentContent()))};
         payload = {...payload, images        : galleryImages};
-
         // If new product
         (toEdit === true) ? saveProductAction({ productId : productID , payload }) : saveProductAction(payload);
     }
@@ -182,6 +188,7 @@ const ProductForm = ({dispatch , USER ,  toEdit=false , productData=null , saveP
     }
 
     return (
+        <ValidatorForm onSubmit={() => { productPayLoadData() } }>
         <Container maxWidth="lg" id="product-form-container">
                 {isProductDeleted && toEdit && <Redirect to={`/mes-produits`} />}
                 <Grid container spacing={3}>
@@ -192,13 +199,19 @@ const ProductForm = ({dispatch , USER ,  toEdit=false , productData=null , saveP
                                 Product Informations 
                             </Typography>
                             <Divider className="paper-divider" />
-                            <TextField
+                            <TextValidator
                                 id="product-name"
                                 label="Product Name"
+                                name="product-name"
+                                value={productName}
+                                validators={['required','minStringLength:3']}
+                                errorMessages={["This field is required" , 'At least 3 letters']}
                                 className="default-input"
-                                variant="outlined"
+                                type="text"
+                                InputLabelProps={{ shrink: true }}
                                 margin="normal"
-                                value={productName} 
+                                variant="outlined"
+                                fullWidth
                                 onChange={(e) => setProductName(e.target.value)}
                             />
                             <Editor
@@ -208,22 +221,44 @@ const ProductForm = ({dispatch , USER ,  toEdit=false , productData=null , saveP
                                 wrapperClassName="wrapperClassName"
                                 editorClassName="editorClassName"
                             />
-                            <TextField
+                            <TextValidator
                                 id="regular-price"
                                 label="Regular Price"
+                                name="regular-price"
+                                value={regularPrice}
+                                validators={[
+                                    'isNumber'
+                                ]}
+                                errorMessages={[ 
+                                    "Invalide number"
+                                ]}
                                 className="default-input"
-                                variant="outlined"
+                                type="text"
+                                InputLabelProps={{ shrink: true }}
                                 margin="normal"
-                                value={regularPrice} 
+                                variant="outlined"
+                                fullWidth
                                 onChange={(e) => setRegularPrice(e.target.value)}
                             />
-                            <TextField
+                            <TextValidator
                                 id="sales-price"
                                 label="Sales Price"
+                                name="sales-price"
+                                value={salePrice}
+                                validators={[
+                                    'isNumber',
+                                    'isSalePriceValide'
+                                ]}
+                                errorMessages={[ 
+                                    "Invalide number",
+                                    "Sale price should be less than regular price",
+                                ]}
                                 className="default-input"
-                                variant="outlined"
+                                type="text"
+                                InputLabelProps={{ shrink: true }}
                                 margin="normal"
-                                value={salePrice} 
+                                variant="outlined"
+                                fullWidth
                                 onChange={(e) => setSalePrice(e.target.value)}
                             />
                             <TextField
@@ -303,7 +338,7 @@ const ProductForm = ({dispatch , USER ,  toEdit=false , productData=null , saveP
                             </ExpansionPanel>
                         </div>
                         <Paper className="product-form">
-                            <Button variant="contained" onClick={()=>productPayLoadData('Add Product')} color="primary">
+                            <Button type="submit" variant="contained" color="primary">
                                 { (toEdit === true)  ? 'Save Porduct' : 'Add Porduct' }
                             </Button>
                         </Paper>
@@ -342,6 +377,7 @@ const ProductForm = ({dispatch , USER ,  toEdit=false , productData=null , saveP
                     </Grid>
                 </Grid>
             </Container>
+        </ValidatorForm>
     ); 
 }
 

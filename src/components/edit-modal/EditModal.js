@@ -30,14 +30,16 @@ const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
     const [regularPrice,setRegularPrice]                = useState(0);
     const [published,setPublished]                      = useState(false);
     const [salePrice,setSalePrice]                      = useState(0);
-    const [isSalePrice,setIsSalePrice]                  = useState(false);
     const [productName,setProductName]                  = useState("");
     const [productThumbnail,setProductThumbnail]        = useState(false); 
     const [productDescription,setProductDescription]    = useState(EditorState.createEmpty());
     const [isThumbnailUploade,setIsThumbnailUploade]    = useState(false);
     const [tmpUploadedImageUrl,setTmpUploadedImageUrl]  = useState("");
     const [tmpUploadedImageId,setTmpUploadedImageId]    = useState("");
-
+    
+    const [isPriceValide,setIsPriceValide]              = useState(false);
+    const [isSalePriceValide,setIsSalePriceValide]      = useState(false);
+    const [isProductNameValide,setIsProductNameValide]  = useState(false);
     
     useEffect(()=>{
         ValidatorForm.addValidationRule('isSalePriceValide', (value) => {
@@ -180,28 +182,26 @@ const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
         let id = EDITING_WOO_PRODUCT.currentProduct.id;
 
         if(field === "name"){
-            if( EDITING_WOO_PRODUCT.currentProduct.name === e.target.value ) return;
+            if( EDITING_WOO_PRODUCT.currentProduct.name === e.target.value || !isProductNameValide) return;
             payload = {
                 name   : e.target.value,
                 slug   : e.target.value
             } 
         }
         else if( field === "regular_price" ){
-            if( EDITING_WOO_PRODUCT.currentProduct.regular_price === e.target.value ) return;
+            if( EDITING_WOO_PRODUCT.currentProduct.regular_price === e.target.value || !isPriceValide ) return;
             payload = {
                 regular_price : e.target.value,
             }
         }
         else if( field === "sale_price" ){
-            if (EDITING_WOO_PRODUCT.currentProduct.sale_price === e.target.value || !isSalePrice ) return;
+            if (EDITING_WOO_PRODUCT.currentProduct.sale_price === e.target.value || !isSalePriceValide ) return;
             
             payload = {
                 sale_price    : e.target.value,
             }
         }
         else if( field === "description" ){
-            if( EDITING_WOO_PRODUCT.currentProduct.description === e.target.value ) return;
-
             payload = {
                 description    : draftToHtml(convertToRaw(productDescription.getCurrentContent())),
             }
@@ -254,73 +254,82 @@ const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
             <DialogContent dividers>
                 <Grid container spacing={3}>
                     <Grid item xs={12} sm={8}>
-                            <TextField
+                        <ValidatorForm
+                            // forwardRef="form-email"
+                            onSubmit={()=>{console.log('Done')}}
+                            onError={errors => console.log(errors)}
+                        > 
+                            <TextValidator
                                 id="product-name"
                                 label="Product Name"
+                                name="product-name"
+                                value={productName}
+                                validatorListener={(valid)=>setIsProductNameValide(valid)}
+                                validators={['required','minStringLength:3']}
+                                errorMessages={["This field is required" , 'At least 3 letters']}
                                 className="default-input"
-                                variant="outlined"
+                                type="text"
+                                InputLabelProps={{ shrink: true }}
                                 margin="normal"
-                                value={productName} 
+                                variant="outlined"
+                                fullWidth
                                 onChange={(e) => setProductName(e.target.value)}
                                 onBlur={(e)=> updateProductProperty(e, "name")}
                             />
-                            <TextField
+                            <TextValidator
                                 id="regular-price"
                                 label="Regular Price"
-                                className="default-input"
-                                variant="outlined"
-                                margin="normal"
+                                name="regular-price"
                                 value={regularPrice}
+                                validatorListener={(valid)=>setIsPriceValide(valid)}
+                                validators={[
+                                    'isNumber'
+                                ]}
+                                errorMessages={[ 
+                                    "Invalide number"
+                                ]}
+                                className="default-input"
+                                type="text"
+                                InputLabelProps={{ shrink: true }}
+                                margin="normal"
+                                variant="outlined"
+                                fullWidth
                                 onChange={(e) => setRegularPrice(e.target.value)}
                                 onBlur={(e)=> updateProductProperty(e, "regular_price")}
                             />
-                            {/* <TextField
+
+                            <TextValidator
                                 id="sales-price"
                                 label="Sales Price"
-                                className="default-input"
-                                variant="outlined"
-                                margin="normal"
+                                name="sales-price"
                                 value={salePrice}
+                                validatorListener={(valid)=>setIsSalePriceValide(valid)}
+                                validators={[
+                                    'isNumber',
+                                    'isSalePriceValide'
+                                ]}
+                                errorMessages={[ 
+                                    "Invalide number",
+                                    "Sale price should be less than regular price",
+                                ]}
+                                className="default-input"
+                                type="text"
+                                InputLabelProps={{ shrink: true }}
+                                margin="normal"
+                                variant="outlined"
+                                fullWidth
                                 onChange={(e) => setSalePrice(e.target.value)}
                                 onBlur={(e)=> updateProductProperty(e, "sale_price")}
-                            /> */}
-                            <ValidatorForm
-                                // forwardRef="form-email"
-                                onSubmit={()=>{console.log('Done')}}
-                                onError={errors => console.log(errors)}
-                            > 
-                                <TextValidator
-                                    id="sales-price"
-                                    label="Sales Price"
-                                    name="sales-price"
-                                    value={salePrice}
-                                    validatorListener={(valid)=>setIsSalePrice(valid)}
-                                    validators={[
-                                        'isNumber',
-                                        'isSalePriceValide'
-                                    ]}
-                                    errorMessages={[ 
-                                        "Invalide number",
-                                        "Sale price should be less than regular price",
-                                    ]}
-                                    className="default-input"
-                                    type="text"
-                                    InputLabelProps={{ shrink: true }}
-                                    margin="normal"
-                                    variant="outlined"
-                                    fullWidth
-                                    onChange={(e) => setSalePrice(e.target.value)}
-                                    onBlur={(e)=> updateProductProperty(e, "sale_price")}
-                                />
-                            </ValidatorForm>
-                            <Editor
-                                editorState={productDescription}
-                                onEditorStateChange={(editorState) => setProductDescription(editorState)}
-                                toolbarClassName="toolbarClassName"
-                                wrapperClassName="wrapperClassName"
-                                editorClassName="editorClassName"
-                                onBlur={(event, editorState) => updateProductProperty(editorState, "description")}
                             />
+                        </ValidatorForm>
+                        <Editor
+                            editorState={productDescription}
+                            onEditorStateChange={(editorState) => setProductDescription(editorState)}
+                            toolbarClassName="toolbarClassName"
+                            wrapperClassName="wrapperClassName"
+                            editorClassName="editorClassName"
+                            onBlur={(event, editorState) => updateProductProperty(editorState, "description")}
+                        />
                     </Grid>
                     <Grid item xs={12} sm={4}>
                         <div className="featured-image">

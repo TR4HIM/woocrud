@@ -1,5 +1,4 @@
-- Install Wysiwig - Done
-- Sale Price < Regular Price
+- Sale Price < Regular Price - Done
 - Search products
 - Filter Menu Icon
 - Filter product

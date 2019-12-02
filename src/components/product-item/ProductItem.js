@@ -12,6 +12,7 @@ const WooProduct = ({dispatch , data , deleteFunc }) => {
     const [anchorEl, setAnchorEl] =  useState(null);
 
     const openModalEdit = () => {
+        handleClose();
         dispatch(editWooProduct(true,data)); 
     }
 
