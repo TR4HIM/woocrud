@@ -11,17 +11,16 @@ import {
 
 import ButtonUploadImage from '../../components/button-upload/ButtonUpload'; 
 import EditableImage from '../../components/editable-image/EditableImage';
-import { Link } from "react-router-dom";
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
 import API from '../../API/'; 
 import Loader from '../loader/loader';
+
 import { EditorState , convertToRaw, ContentState  } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
-import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import draftToHtml from 'draftjs-to-html'; 
 import htmlToDraft from 'html-to-draftjs';
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
 
 const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
@@ -37,8 +36,6 @@ const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
     const [tmpUploadedImageUrl,setTmpUploadedImageUrl]  = useState("");
     const [tmpUploadedImageId,setTmpUploadedImageId]    = useState("");
 
-    const [editorState,setEditorState]                  = useState(EditorState.createEmpty());
-
     useEffect(() => {
         if(EDITING_WOO_PRODUCT.currentProduct){
             setProductId(EDITING_WOO_PRODUCT.currentProduct.id);
@@ -51,26 +48,14 @@ const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
             }else{
                 setProductThumbnail(false);
             }
-
             const blocksFromHtml = htmlToDraft(EDITING_WOO_PRODUCT.currentProduct.short_description);
-            const { contentBlocks, entityMap } = blocksFromHtml;
-            const contentState = ContentState.createFromBlockArray(contentBlocks, entityMap);
-            console.log(blocksFromHtml);
+            const contentState = ContentState.createFromBlockArray(blocksFromHtml.contentBlocks, blocksFromHtml.entityMap);
             setProductDescription(EditorState.createWithContent(contentState));
-
-            // setProductDescription(EditorState.createWithContent(EDITING_WOO_PRODUCT.currentProduct.name));
             setPublished((EDITING_WOO_PRODUCT.currentProduct.status === 'publish'));
-            let id = EDITING_WOO_PRODUCT.currentProduct.id;
-            dispatch(updateWooProudct({id ,isUpdated : false}));
-             // ADD THE OVERFLOW HIDDEN 
+            dispatch(updateWooProudct({id : EDITING_WOO_PRODUCT.currentProduct.id ,isUpdated : false}));
              document.body.classList.add('overflow-hidden');
         }   
     },[EDITING_WOO_PRODUCT]);
-
-    useEffect(() => {
-       
-            console.log(productDescription) 
-    },[productDescription]);
 
     const handleClose = () => {
         document.body.classList.remove('overflow-hidden');
@@ -203,13 +188,9 @@ const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
                 sale_price    : e.target.value,
             }
         }
-        else if( field === "short_description" ){
-            let descContent = draftToHtml(convertToRaw(productDescription.getCurrentContent()));
-            console.log('Done');
-            console.log(descContent);
-            console.log('END');
+        else if( field === "description" ){
             payload = {
-                short_description    : descContent,
+                description    : draftToHtml(convertToRaw(productDescription.getCurrentContent())),
             }
         }
         else if( field === "status" ){
@@ -238,32 +219,6 @@ const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
         })
     }
 
-    const deleteProduct = () => {
-        dispatch(loading(true, "header-loading"));
-        handleClose();
-        API.WC_deleteProduct(USER.token, productId).then((data)=>{ 
-            console.log(data);
-            dispatch(deleteWooProudct(data.id));
-            dispatch(loading(false, "header-loading"));
-        })
-        .catch((error)=>{
-            dispatch({
-                type : "ERROR",
-                payload : error
-            });
-
-            // HIDE LOADING
-            dispatch(loading(false, "header-loading"));
-
-        })
-        // handleClose()
-    }
-
-    const onEditorStateChange = (editorState) => {
-        // console.log(draftToHtml(convertToRaw(editorState.getCurrentContent())))
-        setProductDescription(editorState)
-    }
-
     return (
         <form>
         <Dialog
@@ -280,17 +235,6 @@ const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
                 <Typography variant="h6">
                     Edit [ { productName } ]
                 </Typography>
-                {/* Redirect */}
-                {/* <div className="modal-button">
-                    <Button variant="outlined" color="primary" onClick={ handleClose }>
-                        <Link to={`/edit-produit/${productId}`}>
-                            Advanced Edit 
-                        </Link>
-                    </Button>
-                    <Button variant="outlined" color="secondary" onClick={ deleteProduct }>
-                        Delete Product
-                    </Button>
-                </div> */}
                 <Loader id="edit-modal-loading"  type="linear" />
             </MuiDialogTitle>
             <DialogContent dividers>
@@ -326,27 +270,13 @@ const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
                                 onChange={(e) => setSalePrice(e.target.value)}
                                 onBlur={(e)=> updateProductProperty(e, "sale_price")}
                             />
-                            {/* <TextField
-                                id="product-description"
-                                label="Short Product Description"
-                                className="default-wysiwyg" 
-                                margin="normal"
-                                variant="outlined"
-                                multiline
-                                rows="8"
-                                value={productDescription}
-                                onChange={(e) => setProductDescription(e.target.value)}
-                                onBlur={(e)=> updateProductProperty(e, "short_description")}
-                            /> */}
                             <Editor
                                 editorState={productDescription}
-                                onEditorStateChange={onEditorStateChange}
+                                onEditorStateChange={(editorState) => setProductDescription(editorState)}
                                 toolbarClassName="toolbarClassName"
                                 wrapperClassName="wrapperClassName"
                                 editorClassName="editorClassName"
-                                onFocus={(event) => {console.log('Focus')}}
-                                onBlur={(event, editorState) => updateProductProperty(editorState, "short_description")}
-                                onTab={(event) => {console.log('Tab')}}
+                                onBlur={(event, editorState) => updateProductProperty(editorState, "description")}
                             />
                     </Grid>
                     <Grid item xs={12} sm={4}>

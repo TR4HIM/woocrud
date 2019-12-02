@@ -247,6 +247,8 @@ a{
     border-radius: 5px;
     min-height: 150px;
     max-height: 250px;
+    padding: 0 10px;
+    height: auto;
 }
 @media screen and (max-width : 959px){
     #snackbar{

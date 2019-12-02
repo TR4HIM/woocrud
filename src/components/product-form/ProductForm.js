@@ -20,12 +20,18 @@ import FormTags             from '../../components/form-tags/FormTags';
 import FormCategories       from '../../components/form-categories/FormCategories';
 import FormGallery          from '../../components/form-gallery/FormGallery';
 
+import { EditorState , convertToRaw, ContentState  } from 'draft-js';
+import { Editor } from 'react-draft-wysiwyg';
+import draftToHtml from 'draftjs-to-html'; 
+import htmlToDraft from 'html-to-draftjs';
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+
 const ProductForm = ({dispatch , USER ,  toEdit=false , productData=null , saveProductAction}) =>  {
 
     const [productID,setProductID]                                          = useState(false);
     const [productName,setProductName]                                      = useState("");
-    const [productDescription,setProductDescription]                        = useState("");
-    const [shortProductDescription,setShortProductDescription]              = useState("");
+    const [productDescription,setProductDescription]                        = useState(EditorState.createEmpty());
+    const [shortProductDescription,setShortProductDescription]              = useState(EditorState.createEmpty());
     const [regularPrice,setRegularPrice]                                    = useState(0);
     const [salePrice,setSalePrice]                                          = useState(0);
     const [sku,setSku]                                                      = useState("");
@@ -58,8 +64,15 @@ const ProductForm = ({dispatch , USER ,  toEdit=false , productData=null , saveP
 
             setProductID(productData.id);
             setProductName(productData.name);
-            setProductDescription(productData.description);
-            setShortProductDescription(productData.short_description);
+
+            const descriptionFromHtml = htmlToDraft(productData.description);
+            const contentStateDesc = ContentState.createFromBlockArray(descriptionFromHtml.contentBlocks, descriptionFromHtml.entityMap);
+            setProductDescription(EditorState.createWithContent(contentStateDesc));
+
+            const shortDescriptionFromHtml = htmlToDraft(productData.short_description);
+            const contentStateShortDesc = ContentState.createFromBlockArray(shortDescriptionFromHtml.contentBlocks, shortDescriptionFromHtml.entityMap);
+            setShortProductDescription(EditorState.createWithContent(contentStateShortDesc));
+
             setRegularPrice(productData.regular_price);
             setSalePrice(productData.sale_price);
             setSku(productData.sku);
@@ -129,11 +142,11 @@ const ProductForm = ({dispatch , USER ,  toEdit=false , productData=null , saveP
             else
                 galleryImages.unshift({src : productImage});
         }
-        
+
         let payload = {
             sale_price          : salePrice.toString(),
             status              : (published)  ? 'publish' : 'draft',
-            short_description   : shortProductDescription,
+            short_description   : draftToHtml(convertToRaw(shortProductDescription.getCurrentContent())) ,
             sku                 : sku,
             categories          : wooStoreCategories,
             tags                : productTags,
@@ -145,7 +158,7 @@ const ProductForm = ({dispatch , USER ,  toEdit=false , productData=null , saveP
 
         payload = {...payload, regular_price : regularPrice.toString()};
         payload = {...payload, name          : productName};
-        payload = {...payload, description   : productDescription};
+        payload = {...payload, description   : draftToHtml(convertToRaw(productDescription.getCurrentContent()))};
         payload = {...payload, images        : galleryImages};
 
         // If new product
@@ -188,16 +201,12 @@ const ProductForm = ({dispatch , USER ,  toEdit=false , productData=null , saveP
                                 value={productName} 
                                 onChange={(e) => setProductName(e.target.value)}
                             />
-                            <TextField
-                                id="product-description"
-                                label="Product Description"
-                                className="default-wysiwyg" 
-                                margin="normal"
-                                variant="outlined"
-                                multiline
-                                rows="8"
-                                value={productDescription} 
-                                onChange={(e) => setProductDescription(e.target.value)}
+                            <Editor
+                                editorState={productDescription}
+                                onEditorStateChange={(editorState) => setProductDescription(editorState)}
+                                toolbarClassName="toolbarClassName"
+                                wrapperClassName="wrapperClassName"
+                                editorClassName="editorClassName"
                             />
                             <TextField
                                 id="regular-price"
@@ -239,16 +248,12 @@ const ProductForm = ({dispatch , USER ,  toEdit=false , productData=null , saveP
                                     </Typography>
                                 </ExpansionPanelSummary>
                                 <ExpansionPanelDetails>
-                                    <TextField
-                                        id="product-description"
-                                        label="Product Short Description"
-                                        className="default-wysiwyg" 
-                                        margin="normal"
-                                        variant="outlined"
-                                        multiline
-                                        rows="8"
-                                        value={shortProductDescription} 
-                                        onChange={(e) => setShortProductDescription(e.target.value)}
+                                    <Editor
+                                        editorState={shortProductDescription}
+                                        onEditorStateChange={(editorState) => setShortProductDescription(editorState)}
+                                        toolbarClassName="toolbarClassName"
+                                        wrapperClassName="wrapperClassName"
+                                        editorClassName="editorClassName"
                                     />
                                 </ExpansionPanelDetails>
                             </ExpansionPanel>
