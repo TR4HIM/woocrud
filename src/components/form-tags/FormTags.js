@@ -138,7 +138,7 @@ const FormTags = ({dispatch , USER , WOO_TAGS ,  toEdit=false , currentTags , up
                             </div>
                         )}
                         >
-                        { wooStoreTags.length && wooStoreTags.map(tag => (
+                        { wooStoreTags.length > 0 && wooStoreTags.map(tag => (
                             <MenuItem key={tag.id} value={tag.id} >
                                 {tag.name}
                             </MenuItem>

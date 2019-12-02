@@ -12,7 +12,7 @@ const DEFAULT_PER_PAGE          = 18;
 
 const Products = ({dispatch , USER , WOO_PRODUCTS  }) => {
 
-    const [pagesTotal,setPagesTotal]    = useState('');
+    const [pagesTotal,setPagesTotal]    = useState(0);
     const [pager,setPager]              = useState(1);
     const [perPage,setPerPage]          = useState(DEFAULT_PER_PAGE);
 
@@ -90,9 +90,9 @@ const Products = ({dispatch , USER , WOO_PRODUCTS  }) => {
         <div id="user-products-page" > 
             <Header />
             <div id="container">
-                { WOO_PRODUCTS.length ? renderProductsContainer() : null}
+                { WOO_PRODUCTS.length > 0 ? renderProductsContainer() : null}
 
-                { WOO_PRODUCTS.length ? 
+                { pagesTotal > 0 ? 
                 <Pagination 
                     pageSize={DEFAULT_PER_PAGE}
                     onChange={pageChangeHandler} 

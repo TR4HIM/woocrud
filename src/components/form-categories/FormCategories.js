@@ -134,7 +134,7 @@ const FormCategories = ({dispatch , USER , WOO_CATEGORIES  ,  toEdit=false , cur
                 Categories
             </Typography>
             <Divider className="paper-divider" />
-            { wooStoreCategories.length && renderCategoriesList() }
+            { wooStoreCategories.length > 0 && renderCategoriesList() }
             <div className="add-tag">
                 {(addNewCategoryActive) ? 
                     <TextField id="product-name" inputRef={categoryInput} onKeyDown={(e)=>handleAddCategory(e)} label="Create New Category" fullWidth={true} />
