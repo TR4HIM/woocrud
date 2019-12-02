@@ -21,6 +21,7 @@ import { Editor } from 'react-draft-wysiwyg';
 import draftToHtml from 'draftjs-to-html'; 
 import htmlToDraft from 'html-to-draftjs';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 
 
 const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
@@ -29,12 +30,20 @@ const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
     const [regularPrice,setRegularPrice]                = useState(0);
     const [published,setPublished]                      = useState(false);
     const [salePrice,setSalePrice]                      = useState(0);
+    const [isSalePrice,setIsSalePrice]                  = useState(false);
     const [productName,setProductName]                  = useState("");
     const [productThumbnail,setProductThumbnail]        = useState(false); 
     const [productDescription,setProductDescription]    = useState(EditorState.createEmpty());
     const [isThumbnailUploade,setIsThumbnailUploade]    = useState(false);
     const [tmpUploadedImageUrl,setTmpUploadedImageUrl]  = useState("");
     const [tmpUploadedImageId,setTmpUploadedImageId]    = useState("");
+
+    
+    useEffect(()=>{
+        ValidatorForm.addValidationRule('isSalePriceValide', (value) => {
+            return (parseInt(salePrice) >= parseInt(regularPrice)) ? false : true;
+        });
+    })
 
     useEffect(() => {
         if(EDITING_WOO_PRODUCT.currentProduct){
@@ -59,10 +68,8 @@ const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
 
     const handleClose = () => {
         document.body.classList.remove('overflow-hidden');
-        let id = EDITING_WOO_PRODUCT.currentProduct.id;
         dispatch(editWooProduct(false));
-        dispatch(updateWooProudct({id ,isUpdated : true}));
-
+        dispatch(updateWooProudct({id : productId ,isUpdated : true}));
     };
 
     useEffect(()=>{
@@ -171,28 +178,35 @@ const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
     const updateProductProperty = (e,field) => {
         let payload = {};
         let id = EDITING_WOO_PRODUCT.currentProduct.id;
+
         if(field === "name"){
             if( EDITING_WOO_PRODUCT.currentProduct.name === e.target.value ) return;
             payload = {
                 name   : e.target.value,
                 slug   : e.target.value
-            }
+            } 
         }
         else if( field === "regular_price" ){
+            if( EDITING_WOO_PRODUCT.currentProduct.regular_price === e.target.value ) return;
             payload = {
                 regular_price : e.target.value,
             }
         }
         else if( field === "sale_price" ){
+            if (EDITING_WOO_PRODUCT.currentProduct.sale_price === e.target.value || !isSalePrice ) return;
+            
             payload = {
                 sale_price    : e.target.value,
             }
         }
         else if( field === "description" ){
+            if( EDITING_WOO_PRODUCT.currentProduct.description === e.target.value ) return;
+
             payload = {
                 description    : draftToHtml(convertToRaw(productDescription.getCurrentContent())),
             }
         }
+
         else if( field === "status" ){
             let isPublished = (!published) ? 'publish' : 'draft';
             payload = {
@@ -260,7 +274,7 @@ const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
                                 onChange={(e) => setRegularPrice(e.target.value)}
                                 onBlur={(e)=> updateProductProperty(e, "regular_price")}
                             />
-                            <TextField
+                            {/* <TextField
                                 id="sales-price"
                                 label="Sales Price"
                                 className="default-input"
@@ -269,7 +283,36 @@ const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
                                 value={salePrice}
                                 onChange={(e) => setSalePrice(e.target.value)}
                                 onBlur={(e)=> updateProductProperty(e, "sale_price")}
-                            />
+                            /> */}
+                            <ValidatorForm
+                                // forwardRef="form-email"
+                                onSubmit={()=>{console.log('Done')}}
+                                onError={errors => console.log(errors)}
+                            > 
+                                <TextValidator
+                                    id="sales-price"
+                                    label="Sales Price"
+                                    name="sales-price"
+                                    value={salePrice}
+                                    validatorListener={(valid)=>setIsSalePrice(valid)}
+                                    validators={[
+                                        'isNumber',
+                                        'isSalePriceValide'
+                                    ]}
+                                    errorMessages={[ 
+                                        "Invalide number",
+                                        "Sale price should be less than regular price",
+                                    ]}
+                                    className="default-input"
+                                    type="text"
+                                    InputLabelProps={{ shrink: true }}
+                                    margin="normal"
+                                    variant="outlined"
+                                    fullWidth
+                                    onChange={(e) => setSalePrice(e.target.value)}
+                                    onBlur={(e)=> updateProductProperty(e, "sale_price")}
+                                />
+                            </ValidatorForm>
                             <Editor
                                 editorState={productDescription}
                                 onEditorStateChange={(editorState) => setProductDescription(editorState)}

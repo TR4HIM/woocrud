@@ -184,7 +184,7 @@ const UserSettings = ({ dispatch , USER , USER_PROFILE}) => {
                                 'isCustomEmail'
                             ]}
                             errorMessages={[ 
-                                "this field is required", 
+                                "This field is required", 
                                 "Email id incorrect"
                             ]}
                             className="field"
@@ -240,7 +240,7 @@ const UserSettings = ({ dispatch , USER , USER_PROFILE}) => {
                             variant="outlined"
                             fullWidth
                             validators={['required']}
-                            errorMessages={['this field is required']}
+                            errorMessages={['This field is required']}
                         />
                     </ValidatorForm>
                     <ValidatorForm
