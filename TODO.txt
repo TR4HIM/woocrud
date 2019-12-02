@@ -1,4 +1,3 @@
-- Sale Price < Regular Price - Done
 - Search products
 - Filter Menu Icon
 - Filter product

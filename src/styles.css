@@ -744,7 +744,8 @@ button.btn {
   flex-flow: row wrap;
   align-items: stretch;
   padding: 0 10px 10px;
-  margin-bottom: 10px; }
+  margin-bottom: 10px;
+  /* blue bar */ }
   #products-list.few-products .product {
     max-width: 200px; }
   #products-list .product {
@@ -760,6 +761,12 @@ button.btn {
       margin-bottom: 10px;
       position: relative;
       padding-right: 20px; }
+    #products-list .product .no-thumbnail {
+      text-align: center;
+      padding-top: 40%; }
+      #products-list .product .no-thumbnail span {
+        text-transform: uppercase;
+        font-weight: bold; }
     #products-list .product .thumbnail {
       display: block;
       position: relative;
@@ -869,9 +876,9 @@ button.btn {
       #products-list .product .details.in-promo .price.regular {
         text-decoration: line-through;
         opacity: .5;
-        font-weight: normal; }
+        font-weight: normal;
+        margin-left: 10px; }
       #products-list .product .details.in-promo .price.promo {
-        margin-left: 10px;
         display: inline-block;
         text-decoration: none; }
       #products-list .product .details .price {
@@ -896,6 +903,34 @@ button.btn {
       width: 25px;
       min-width: auto;
       padding: 0; }
+  #products-list .loading-animation {
+    height: 100%;
+    width: 100%;
+    background: #f3f3f3;
+    position: absolute;
+    margin: auto;
+    left: 0;
+    top: 0; }
+    #products-list .loading-animation:after {
+      content: '';
+      top: 0;
+      transform: translateX(100%);
+      width: 100%;
+      height: 220px;
+      position: absolute;
+      z-index: 1;
+      animation: slide 1s infinite;
+      background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.8) 50%, rgba(128, 186, 232, 0) 99%, rgba(125, 185, 232, 0) 100%);
+      /* W3C */
+      filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#007db9e8',GradientType=1 );
+      /* IE6-9 */ }
+
+/* animation */
+@keyframes slide {
+  0% {
+    transform: translateX(-100%); }
+  100% {
+    transform: translateX(100%); } }
 
 .popover-links {
   display: block;

@@ -4,30 +4,26 @@ import { Link} from "react-router-dom";
 import MoreVert from '@material-ui/icons/MoreVert';
 import Popover from '@material-ui/core/Popover';
 import Button from '@material-ui/core/Button';
+import ToggleDisplay from 'react-toggle-display';
 
 const WooProduct = ({data , deleteFunc , openModalEdit}) => {
 
-    const [visualLoaded,setVisualLoaded]    = useState(false);
-    const [anchorEl, setAnchorEl] =  useState(null);
-
+    const [anchorEl, setAnchorEl]               =  useState(null);
+    const [isImageLoading, setIsImageLoading]   = useState(false);
+ 
+    
     const openModal = () => {
         handleClose();
         openModalEdit(data)
     }
 
-    let imgUrl = (data.images.length>0 && data.images[0].src !== false) ? data.images[0].src : `${process.env.PUBLIC_URL}/img/product-image-mold.png`;
-
-
     const handleClick = event => {
         setAnchorEl(event.currentTarget);
-    };
+    }
 
     const handleClose = () => {
         setAnchorEl(null);
-    };
-
-    const open = Boolean(anchorEl);
-    const id = open ? 'simple-popover' : undefined;
+    }
 
     const deleteProduct = () => {
         deleteFunc(data.id)
@@ -42,13 +38,17 @@ const WooProduct = ({data , deleteFunc , openModalEdit}) => {
                 <h3 className="title">
                     {data.name}
                 </h3>
+                <ToggleDisplay show={Boolean(data.regular_price.length)} className={`details ${ ( data.sale_price && (data.regular_price !== data.sale_price ) )  ? 'in-promo' : ''}`}>
+                    { ( data.sale_price && (data.regular_price !== data.sale_price ) ) ? <span className="price promo">{data.sale_price}<small> Dh</small></span> : null }
+                    { data.regular_price ? <span className="price regular"> {data.regular_price}<small> Dh</small></span> : null }
+                </ToggleDisplay>
                 <div className="product-popover">
-                    <Button aria-describedby={id} onClick={handleClick} className="btn-popover">
+                    <Button aria-describedby={Boolean(anchorEl) ? 'simple-popover' : undefined} onClick={handleClick} className="btn-popover">
                         <MoreVert />
                     </Button>
                     <Popover
-                        id={id}
-                        open={open}
+                        id={Boolean(anchorEl) ? 'simple-popover' : undefined}
+                        open={Boolean(anchorEl)}
                         anchorEl={anchorEl}
                         onClose={handleClose}
                         anchorOrigin={{
@@ -80,10 +80,15 @@ const WooProduct = ({data , deleteFunc , openModalEdit}) => {
                     </Popover>
                 </div>
             </div>
-            <div className={`thumbnail ${visualLoaded ? 'visual-loaded' : ''}`} style={{backgroundImage: `url(${imgUrl})`}}>
-                { (data.images.length>0 && data.images[0].src !== false) ? <img className="visual" src={data.images[0].src} alt="" onLoad={()=>setVisualLoaded(true)} /> : "" }
-                <img className="mold" src={`${process.env.PUBLIC_URL}/img/product-image-mold.png`} alt="" />
-            </div>
+            {(data.images.length>0 && data.images[0].src !== false) ?
+                <div className="thumbnail" style={{backgroundImage: `url(${data.images[0].src})`}}>
+                { !isImageLoading && <div className="loading-animation"></div> }
+                    <img className="visual" src={data.images[0].src} alt="" onLoad={()=>setIsImageLoading(true)} /> 
+                </div> :
+                <div className="no-thumbnail">
+                    <span>No Image</span>
+                </div> 
+            }
         </li>
     );
 }

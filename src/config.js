@@ -23,9 +23,3 @@ export const APP_PATHS = {
     REQUESTED_PRODUCT   : `${process.env.PUBLIC_URL}${APP_ROUTES.REQUESTED_PRODUCT}`,
     EDIT_PRODUCT        : `${process.env.PUBLIC_URL}${APP_ROUTES.EDIT_PRODUCT}`
 }
-
-
-
-export const SHOP_PAGE_LINK = `${protocol + endPoint}/boutiques`;
-
-export const REGISTER_NEW_VENDOR_URL = `${protocol + endPoint}/?inscription=popup`;
