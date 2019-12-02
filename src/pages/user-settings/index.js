@@ -8,7 +8,7 @@ import {loading , storeUserData} from '../../store/actions/';
 import ToggleDisplay from 'react-toggle-display';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 
-const UserSettings = ({ dispatch , USER , USER_PROFILE}) => {
+const UserSettings = ({ dispatch , USER , USER_PROFILE }) => {
         
     const [showOldPasswordField,setShowOldPasswordField]             = useState( false)
     const [oldPassword,setOldPassword]                               = useState( "")
@@ -345,7 +345,6 @@ const UserSettings = ({ dispatch , USER , USER_PROFILE}) => {
         
     );
 }
-
 
 const mapStateToProps = ({ USER , USER_PROFILE  }) => ({ USER , USER_PROFILE });
 

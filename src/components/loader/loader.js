@@ -1,7 +1,7 @@
 import React, { useState , useEffect } from 'react';
 import {connect} from 'react-redux';
-import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
 import ToggleDisplay from 'react-toggle-display';
 import { CircularProgress, LinearProgress } from '@material-ui/core';
 
@@ -44,11 +44,6 @@ const Loader = ({LOADER, type , id , size , classes}) => {
     );
 }
 
-Loader.propTypes = {
-    classes: PropTypes.object.isRequired,
-};
-
-
 const styles = (theme)=> ({
     loader: {
         color : '#d35400', 
@@ -62,9 +57,13 @@ const styles = (theme)=> ({
     }
 });
 
+Loader.propTypes = {
+    type : PropTypes.string,
+    id : PropTypes.string,
+    size : PropTypes.string,
+    classes: PropTypes.object.isRequired
+}
 
 const mapStateToProps = ({LOADER}) => ({LOADER});
-
-
 
 export default withStyles(styles)(connect(mapStateToProps)(Loader))

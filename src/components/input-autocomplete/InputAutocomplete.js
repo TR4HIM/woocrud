@@ -1,5 +1,6 @@
 import React , {useState , useEffect } from 'react';
 import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
 import {    
         Paper , 
         TextField ,Chip} from '@material-ui/core';
@@ -218,6 +219,12 @@ const ProductsAutoComplete = ({dispatch , USER , fieldLabel , onChangeAuto , cur
   );
 }
 
-const mapStateToProps = ({ USER }) => ({ USER});
+ProductsAutoComplete.propTypes = {
+  fieldLabel : PropTypes.string,
+  onChangeAuto : PropTypes.func,
+  currentProduct : PropTypes.array
+}
+
+const mapStateToProps = ({ USER }) => ({ USER });
 
 export default connect(mapStateToProps)(ProductsAutoComplete);

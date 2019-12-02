@@ -1,5 +1,6 @@
 import React , { useState , useEffect } from 'react';
 import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
 import {    
         Container, 
         Grid , 
@@ -379,6 +380,12 @@ const ProductForm = ({dispatch , USER ,  toEdit=false , productData=null , saveP
             </Container>
         </ValidatorForm>
     ); 
+}
+
+ProductForm.propTypes = {
+    toEdit : PropTypes.bool,
+    productData : PropTypes.array,
+    saveProductAction : PropTypes.func
 }
 
 const mapStateToProps = ({ USER }) => ({ USER });

@@ -1,5 +1,6 @@
 import React , {useState , useRef , useEffect } from 'react';
 import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
 import {    
         Paper , 
         TextField , 
@@ -141,6 +142,12 @@ const FormCategories = ({dispatch , USER , WOO_CATEGORIES  ,  toEdit=false , cur
             </div>
         </Paper>
     ); 
+}
+
+FormCategories.propTypes = {
+    toEdit : PropTypes.bool,
+    currentCategories : PropTypes.array,
+    updateSelectedCategories : PropTypes.func
 }
 
 const mapStateToProps = ({ USER , WOO_CATEGORIES }) => ({ USER , WOO_CATEGORIES });

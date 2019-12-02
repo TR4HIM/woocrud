@@ -1,5 +1,6 @@
 import React , {useState , useRef , useEffect } from 'react';
 import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
 import {    
         Paper , Input ,
         TextField , Select , FormControl ,
@@ -9,7 +10,7 @@ import API from '../../API/';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 
-const FormTags = ({dispatch , USER , WOO_TAGS ,  toEdit=false , updateSelectedTags , currentTags }) =>  {
+const FormTags = ({dispatch , USER , WOO_TAGS ,  toEdit=false , currentTags , updateSelectedTags }) =>  {
 
     const tagInput = useRef(null);
     const [wooStoreTags, setWooStoreTags]                                   = useState([]);
@@ -151,6 +152,12 @@ const FormTags = ({dispatch , USER , WOO_TAGS ,  toEdit=false , updateSelectedTa
             </div>
         </Paper>
     ); 
+}
+
+FormTags.propTypes = {
+    toEdit : PropTypes.bool,
+    currentTags : PropTypes.array,
+    updateSelectedTags : PropTypes.func
 }
 
 const mapStateToProps = ({ USER , WOO_TAGS }) => ({ USER , WOO_TAGS });

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Icon from '@material-ui/core/Icon';
 
 const EditableImage = ( { imageObject , removeImageFunc } ) => { 
@@ -25,6 +26,11 @@ const EditableImage = ( { imageObject , removeImageFunc } ) => {
             </div> 
         </div>
     );
+}
+
+EditableImage.propTypes = {
+    imageObject : PropTypes.object,
+    removeImageFunc : PropTypes.func,
 }
 
 export default EditableImage; 

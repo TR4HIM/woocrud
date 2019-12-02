@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { NavLink } from "react-router-dom";
 import { MenuItem, Drawer } from '@material-ui/core';
 import { APP_ROUTES } from '../../config';
@@ -43,5 +44,11 @@ const MainMenu = ( {open = false , user , logout , handleClose}) => {
 	)
 };
 
+MainMenu.propTypes = {
+    open : PropTypes.bool,
+    user : PropTypes.object,
+    logout : PropTypes.func,
+    handleClose: PropTypes.func
+}
 
 export default MainMenu;

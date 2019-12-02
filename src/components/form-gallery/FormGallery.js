@@ -1,5 +1,6 @@
 import React , { useState , useEffect } from 'react';
 import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
 import {    
         Paper , 
         Typography,
@@ -98,6 +99,12 @@ const FormGallery = ({dispatch , USER ,  toEdit=false , currentGallery=null , sa
             </ul>    
         </Paper>
     ); 
+}
+
+FormGallery.propTypes = {
+    toEdit : PropTypes.bool,
+    currentGallery : PropTypes.array,
+    saveProductGallery : PropTypes.func
 }
 
 const mapStateToProps = ({ USER }) => ({ USER });

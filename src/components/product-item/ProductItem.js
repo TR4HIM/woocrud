@@ -1,19 +1,18 @@
 import React, {  useState } from 'react';
-import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
 import { Link} from "react-router-dom";
-import { editWooProduct } from '../../store/actions/';
 import MoreVert from '@material-ui/icons/MoreVert';
 import Popover from '@material-ui/core/Popover';
 import Button from '@material-ui/core/Button';
 
-const WooProduct = ({dispatch , data , deleteFunc }) => {
+const WooProduct = ({data , deleteFunc , openModalEdit}) => {
 
     const [visualLoaded,setVisualLoaded]    = useState(false);
     const [anchorEl, setAnchorEl] =  useState(null);
 
-    const openModalEdit = () => {
+    const openModal = () => {
         handleClose();
-        dispatch(editWooProduct(true,data)); 
+        openModalEdit(data)
     }
 
     let imgUrl = (data.images.length>0 && data.images[0].src !== false) ? data.images[0].src : `${process.env.PUBLIC_URL}/img/product-image-mold.png`;
@@ -63,7 +62,7 @@ const WooProduct = ({dispatch , data , deleteFunc }) => {
                     >   
                     <ul className="popover-links">
                         <li>
-                            <a onClick={openModalEdit}>
+                            <a onClick={()=>openModal(data)}>
                                 Quick Edit
                             </a>
                         </li>
@@ -89,4 +88,10 @@ const WooProduct = ({dispatch , data , deleteFunc }) => {
     );
 }
 
-export default connect()(WooProduct);
+WooProduct.propTypes = {
+    data : PropTypes.object,
+    deleteFunc : PropTypes.func,
+    openModalEdit : PropTypes.func,
+}
+
+export default WooProduct;

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Icon from '@material-ui/core/Icon';
 
 const ButtonUploadImage = ({ typeImage , onChange }) => {
@@ -15,6 +16,11 @@ const ButtonUploadImage = ({ typeImage , onChange }) => {
         </span>
     </div>
   );
+}
+
+ButtonUploadImage.propTypes = {
+  typeImage : PropTypes.string,
+  onChange : PropTypes.func,
 }
 
 export default ButtonUploadImage; 

@@ -4,7 +4,7 @@ import Header from '../../components/header/Header';
 import Footer from '../../components/footer/Footer'; 
 import ProductItem from '../../components/product-item/ProductItem'; 
 import EditProductModal from '../../components/edit-modal/EditModal'; 
-import {loading , storeWooProducts , deleteWooProudct} from '../../store/actions/';
+import {loading , storeWooProducts , deleteWooProudct , editWooProduct} from '../../store/actions/';
 import API from '../../API/'; 
 import Pagination from 'rc-pagination';
 
@@ -51,7 +51,7 @@ const Products = ({dispatch , USER , WOO_PRODUCTS  }) => {
     }
 
     const renderProducts = () => {
-        return WOO_PRODUCTS.map((product, i)=> (<ProductItem key={i} data={product} deleteFunc={(id)=>deleteProduct(id)}/>) );
+        return WOO_PRODUCTS.map((product, i)=> (<ProductItem key={i} data={product} deleteFunc={(id)=>deleteProduct(id)} openModalEdit={(data)=>dispatch(editWooProduct(true,data))}/>) );
     }
     
     const renderProductsContainer = () => {
