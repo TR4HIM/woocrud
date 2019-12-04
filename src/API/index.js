@@ -1,15 +1,13 @@
 import axios from 'axios';
 
-export const protocol  = (process.env.NODE_ENV === 'production') ? 'https://' : 'http://';
-export const endPoint  = (process.env.NODE_ENV === 'production') ? 'kibo.ma' : 'woocrud.test';
-
+const APP_API_URL = (process.env.NODE_ENV === 'production') ? process.env.REACT_APP_LIVE_STORE_URL : process.env.REACT_APP_LOCAL_STORE_URL;
 
 // Wordpress API
-export const WP         = `${protocol + endPoint}/wp-json/wp/v2`;
+export const WP         = `${APP_API_URL}/wp-json/wp/v2`;
 // WooCommerce API
-export const WC         = `${protocol + endPoint}/wp-json/wc/v3`;
+export const WC         = `${APP_API_URL}/wp-json/wc/v3`;
 // JWT API
-export const AUTH       = `${protocol + endPoint}/wp-json/jwt-auth/v1`;
+export const AUTH       = `${APP_API_URL}/wp-json/jwt-auth/v1`;
 
 
 const LOGIN = (formData)=>{
