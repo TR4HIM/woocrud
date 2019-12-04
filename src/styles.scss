@@ -13,11 +13,14 @@
 @import "./components/loader/loader.scss";
 @import "./components/footer/footer.scss";
 @import "./components/header/header.scss";
+@import "./components/main-menu/main-menu.scss";
 @import "./components/input-autocomplete/autocomplete.scss"; 
 @import "./components/button-upload/button-upload.scss"; 
 @import "./components/product-form/product-form.scss"; 
 @import "./components/edit-modal/edit-modal.scss"; 
 @import "./components/product-item/product-item.scss"; 
+@import "./components/form-tags/form-tags.scss"; 
+@import "./components/form-categories/form-categories.scss"; 
 @import "./components/editable-image/editable-image.scss"; 
 
 // PAGES
@@ -27,4 +30,7 @@
 @import "./pages/add-product/add-product.scss";
 @import "./pages/user-settings/user-settings.scss";
 @import "./pages/not-found/not-found.scss";
+
+//ADD ONS
+
 

@@ -1,45 +1,40 @@
-import React , {useState , useRef , useEffect } from 'react';
+import React , { useState , useEffect } from 'react';
 import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
 import {    
         Container, 
         Grid , 
-        Paper , Input ,
-        TextField , Select ,
-        FormControlLabel , FormControl ,
+        Paper , 
+        TextField , 
+        FormControlLabel ,  
         Switch , Typography , Checkbox ,
-        Divider , Chip , Button ,
+        Divider  , Button ,
         ExpansionPanel , ExpansionPanelSummary , ExpansionPanelDetails} from '@material-ui/core';
-
+import { loading , deleteWooProudct} from '../../store/actions/';
+import { Redirect } from 'react-router';
+import API  from '../../API/'; 
 import Icon from '@material-ui/core/Icon';
 import ProductsAutoComplete from '../../components/input-autocomplete/InputAutocomplete';
-import ButtonUploadImage from '../../components/button-upload/ButtonUpload';
-import EditableImage from '../../components/editable-image/EditableImage';
-import { loading , storeWooTags} from '../../store/actions/';
-import API from '../../API/'; 
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
+import ButtonUploadImage    from '../../components/button-upload/ButtonUpload';
+import EditableImage        from '../../components/editable-image/EditableImage';
+import FormTags             from '../../components/form-tags/FormTags';
+import FormCategories       from '../../components/form-categories/FormCategories';
+import FormGallery          from '../../components/form-gallery/FormGallery';
 
+import { EditorState , convertToRaw, ContentState  } from 'draft-js';
+import { Editor } from 'react-draft-wysiwyg';
+import draftToHtml from 'draftjs-to-html'; 
+import htmlToDraft from 'html-to-draftjs';
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
+import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
-
-const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=false , productData=null , saveProductAction}) =>  {
-
-    const tagInput = useRef(null);
+const ProductForm = ({dispatch , USER ,  toEdit=false , productData=null , saveProductAction}) =>  {
 
     const [productID,setProductID]                                          = useState(false);
     const [productName,setProductName]                                      = useState("");
-    const [productDescription,setProductDescription]                        = useState("");
-    const [shortProductDescription,setShortProductDescription]              = useState("");
+    const [productDescription,setProductDescription]                        = useState(EditorState.createEmpty());
+    const [shortProductDescription,setShortProductDescription]              = useState(EditorState.createEmpty());
     const [regularPrice,setRegularPrice]                                    = useState(0);
     const [salePrice,setSalePrice]                                          = useState(0);
     const [sku,setSku]                                                      = useState("");
@@ -52,117 +47,55 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=fals
     const [crossSellsProductsIds,setCrossSellsProductsIds]                  = useState([]);
     const [productImage,setProductImage]                                    = useState(false);
     const [productGallery,setProductGallery]                                = useState([]);
-    const [wooStoreTags, setWooStoreTags]                                   = useState([]);
-    const [productTags, setProductTags]                                     = useState([]);
-    const [wooStoreCategories, setWooStoreCategories]                       = useState([]);
-    const [getProductCategories, setGetProductCategories]                   = useState([]);
+    const [productTags,setProductTags]                                      = useState([]);
+    const [wooStoreCategories,setWooStoreCategories]                        = useState([]);
+    const [getProductCategories,setGetProductCategories]                    = useState([]);
     const [isThumbnailUploade,setIsThumbnailUploade]                        = useState(false);
     const [tmpUploadedImageUrl,setTmpUploadedImageUrl]                      = useState("");
-    const [productDeletedImages, setProductDeletedImages]                   = useState([]);
-    const [crossSellsProductsDataReady, setCrossSellsProductsDataReady]     = useState(true);
-    const [upSellsProductsDataReady, setUpSellsProductsDataReady]           = useState(true);
+    const [productDeletedImages,setProductDeletedImages]                    = useState([]);
+    const [isProductDeleted,setIsProductDeleted]                            = useState(false);
+    const [ isEditedProductLoaded,setIsEditedProductLoaded]                 = useState(false);
 
     useEffect(()=>{
-        setWooStoreCategories(WOO_CATEGORIES);
-        setWooStoreTags(WOO_TAGS);
+        ValidatorForm.addValidationRule('isSalePriceValide', (value) => {
+            return (parseInt(salePrice) >= parseInt(regularPrice)) ? false : true;
+        });
+    })
 
-        // WOO_TAGS.map(name => (console.log(name))) 
-
+    useEffect(()=>{
         if(toEdit === true){
             const isPublished   = (productData.status === "publish") ? true : false;
             let galleryImages   = productData.images.map(img => ({sourceUrl : img.src , id : img.id}));
-            if(productData.upsell_ids.length > 0)
-                setCrossSellsProductsDataReady(false);
-            if(productData.upsell_ids.length > 0)
-                setUpSellsProductsDataReady(false);
 
             setUpSellsProductsIds(productData.upsell_ids);
             setCrossSellsProductsIds(productData.cross_sell_ids);
 
             setProductID(productData.id);
             setProductName(productData.name);
-            setProductDescription(productData.description);
-            setShortProductDescription(productData.short_description);
+
+            const descriptionFromHtml = htmlToDraft(productData.description);
+            const contentStateDesc = ContentState.createFromBlockArray(descriptionFromHtml.contentBlocks, descriptionFromHtml.entityMap);
+            setProductDescription(EditorState.createWithContent(contentStateDesc));
+
+            const shortDescriptionFromHtml = htmlToDraft(productData.short_description);
+            const contentStateShortDesc = ContentState.createFromBlockArray(shortDescriptionFromHtml.contentBlocks, shortDescriptionFromHtml.entityMap);
+            setShortProductDescription(EditorState.createWithContent(contentStateShortDesc));
+
             setRegularPrice(productData.regular_price);
             setSalePrice(productData.sale_price);
             setSku(productData.sku);
             setDownloadable(productData.downloadable);
             setVirtual(productData.virtual);
-            setProductTags(productData.tags)
+            setProductTags(productData.tags);
             setGetProductCategories(productData.categories);
 
             // Remove First Element For Featured Image :) 
             setProductImage(galleryImages.shift());
-            setProductGallery(galleryImages);
+            setProductGallery(productData.images);
             setPublished(isPublished);
-
         }
+        setIsEditedProductLoaded(true);
     },[]);
-
-    useEffect(()=>{
-        if(upSellsProductsIds.length > 0) 
-            getRelatedProductData(upSellsProductsIds,'upSellsProducts')
-        if (crossSellsProductsIds.length > 0)
-            getRelatedProductData(crossSellsProductsIds,'crossSellsProducts')
-    },[upSellsProductsIds, crossSellsProductsIds]);
-
-    useEffect(()=>{
-        if(upSellsProducts.length > 0){
-            setUpSellsProductsDataReady(true)
-        }
-        if(crossSellsProducts.length > 0){
-            setCrossSellsProductsDataReady(true)
-        }
-
-    },[upSellsProducts, crossSellsProducts]);
-
-    
-
-    const getRelatedProductData = async (relatedProducts,relatedType) => {
-        const listProductsData = [];
-        for(let i = 0; i < relatedProducts.length ; i++){
-            let id = relatedProducts[i];
-            await API.WC_getWooProductById(USER.token, id)
-            .then((result)=>{
-                if( result !== undefined ){
-                    // HIDE LOADER
-                    let productItem = {id:result.id, name:result.name};
-                    listProductsData.push(productItem)
-                    dispatch(loading(false, "header-loader"));
-                }
-            })
-            .catch((error)=>{
-                dispatch({
-                    type : 'ERROR',
-                    payload : error
-                })
-                // HIDE LOADING
-                dispatch(loading(false, "header-loader"));
-            })
-        }
-        if(relatedType === "upSellsProducts")
-            setUpSellsProducts(listProductsData);
-        if(relatedType === "crossSellsProducts")
-            setCrossSellsProducts(listProductsData);
-    }
-
-    useEffect(() => {
-        if(toEdit === true ){
-            if(getProductCategories.length > 0 && wooStoreCategories.length > 0){
-                const tmpCats = getProductCategories.map(category => ({
-                    ...category,
-                    selected: true
-                }));
-                const selectedCategories = [...WOO_CATEGORIES.filter(item1 => !tmpCats.find(item2 => item1.id === item2.id)), ...tmpCats];
-                setWooStoreCategories(selectedCategories);
-            }
-        }
-    }, [getProductCategories ]);
-
-    useEffect(()=>{
-        tagInput.current.value = "";
-        // console.log(productTags)
-    },[productTags])
 
     useEffect(()=>{
         if(isThumbnailUploade && tmpUploadedImageUrl !== ""){
@@ -173,63 +106,29 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=fals
         }
     },[productGallery,isThumbnailUploade])
 
-    const uploadProductImage = (file,imgType="gallery") => {
-        let imageObject = file.imageObject;
+    const handleThumbnailProduct = (file) =>{
+        let imageObj = {id : file.name, name : file.name, isUloading : true, imageObject : file};
+
+        setProductImage(imageObj);
+
         let formData    = new FormData();
 
-        formData.append( 'file', imageObject );
-        if(productID !== false)
-            formData.append( 'post', productID);
+        formData.append( 'file', file );
         
         dispatch(loading(true, "header-loader"));
-        return API.WP_uploadImage(USER.token, formData).then((data)=>{ 
-            if(imgType == 'thumbnail'){
-                setProductImage(data.source_url);
-                setIsThumbnailUploade(true);
-                dispatch(loading(false, "header-loader"));
-            }else{
-                return data;
-            }
+
+        API.WP_uploadImage(USER.token, formData).then((data)=>{ 
+            setProductImage(data.source_url);
+            setIsThumbnailUploade(true);
+            dispatch(loading(false, "header-loader"));
         })
         .catch((error)=>{
             dispatch({
                 type : "ERROR",
                 payload : error
             });
-            // HIDE LOADING
             dispatch(loading(false, "header-loader"));
-
         })
-    }
-
-    const handleThumbnailProduct = (file) =>{
-        let imageObj = {id : file.name, name : file.name, isUloading : true, imageObject : file};
-        setProductImage(imageObj);
-        uploadProductImage(imageObj,'thumbnail');
-    }
-
-    const handleProductGallery = async (gallery) => {
-        const selectedImages = gallery.target.files;
-        for(let i = 0; i < selectedImages.length ; i++){
-            let productImage = selectedImages[i];
-            let id = i+productImage.name;
-            let imageObj = {id, name : productImage.name, isUloading : true, imageObject : productImage};
-            setIsThumbnailUploade(false);
-            setProductGallery( currentGallery => [...currentGallery,  imageObj]);
-            
-            await uploadProductImage(imageObj).then((data)=>{
-                setTmpUploadedImageUrl(data.source_url); 
-                setIsThumbnailUploade(true);
-            })
-        }
-        dispatch(loading(false, "header-loader"));
-    }
-
-    const removeGallery = (imageToDelete) => {
-        setProductGallery(imagesGallery => imagesGallery.filter(image => image !== imageToDelete));
-        if(typeof imgObject !== "string"){
-            setProductDeletedImages(currentDeletedImages => [...currentDeletedImages, imageToDelete])
-        }
     }
     
     const deleteThumbnailImage = (imgObject) => {
@@ -239,71 +138,11 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=fals
         }
     }
     
-    const addTagToWoo = (payload) => {
-        API.WC_createWooTags(USER.token,payload).then((data)=>{ 
-            setProductTags(currentTags => [...currentTags, data])
-            dispatch(storeWooTags([...WOO_TAGS, data]));
-            dispatch(loading(false, "header-loader"));
-        })
-        .catch((error)=>{
-            dispatch({
-                type : "ERROR",
-                payload : error
-            });
-            // HIDE LOADING
-            dispatch(loading(false, "header-loader"));
-        })
-    }
-
-    const handleAddTag = (e) => {
-        if(tagInput.current.value.trim() !== '' && e.keyCode === 13){
-            let wooStoreTags    = WOO_TAGS.filter(tag => tag.name === tagInput.current.value.trim() ).map(t => ({id : t.id , name : t.name}));
-            let isTagExist      = productTags.filter(tag => tag.name === tagInput.current.value.trim() )
-            if(isTagExist.length > 0){
-                tagInput.current.value = "";
-                return;
-            }
-            if(wooStoreTags.length > 0)
-                setProductTags(currentTags => [...currentTags, ...wooStoreTags])
-            else {
-                addTagToWoo({name : tagInput.current.value.trim()});
-            }
-
-        }
-    }
-
-    const handleDeleteTag = chipToDelete => () => {
-        setProductTags(productTags => productTags.filter(tag => tag.name !== chipToDelete.name));
-    }
-
-    const checkCategory = index => {
-        const newCategoryList = [...wooStoreCategories]; 
-        newCategoryList[index].selected = ! newCategoryList[index].selected;
-        setWooStoreCategories(newCategoryList);
-    }
-
-    const renderCategoriesList = () => {
-        return(
-            wooStoreCategories.map((category,i)=>(
-                <FormControlLabel
-                    control={ <Checkbox checked={category.selected} 
-                    onChange={() => checkCategory(i) } value={category.selected} /> }
-                    label={category.name}
-                    key={i}
-                />)
-            )  
-        )
-    }
-
-    
     const productPayLoadData = () => {
         
         dispatch(loading(true, "header-loader"));
         
         let galleryImages       = productGallery.map(img => ({src : img.sourceUrl}));
-        let productCategories   = wooStoreCategories.filter(cat => cat.selected ).map(c => ({id : c.id}));
-        let productUpSells      = upSellsProducts.map(ups =>  ups.id );
-        let productCrossSells   = crossSellsProducts.map(ups =>  ups.id );
 
         if( productImage !== undefined && productImage !== false){
             if(toEdit === true && typeof productImage !== "string")
@@ -311,75 +150,116 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=fals
             else
                 galleryImages.unshift({src : productImage});
         }
-        
+
         let payload = {
             sale_price          : salePrice.toString(),
             status              : (published)  ? 'publish' : 'draft',
-            short_description   : shortProductDescription,
+            short_description   : draftToHtml(convertToRaw(shortProductDescription.getCurrentContent())) ,
             sku                 : sku,
-            categories          : productCategories,
+            categories          : wooStoreCategories,
             tags                : productTags,
             virtual             : virtual,
             downloadable        : downloadable,
-            upsell_ids          : productUpSells,
-            cross_sell_ids      : productCrossSells,
-            // related_ids      : 'EMPTY',
+            upsell_ids          : upSellsProducts,
+            cross_sell_ids      : crossSellsProducts,
         };
 
         payload = {...payload, regular_price : regularPrice.toString()};
         payload = {...payload, name          : productName};
-        payload = {...payload, description   : productDescription};
+        payload = {...payload, description   : draftToHtml(convertToRaw(productDescription.getCurrentContent()))};
         payload = {...payload, images        : galleryImages};
-
         // If new product
         (toEdit === true) ? saveProductAction({ productId : productID , payload }) : saveProductAction(payload);
     }
 
+    const deleteProduct = () => {
+        dispatch(loading(true, "header-loading"));
+        API.WC_deleteProduct(USER.token, productID).then((data)=>{ 
+            setIsProductDeleted(true)
+            dispatch(deleteWooProudct(productID));
+            dispatch(loading(false, "header-loading"));
+        })
+        .catch((error)=>{
+            dispatch({
+                type : "ERROR",
+                payload : error
+            });
+            dispatch(loading(false, "header-loading"));
+        })
+    }
+
     return (
+        <ValidatorForm onSubmit={() => { productPayLoadData() } }>
         <Container maxWidth="lg" id="product-form-container">
+                {isProductDeleted && toEdit && <Redirect to={`/mes-produits`} />}
                 <Grid container spacing={3}>
                     <Grid item xs={12} sm={8}>
                         <Paper className="product-form">
-                            <Typography variant="subtitle2" className="paper-title" gutterBottom>
+                            { toEdit && <Button variant="outlined" color="secondary" className="delete-product-btn" onClick={ deleteProduct }> Delete Product </Button> }
+                            <Typography variant="subtitle2" className="paper-title" gutterBottom> 
                                 Product Informations 
                             </Typography>
                             <Divider className="paper-divider" />
-                            <TextField
+                            <TextValidator
                                 id="product-name"
                                 label="Product Name"
+                                name="product-name"
+                                value={productName}
+                                validators={['required','minStringLength:3']}
+                                errorMessages={["This field is required" , 'At least 3 letters']}
                                 className="default-input"
-                                variant="outlined"
+                                type="text"
+                                InputLabelProps={{ shrink: true }}
                                 margin="normal"
-                                value={productName} 
+                                variant="outlined"
+                                fullWidth
                                 onChange={(e) => setProductName(e.target.value)}
                             />
-                            <TextField
-                                id="product-description"
-                                label="Product Description"
-                                className="default-wysiwyg" 
-                                margin="normal"
-                                variant="outlined"
-                                multiline
-                                rows="8"
-                                value={productDescription} 
-                                onChange={(e) => setProductDescription(e.target.value)}
+                            <Editor
+                                editorState={productDescription}
+                                onEditorStateChange={(editorState) => setProductDescription(editorState)}
+                                toolbarClassName="toolbarClassName"
+                                wrapperClassName="wrapperClassName"
+                                editorClassName="editorClassName"
                             />
-                            <TextField
+                            <TextValidator
                                 id="regular-price"
                                 label="Regular Price"
+                                name="regular-price"
+                                value={regularPrice}
+                                validators={[
+                                    'isNumber'
+                                ]}
+                                errorMessages={[ 
+                                    "Invalide number"
+                                ]}
                                 className="default-input"
-                                variant="outlined"
+                                type="text"
+                                InputLabelProps={{ shrink: true }}
                                 margin="normal"
-                                value={regularPrice} 
+                                variant="outlined"
+                                fullWidth
                                 onChange={(e) => setRegularPrice(e.target.value)}
                             />
-                            <TextField
+                            <TextValidator
                                 id="sales-price"
                                 label="Sales Price"
+                                name="sales-price"
+                                value={salePrice}
+                                validators={[
+                                    'isNumber',
+                                    'isSalePriceValide'
+                                ]}
+                                errorMessages={[ 
+                                    "Invalide number",
+                                    "Sale price should be less than regular price",
+                                ]}
                                 className="default-input"
-                                variant="outlined"
+                                type="text"
+                                InputLabelProps={{ shrink: true }}
                                 margin="normal"
-                                value={salePrice} 
+                                variant="outlined"
+                                fullWidth
                                 onChange={(e) => setSalePrice(e.target.value)}
                             />
                             <TextField
@@ -404,16 +284,12 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=fals
                                     </Typography>
                                 </ExpansionPanelSummary>
                                 <ExpansionPanelDetails>
-                                    <TextField
-                                        id="product-description"
-                                        label="Product Short Description"
-                                        className="default-wysiwyg" 
-                                        margin="normal"
-                                        variant="outlined"
-                                        multiline
-                                        rows="8"
-                                        value={shortProductDescription} 
-                                        onChange={(e) => setShortProductDescription(e.target.value)}
+                                    <Editor
+                                        editorState={shortProductDescription}
+                                        onEditorStateChange={(editorState) => setShortProductDescription(editorState)}
+                                        toolbarClassName="toolbarClassName"
+                                        wrapperClassName="wrapperClassName"
+                                        editorClassName="editorClassName"
                                     />
                                 </ExpansionPanelDetails>
                             </ExpansionPanel>
@@ -454,16 +330,16 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=fals
                                 </ExpansionPanelSummary>
                                 <ExpansionPanelDetails className="panel-form">
                                     <div className="autocomplete-container">
-                                        { upSellsProductsDataReady      && <ProductsAutoComplete fieldLabel="UpSells" currentProduct={upSellsProducts} onChangeAuto={(upsellsvalue) => setUpSellsProducts(upsellsvalue)}/> }
+                                        { isEditedProductLoaded      && <ProductsAutoComplete fieldLabel="UpSells" currentProduct={upSellsProductsIds} onChangeAuto={(upsellsvalue) => setUpSellsProducts(upsellsvalue)}/> }
                                     </div>
                                     <div className="autocomplete-container">
-                                        { crossSellsProductsDataReady   && <ProductsAutoComplete fieldLabel="Cross-Sells"  currentProduct={crossSellsProducts} onChangeAuto={(crosssellsvalue) => setCrossSellsProducts(crosssellsvalue)} /> }
+                                        { isEditedProductLoaded   && <ProductsAutoComplete fieldLabel="Cross-Sells"  currentProduct={crossSellsProductsIds} onChangeAuto={(crosssellsvalue) => setCrossSellsProducts(crosssellsvalue)} /> }
                                     </div>
                                 </ExpansionPanelDetails>
                             </ExpansionPanel>
                         </div>
                         <Paper className="product-form">
-                            <Button variant="contained" onClick={()=>productPayLoadData('Add Product')} color="primary">
+                            <Button type="submit" variant="contained" color="primary">
                                 { (toEdit === true)  ? 'Save Porduct' : 'Add Porduct' }
                             </Button>
                         </Paper>
@@ -493,90 +369,25 @@ const ProductForm = ({dispatch , USER , WOO_CATEGORIES , WOO_TAGS ,  toEdit=fals
                             <Divider className="paper-divider" />
                             <div className="featured-image">
                                 { productImage  ? <EditableImage imageObject={productImage} removeImageFunc={() =>deleteThumbnailImage(productImage)} />  
-                                                : <ButtonUploadImage typeImage="thumbnail" onChange ={ (thumbnail) => handleThumbnailProduct(thumbnail.target.files[0],'thumbnail') } /> }
+                                                : <ButtonUploadImage typeImage="thumbnail" onChange ={ (thumbnail) => handleThumbnailProduct(thumbnail.target.files[0]) } /> }
                             </div>    
                         </Paper>
-                        <Paper className="product-form" elevation={2}>
-                            <Typography variant="subtitle2" className="paper-title" gutterBottom>
-                                Product Gallery 
-                            </Typography>
-                            <Divider className="paper-divider" />
-                            <ul className="product-gallery">
-                                { productGallery.map((image,i)=> (<li key={i}><EditableImage imageObject={image} removeImageFunc={() => removeGallery(image)} /></li>) ) }
-                                <li>
-                                    <ButtonUploadImage typeImage="gallery"  onChange ={ (var2) => handleProductGallery(var2) } />
-                                </li>
-                            </ul>    
-                        </Paper>
-                        <Paper className="product-form">
-                            <Typography variant="subtitle2" className="paper-title" gutterBottom>
-                                Categories
-                            </Typography>
-                            <Divider className="paper-divider" />
-                            { renderCategoriesList() }
-                            
-                        </Paper>
-                        <Paper id="product-tags" className="product-form">
-                            <Typography variant="subtitle2" className="paper-title" gutterBottom>
-                                Product Tags
-                            </Typography>
-                            <Divider className="paper-divider" />
-                            {/* <div>
-                                {productTags.length > 0 && productTags.map((data,i) => {
-                                    return (
-                                    <Chip
-                                        key={i}
-                                        label={data.name}
-                                        onDelete={handleDeleteTag(data)}
-                                        color="primary"
-                                        className="product-tag"
-                                    />
-                                    );
-                                })}
-                            </div> */}
-                            <div>
-                                <FormControl className="form-control">
-                                    <InputLabel id="demo-mutiple-chip-label">Chip</InputLabel>
-                                    <Select
-                                        labelid="demo-mutiple-chip-label"
-                                        id="demo-mutiple-chip"
-                                        multiple
-                                        value={productTags}
-                                        onChange={(event) => setProductTags(event.target.value)}
-                                        input={<Input id="select-multiple-chip" />}
-                                        renderValue={productTags => (
-                                            <div className="chips">
-                                                {productTags.map(tag => (
-                                                    <Chip key={tag.id} label={tag.name}  className="product-tag" color="primary"  />
-                                                ))}
-                                            </div>
-                                        )}
-                                        MenuProps={MenuProps}
-                                        >
-                                        { WOO_TAGS.map(tag => (
-                                            <MenuItem key={tag.id} value={tag} >
-                                                {tag.name}
-                                            </MenuItem>
-                                        )) }
-                                    </Select>
-                                </FormControl>
-                            </div>
-                            <div className="add-tag">
-                                <TextField
-                                    id="product-name"
-                                    inputRef={tagInput}
-                                    onKeyDown={(e)=>handleAddTag(e)}
-                                    label="Add New Tag"
-                                    fullWidth={true}
-                                />
-                            </div>
-                        </Paper>
+                        { isEditedProductLoaded && <FormGallery toEdit={toEdit} currentGallery={productGallery} saveProductGallery={(gallery)=> setProductGallery(gallery)}/> }
+                        { isEditedProductLoaded && <FormCategories toEdit={toEdit} currentCategories={getProductCategories} updateSelectedCategories={(selectedCategories) => setWooStoreCategories([...selectedCategories])} /> }
+                        { isEditedProductLoaded && <FormTags toEdit={toEdit} currentTags={productTags} updateSelectedTags={(selectedTags)=>setProductTags(selectedTags)} /> }
                     </Grid>
                 </Grid>
             </Container>
+        </ValidatorForm>
     ); 
 }
 
-const mapStateToProps = ({ USER , WOO_CATEGORIES , WOO_TAGS }) => ({ USER , WOO_CATEGORIES , WOO_TAGS });
+ProductForm.propTypes = {
+    toEdit : PropTypes.bool,
+    productData : PropTypes.array,
+    saveProductAction : PropTypes.func
+}
+
+const mapStateToProps = ({ USER }) => ({ USER });
 
 export default   connect(mapStateToProps)(ProductForm) ;

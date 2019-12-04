@@ -63,13 +63,12 @@ const Routing = ( {dispatch , AUTHORIZED} ) => {
         return(
             <BrowserRouter>
                 <Switch>
-                    <Route exact path={APP_PATHS.HOME}          component={withRouter(Login)} />
-                    <Route exact path={APP_PATHS.ADD_PRODUCTS}  component={withRouter(AddProduct)} />
-                    <Route exact path={APP_PATHS.PARAMETERS}    component={withRouter(UserProfile)} />
-
-                    <PrivateRoute exact authed={AUTHORIZED}     component={withRouter(Products)} path={APP_PATHS.MY_PRODUCTS}  />
-                    <PrivateRoute exact authed={AUTHORIZED}     component={withRouter(EditProductPage)} path={APP_PATHS.EDIT_PRODUCT}  />
-
+                    <Route exact component={withRouter(Login)} path={APP_PATHS.HOME} />
+                    
+                    <PrivateRoute exact authed={AUTHORIZED} component={withRouter(Products)} path={APP_PATHS.MY_PRODUCTS} />
+                    <PrivateRoute exact authed={AUTHORIZED} component={withRouter(AddProduct)} path={APP_PATHS.ADD_PRODUCTS} />
+                    <PrivateRoute exact authed={AUTHORIZED} component={withRouter(UserProfile)} path={APP_PATHS.PARAMETERS} />
+                    <PrivateRoute exact authed={AUTHORIZED} component={withRouter(EditProductPage)} path={APP_PATHS.EDIT_PRODUCT} />
                     <Route component={withRouter(Page404)} />
                 </Switch>
             </BrowserRouter>

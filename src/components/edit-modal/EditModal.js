@@ -2,7 +2,7 @@ import React , {useState , useEffect} from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import {connect} from 'react-redux';
-import { loading , editWooProduct, updateWooProudct} from '../../store/actions/';
+import { loading , editWooProduct, updateWooProudct , deleteWooProudct} from '../../store/actions/';
 import {    
     Grid , 
     TextField , 
@@ -11,12 +11,17 @@ import {
 
 import ButtonUploadImage from '../../components/button-upload/ButtonUpload'; 
 import EditableImage from '../../components/editable-image/EditableImage';
-import { Link , Redirect } from "react-router-dom";
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
 import API from '../../API/'; 
 import Loader from '../loader/loader';
+
+import { EditorState , convertToRaw, ContentState  } from 'draft-js';
+import { Editor } from 'react-draft-wysiwyg';
+import draftToHtml from 'draftjs-to-html'; 
+import htmlToDraft from 'html-to-draftjs';
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 
 
 const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
@@ -27,10 +32,20 @@ const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
     const [salePrice,setSalePrice]                      = useState(0);
     const [productName,setProductName]                  = useState("");
     const [productThumbnail,setProductThumbnail]        = useState(false); 
-    const [productDescription,setProductDescription]    = useState("");
+    const [productDescription,setProductDescription]    = useState(EditorState.createEmpty());
     const [isThumbnailUploade,setIsThumbnailUploade]    = useState(false);
     const [tmpUploadedImageUrl,setTmpUploadedImageUrl]  = useState("");
     const [tmpUploadedImageId,setTmpUploadedImageId]    = useState("");
+    
+    const [isPriceValide,setIsPriceValide]              = useState(false);
+    const [isSalePriceValide,setIsSalePriceValide]      = useState(false);
+    const [isProductNameValide,setIsProductNameValide]  = useState(false);
+    
+    useEffect(()=>{
+        ValidatorForm.addValidationRule('isSalePriceValide', (value) => {
+            return (parseInt(salePrice) >= parseInt(regularPrice)) ? false : true;
+        });
+    })
 
     useEffect(() => {
         if(EDITING_WOO_PRODUCT.currentProduct){
@@ -44,21 +59,19 @@ const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
             }else{
                 setProductThumbnail(false);
             }
-            setProductDescription(EDITING_WOO_PRODUCT.currentProduct.short_description);
+            const blocksFromHtml = htmlToDraft(EDITING_WOO_PRODUCT.currentProduct.short_description);
+            const contentState = ContentState.createFromBlockArray(blocksFromHtml.contentBlocks, blocksFromHtml.entityMap);
+            setProductDescription(EditorState.createWithContent(contentState));
             setPublished((EDITING_WOO_PRODUCT.currentProduct.status === 'publish'));
-            let id = EDITING_WOO_PRODUCT.currentProduct.id;
-            dispatch(updateWooProudct({id ,isUpdated : false}));
-             // ADD THE OVERFLOW HIDDEN 
+            dispatch(updateWooProudct({id : EDITING_WOO_PRODUCT.currentProduct.id ,isUpdated : false}));
              document.body.classList.add('overflow-hidden');
         }   
     },[EDITING_WOO_PRODUCT]);
 
     const handleClose = () => {
         document.body.classList.remove('overflow-hidden');
-        let id = EDITING_WOO_PRODUCT.currentProduct.id;
         dispatch(editWooProduct(false));
-        dispatch(updateWooProudct({id ,isUpdated : true}));
-
+        dispatch(updateWooProudct({id : productId ,isUpdated : true}));
     };
 
     useEffect(()=>{
@@ -167,28 +180,33 @@ const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
     const updateProductProperty = (e,field) => {
         let payload = {};
         let id = EDITING_WOO_PRODUCT.currentProduct.id;
+
         if(field === "name"){
-            if( EDITING_WOO_PRODUCT.currentProduct.name === e.target.value ) return;
+            if( EDITING_WOO_PRODUCT.currentProduct.name === e.target.value || !isProductNameValide) return;
             payload = {
                 name   : e.target.value,
                 slug   : e.target.value
-            }
+            } 
         }
         else if( field === "regular_price" ){
+            if( EDITING_WOO_PRODUCT.currentProduct.regular_price === e.target.value || !isPriceValide ) return;
             payload = {
                 regular_price : e.target.value,
             }
         }
         else if( field === "sale_price" ){
+            if (EDITING_WOO_PRODUCT.currentProduct.sale_price === e.target.value || !isSalePriceValide ) return;
+            
             payload = {
                 sale_price    : e.target.value,
             }
         }
-        else if( field === "short_description" ){
+        else if( field === "description" ){
             payload = {
-                short_description    : e.target.value,
+                description    : draftToHtml(convertToRaw(productDescription.getCurrentContent())),
             }
         }
+
         else if( field === "status" ){
             let isPublished = (!published) ? 'publish' : 'draft';
             payload = {
@@ -225,64 +243,93 @@ const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
             aria-labelledby="max-width-dialog-title"
             scroll="body"
             className="edit-modal-container"
+            id="edit-modal-container"
         >
             <MuiDialogTitle disableTypography className="edit-modal-title">
                 <Typography variant="h6">
                     Edit [ { productName } ]
                 </Typography>
-                {/* Redirect */}
-                <Button variant="outlined" color="secondary" className="modal-button" onClick={ handleClose }>
-                    <Link to={`/edit-produit/${productId}`}>
-                        Advanced Edit 
-                    </Link>
-                </Button>
                 <Loader id="edit-modal-loading"  type="linear" />
             </MuiDialogTitle>
             <DialogContent dividers>
                 <Grid container spacing={3}>
                     <Grid item xs={12} sm={8}>
-                            <TextField
+                        <ValidatorForm
+                            // forwardRef="form-email"
+                            onSubmit={()=>{console.log('Done')}}
+                            onError={errors => console.log(errors)}
+                        > 
+                            <TextValidator
                                 id="product-name"
                                 label="Product Name"
+                                name="product-name"
+                                value={productName}
+                                validatorListener={(valid)=>setIsProductNameValide(valid)}
+                                validators={['required','minStringLength:3']}
+                                errorMessages={["This field is required" , 'At least 3 letters']}
                                 className="default-input"
-                                variant="outlined"
+                                type="text"
+                                InputLabelProps={{ shrink: true }}
                                 margin="normal"
-                                value={productName} 
+                                variant="outlined"
+                                fullWidth
                                 onChange={(e) => setProductName(e.target.value)}
                                 onBlur={(e)=> updateProductProperty(e, "name")}
                             />
-                            <TextField
+                            <TextValidator
                                 id="regular-price"
                                 label="Regular Price"
-                                className="default-input"
-                                variant="outlined"
-                                margin="normal"
+                                name="regular-price"
                                 value={regularPrice}
+                                validatorListener={(valid)=>setIsPriceValide(valid)}
+                                validators={[
+                                    'isNumber'
+                                ]}
+                                errorMessages={[ 
+                                    "Invalide number"
+                                ]}
+                                className="default-input"
+                                type="text"
+                                InputLabelProps={{ shrink: true }}
+                                margin="normal"
+                                variant="outlined"
+                                fullWidth
                                 onChange={(e) => setRegularPrice(e.target.value)}
                                 onBlur={(e)=> updateProductProperty(e, "regular_price")}
                             />
-                            <TextField
+
+                            <TextValidator
                                 id="sales-price"
                                 label="Sales Price"
-                                className="default-input"
-                                variant="outlined"
-                                margin="normal"
+                                name="sales-price"
                                 value={salePrice}
+                                validatorListener={(valid)=>setIsSalePriceValide(valid)}
+                                validators={[
+                                    'isNumber',
+                                    'isSalePriceValide'
+                                ]}
+                                errorMessages={[ 
+                                    "Invalide number",
+                                    "Sale price should be less than regular price",
+                                ]}
+                                className="default-input"
+                                type="text"
+                                InputLabelProps={{ shrink: true }}
+                                margin="normal"
+                                variant="outlined"
+                                fullWidth
                                 onChange={(e) => setSalePrice(e.target.value)}
                                 onBlur={(e)=> updateProductProperty(e, "sale_price")}
                             />
-                            <TextField
-                                id="product-description"
-                                label="Short Product Description"
-                                className="default-wysiwyg" 
-                                margin="normal"
-                                variant="outlined"
-                                multiline
-                                rows="8"
-                                value={productDescription}
-                                onChange={(e) => setProductDescription(e.target.value)}
-                                onBlur={(e)=> updateProductProperty(e, "short_description")}
-                            />
+                        </ValidatorForm>
+                        <Editor
+                            editorState={productDescription}
+                            onEditorStateChange={(editorState) => setProductDescription(editorState)}
+                            toolbarClassName="toolbarClassName"
+                            wrapperClassName="wrapperClassName"
+                            editorClassName="editorClassName"
+                            onBlur={(event, editorState) => updateProductProperty(editorState, "description")}
+                        />
                     </Grid>
                     <Grid item xs={12} sm={4}>
                         <div className="featured-image">

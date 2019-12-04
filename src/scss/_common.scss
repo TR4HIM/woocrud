@@ -163,6 +163,7 @@ a{
         display: inline-block;
         margin: 0 3px;
         vertical-align: text-bottom;
+        outline: none !important;
         a{
             display: block;
             padding: 3px;
@@ -172,6 +173,7 @@ a{
             line-height: 28px;
             background: white;
             cursor: pointer;
+            outline: none !important;
         }
         &.rc-pagination-item-active{
             a{
@@ -236,11 +238,18 @@ a{
     }
 }
 
-
 .hide-upload-input {
     display: none;
 }
 
+.editorClassName {
+    border:1px solid rgba(0, 0, 0, 0.23);
+    border-radius: 5px;
+    min-height: 150px;
+    max-height: 250px;
+    padding: 0 10px;
+    height: auto;
+}
 @media screen and (max-width : 959px){
     #snackbar{
         top: 0 !important;

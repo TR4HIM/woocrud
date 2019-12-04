@@ -3,7 +3,8 @@ import React  from 'react';
 const Footer = () => {
     return (
         <footer id="main-footer">
-            Page footer 2020
+             
+            &copy; Copyright {(new Date().getFullYear())}
         </footer>
     )
 };

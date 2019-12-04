@@ -32,16 +32,29 @@ const Login = ({dispatch, AUTHORIZED , history }) => {
         };
         API.LOGIN(payload)
             .then((data)=>{
-                localStorage.setItem('woo-app', JSON.stringify(data));
-                dispatch(login(true));
-                dispatch(storeUserData(data));
-                dispatch(loading( false, 'login-loader' ));
-                history.push(APP_ROUTES.MY_PRODUCTS);
+                API.WP_getProfileInfo(data.token).then((res)=>{
+                    let userData = {...data ,  roles : res.roles };
+                    if(userData.roles.indexOf('administrator') !== -1 || userData.roles.indexOf('shop_manager') !== -1){
+                        localStorage.setItem('woo-app', JSON.stringify(userData));
+                        dispatch(login(true));
+                        dispatch(storeUserData(res));
+                        dispatch(loading( false, 'login-loader' ));
+                        history.push(APP_ROUTES.MY_PRODUCTS);
+                    }else{
+                        // CLEAR THE LOCALSTORAGE
+                        localStorage.removeItem('woo-app');
+                        // LOGOUT
+                        dispatch(login(false));
+                        // DISPATCH THE LOGOUT ACTION TO CLEAR THE STORE
+                        dispatch({ type : "LOGOUT"});
+                        dispatch(loading( false, 'login-loader' )); 
+                    }
+                })
             })
             .catch((error)=>{
                 dispatch({
                     type : 'ERROR',
-                    payload : error
+                    payload : 'Wrong Username or Password'
                 });
                 // HIDE LOADING
                 dispatch(loading( false, 'login-loader' ));
@@ -50,10 +63,10 @@ const Login = ({dispatch, AUTHORIZED , history }) => {
 
     return (
         <div id="login-page">
-            <Loader id="login-loader" />
             <div id="login-form" elevation={1}>
                 <img id="logo" src={`${process.env.PUBLIC_URL}/img/logo.png`} alt="kibo" />
                 <Paper id="paper" elevation={1}>
+                    <Loader id="login-loader" type="linear"/>
                     <form  className="form" >
                         <TextField
                             label="Username"
@@ -77,7 +90,7 @@ const Login = ({dispatch, AUTHORIZED , history }) => {
                             InputLabelProps={{ shrink: true }}
                         />
                         <div className="action">
-                            <Button variant="contained" color="primary" size="large" onClick={ submitFormLogin } >
+                            <Button variant="contained" color="primary" size="large" onClick={ (e) => submitFormLogin(e) } >
                                 Sign Up
                             </Button>
                         </div>

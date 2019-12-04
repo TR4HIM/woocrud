@@ -25,9 +25,11 @@ export const AUTHORIZED = (state = false, action)=>{
 
     if(action.type === TYPES.LOGIN)
         return action.payload;
-    
-    
+    if(action.type === TYPES.LOGOUT)
+        return null;
+
     return state;
+    
 }
 
 export const USER_PROFILE = (state = null, action)=>{
@@ -56,6 +58,8 @@ export const WOO_PRODUCTS = (state = [], action)=>{
 
     else if( action.type === TYPES.UPDATE_WOO_PRODUCT )
         return state.map((product)=> (product.id === action.payload.id) ? { ...product, ...action.payload } :  product );
+    else if(action.type === TYPES.DELETE_WOO_PRODUCT)
+        return state.filter((product)=>product.id !== action.payload)
 
     return state;
 }
@@ -84,6 +88,34 @@ export const EDITING_WOO_PRODUCT = (state = { status : false , currentProduct : 
         else
             return action.payload;
     }
+
+    return state;
+}
+
+export const ERROR = (state = { show : false } , action)=>{
+
+    if((action.type === TYPES.ERROR) && action.payload.response)
+        state = {
+            ...action.payload.response.data,
+            show : true
+        }
+    
+    else if((action.type === TYPES.ERROR) && !action.payload.response){
+        let payload = {
+            code : 'DEFAULT_ERROR',
+            message : action.payload
+        }
+        state = {
+            ...payload,
+            show : true
+        }
+    }
+    
+    else if(action.type === TYPES.HIDE_ERROR)
+        state = {
+            ...state,
+            show : false
+        }
 
     return state;
 }

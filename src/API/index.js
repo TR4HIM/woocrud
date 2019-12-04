@@ -1,24 +1,21 @@
 import axios from 'axios';
 
-export const protocol  = (process.env.NODE_ENV === 'production') ? 'https://' : 'http://';
-export const endPoint  = (process.env.NODE_ENV === 'production') ? 'kibo.ma' : 'woocrud.test';
-
+const APP_API_URL = (process.env.NODE_ENV === 'production') ? process.env.REACT_APP_LIVE_STORE_URL : process.env.REACT_APP_LOCAL_STORE_URL;
 
 // Wordpress API
-export const WP         = `${protocol + endPoint}/wp-json/wp/v2`;
+export const WP         = `${APP_API_URL}/wp-json/wp/v2`;
 // WooCommerce API
-export const WC         = `${protocol + endPoint}/wp-json/wc/v3`;
-
-export const AUTH       = `${protocol + endPoint}/wp-json/jwt-auth/v1`;
-export const WC_VENDOR  = `${protocol + endPoint}/wp-json/wc-vendor/v1`;
+export const WC         = `${APP_API_URL}/wp-json/wc/v3`;
+// JWT API
+export const AUTH       = `${APP_API_URL}/wp-json/jwt-auth/v1`;
 
 
 const LOGIN = (formData)=>{
 
     return axios.post( `${AUTH}/token`, formData)
-            .then((tokenResult)=>{
-                return tokenResult.data
-            });
+    .then((tokenResult)=>{
+        return tokenResult.data
+    });
 
 }
 
@@ -35,14 +32,15 @@ const TOKEN_VALIDATE = (token)=>{
 
 }
 
-const WC_getWooProducts = (token)=>{
-    return axios.get( `${WC}/products?per_page=100`, {
+const WC_getWooProducts = (token,perpage,pager)=>{
+    return axios.get( `${WC}/products?per_page=${perpage}&page=${pager}`, {
         headers : {
             "Authorization" : `Bearer ${token}`
         }
     })
     .then((result)=>{
-        return result.data;
+        
+        return result;
     })
     .catch((error)=>{
         if ( !axios.isCancel(error)) 
@@ -118,7 +116,7 @@ const WC_getWooSearchProducts = ()=>{
 }
 
 const WC_getWooCategories = (token)=>{
-    return axios.get( `${WC}/products/categories`, {
+    return axios.get( `${WC}/products/categories?per_page=100`, {
         headers : {
             "Authorization" : `Bearer ${token}`
         }
@@ -133,7 +131,7 @@ const WC_getWooCategories = (token)=>{
 }
 
 const WC_getWooTags = (token)=>{
-    return axios.get( `${WC}/products/tags`, {
+    return axios.get( `${WC}/products/tags?per_page=100`, {
         headers : {
             "Authorization" : `Bearer ${token}`
         }
@@ -163,7 +161,23 @@ const WC_createWooTags = (token,data)=>{
     })
 }
 
-const WP_getProfileInfo = (token, idUser)=>{
+const WC_createWooCategories = (token,data)=>{
+    let newTag = data;
+    return axios.post( `${WC}/products/categories`, newTag , {
+        headers : {
+            "Authorization" : `Bearer ${token}`
+        }
+    })
+    .then((result)=>{
+        return result.data;
+    })
+    .catch((error)=>{
+        if ( !axios.isCancel(error)) 
+            return error;
+    })
+}
+
+const WP_getProfileInfo = (token)=>{
     return axios.get( `${WP}/users/me?context=edit`, {
         headers : {
             "Authorization" : `Bearer ${token}`,
@@ -173,6 +187,33 @@ const WP_getProfileInfo = (token, idUser)=>{
         return result.data
     });
 }
+
+const WP_updateProfileInfo = (token, data)=>{
+
+    return axios.post( `${WP}/users/${data.id}`, data , {
+        headers : {
+            "Authorization" : `Bearer ${token}`
+        }
+    })
+    .then((result)=>{
+        return result.data
+    });
+
+}
+
+const WP_change_password = (token, payload)=>{
+
+    // /current-user/${payload.id}/change_password/
+    return axios.put( `${WP}/current-user/${payload.id}/change_password`, payload , {
+        headers : {
+            "Authorization" : `Bearer ${token}`
+        }
+    })
+    .then((result)=>{
+        return result.data
+    });
+}
+
 
 const WC_updateProduct = (token, id, property)=>{
     let data = {
@@ -190,11 +231,22 @@ const WC_updateProduct = (token, id, property)=>{
 
 }
 
+const WC_deleteProduct = (token, id)=> {
+    return axios.delete( `${WC}/products/${id}?force=true`, {
+        headers : {
+            "Authorization" : `Bearer ${token}`,
+        }
+    })
+    .then((result)=>{
+        return result.data
+    });
+
+}
+
 const WC_createProduct = (token, property)=>{
     let data = {
         ...property
     }
-    console.log(data);
     return axios.post( `${WC}/products`, data, {
         headers : {
             "Authorization" : `Bearer ${token}`,
@@ -236,10 +288,14 @@ export default {
     WC_getWooTags,
     WC_getWooProductById,
     WP_getProfileInfo,
+    WP_updateProfileInfo,
+    WP_change_password,
     WC_updateProduct,
     WC_getWooProductByName,
     WP_uploadImage,
     WC_createProduct,
+    WC_deleteProduct,
     WC_createWooTags,
+    WC_createWooCategories,
     WP_deleteImage
 }

@@ -1,5 +1,6 @@
 import React , {useState , useEffect } from 'react';
 import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
 import {    
         Paper , 
         TextField ,Chip} from '@material-ui/core';
@@ -54,13 +55,13 @@ const ProductsAutoComplete = ({dispatch , USER , fieldLabel , onChangeAuto , cur
 
     useEffect(() => {
       if(currentProduct.length > 0){
-        setSelectedItem(currentProduct);
+        getRelatedProductData(currentProduct)
       }
     }, []);
 
     useEffect(() => {
       if( selectedItem.length  >=   0){
-        onChangeAuto(selectedItem);
+        onChangeAuto(selectedItem.map(ups =>  ups.id ));
       }
     }, [selectedItem]);
 
@@ -69,6 +70,32 @@ const ProductsAutoComplete = ({dispatch , USER , fieldLabel , onChangeAuto , cur
         getSuggestions(inputValue);
       }
     },[inputValue]);
+
+    const getRelatedProductData = async (relatedProducts) => {
+        const listProductsData = [];
+        for(let i = 0; i < relatedProducts.length ; i++){
+            let id = relatedProducts[i];
+            await API.WC_getWooProductById(USER.token, id)
+            .then((result)=>{
+                if( result !== undefined ){
+                    // HIDE LOADER
+                    let productItem = {id:result.id, name:result.name};
+                    listProductsData.push(productItem)
+                    dispatch(loading(false, "header-loader"));
+                }
+            })
+            .catch((error)=>{
+                dispatch({
+                    type : 'ERROR',
+                    payload : error
+                })
+                // HIDE LOADING
+                dispatch(loading(false, "header-loader"));
+            })
+        }
+
+        setSelectedItem(listProductsData)
+    }
 
     const getSuggestions = (value) => {
       const inputValue = deburr(value.trim()).toLowerCase();
@@ -192,6 +219,12 @@ const ProductsAutoComplete = ({dispatch , USER , fieldLabel , onChangeAuto , cur
   );
 }
 
-const mapStateToProps = ({ USER }) => ({ USER});
+ProductsAutoComplete.propTypes = {
+  fieldLabel : PropTypes.string,
+  onChangeAuto : PropTypes.func,
+  currentProduct : PropTypes.array
+}
+
+const mapStateToProps = ({ USER }) => ({ USER });
 
 export default connect(mapStateToProps)(ProductsAutoComplete);

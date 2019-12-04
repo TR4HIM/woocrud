@@ -9,5 +9,9 @@ export default {
 	STORE_CHECKED_PRODUCTS 		    : 'STORE_CHECKED_PRODUCTS',
 	EDIT_WOO_PRODUCT  			    : 'EDIT_WOO_PRODUCT',
 	UPDATE_WOO_PRODUCT  			: 'UPDATE_WOO_PRODUCT',
-	LOADING  			            : 'LOADING'
+	DELETE_WOO_PRODUCT  			: 'DELETE_WOO_PRODUCT',
+	LOADING  			            : 'LOADING',
+	ERROR  			            	: 'ERROR',
+	HIDE_ERROR  			        : 'HIDE_ERROR',
+	LOGOUT  			            : 'LOGOUT'
 };

@@ -88,3 +88,10 @@ export const updateWooProudct = (payload)=>{
         payload 
     }
 }
+
+export const deleteWooProudct = (productId)=>{
+    return {
+        type    : TYPES.DELETE_WOO_PRODUCT,
+        payload : productId
+    }
+}

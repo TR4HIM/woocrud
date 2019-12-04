@@ -2,55 +2,28 @@ import React, { useState, useEffect , Fragment } from 'react';
 import {connect} from 'react-redux';
 import Header from '../../components/header/Header';
 import Footer from '../../components/footer/Footer';
-
-import {  Paper, Typography, TextField, Button, FormControl, 
-          InputLabel, Select, FilledInput, MenuItem } from '@material-ui/core';
-
+import {  Paper, Typography, TextField, Button} from '@material-ui/core';
 import API from '../../API/'; 
-
-import {loading , updateUser , storeUserProfile} from '../../store/actions/';
-
+import {loading , storeUserData} from '../../store/actions/';
 import ToggleDisplay from 'react-toggle-display';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
-import Slide from '@material-ui/core/Slide';
 
-const Transition = (props) =>{
-    return <Slide direction="up" {...props} />;
-}
-
-const UserSettings = ({ dispatch , USER , USER_PROFILE}) => {
-
-
+const UserSettings = ({ dispatch , USER , USER_PROFILE }) => {
         
-    const [readyToLoad,setReadyToLoad]                  = useState( false)
-    const [showOldPasswordField,setShowOldPasswordField]         = useState( false)
-    const [oldPassword,setOldPassword]                  = useState( "")
-
-    const [newPassword,setNewPassword]                  = useState("")
+    const [showOldPasswordField,setShowOldPasswordField]             = useState( false)
+    const [oldPassword,setOldPassword]                               = useState( "")
+    const [newPassword,setNewPassword]                               = useState("")
     const [confirmationNewPassword,setConfirmationNewPassword]       = useState("")
-
-    const [showSubmitButton,setShowSubmitButton]             = useState( false)
-    const [validEmail,setValidEmail]                   = useState( false)
-    const [userEmail,setUserEmail]                   = useState(false)
-    const [userName,setUserName]                   = useState("")
-    const [firstName,setFirstName]                   = useState("")
-    const [lastName,setLastName]                   = useState("")
-    const [userUrl,setUserUrl]                   = useState("")
-    const [userAvatar,setUserAvatar]                   = useState("")
-    const [successPasswordChange,setSuccessPasswordChange]        = useState( false)
-    const [uploading,setUploading]                    = useState( false)
-    const [uploadingCover,setUploadingCover]               = useState( false)
-    const [uploadingProfile,setUploadingProfile]              = useState( false)
-    const [srcCover,setSrcCover]                     = useState( "")
-    const [srcProfile, setSrcProfile]                    = useState( "")
-    const [src,setSrc]                          = useState( null)
-    const [open,setOpen]                         = useState( false)
-    const [isLoaded,setIsLoaded]                         = useState(false)
-            
-
-    const t = (msg) => {
-      return msg;
-    }
+    const [showSubmitButton,setShowSubmitButton]                     = useState( false)
+    const [validEmail,setValidEmail]                                 = useState( false)
+    const [userID,setUserId]                                         = useState("");
+    const [userName,setUserName]                                     = useState("")
+    const [userEmail,setUserEmail]                                   = useState("")
+    const [firstName,setFirstName]                                   = useState("")
+    const [lastName,setLastName]                                     = useState("")
+    const [userUrl,setUserUrl]                                       = useState("")
+    const [successPasswordChange,setSuccessPasswordChange]           = useState( false)
+    const [isLoaded,setIsLoaded]                                     = useState(false)
 
     ValidatorForm.addValidationRule('isPasswordMatch', (value) => {
         return (value !== newPassword) ? false : true;
@@ -71,67 +44,69 @@ const UserSettings = ({ dispatch , USER , USER_PROFILE}) => {
 
     useEffect(()=>{
       // SHOW LOADER
-      dispatch(loading(true, "header-loader"));
-
-      API.WP_getProfileInfo(USER.token, USER.id)
-          .then((result)=>{
-              // HIDE LOADER
-              setUserName(result.username);
-              setUserEmail(result.email);
-              setFirstName(result.first_name);
-              setLastName(result.last_name);
-              setUserUrl(result.url);
-              setUserAvatar(result.avatar_urls['96']);
-              console.log(result)
-              setIsLoaded(true)
-              dispatch(loading(false, "header-loader"));
-          })
-          .catch((error)=>{
-
-              dispatch(({
-                  type    : 'ERROR',
-                  payload : error
-              }))
-
-              // HIDE LOADER
-              dispatch(loading(false, "header-loader"));
-          })
+      if(USER_PROFILE == null){
+            dispatch(loading(true, "header-loader"));
+            API.WP_getProfileInfo(USER.token)
+            .then((result)=>{
+                // HIDE LOADER
+                setUserId(result.id);
+                setUserName(result.username);
+                setUserEmail(result.email);
+                setFirstName(result.first_name);
+                setLastName(result.last_name);
+                setUserUrl(result.url);
+                setIsLoaded(true);
+                dispatch(loading(false, "header-loader"));
+                dispatch(storeUserData(result));
+            })
+            .catch((error)=>{
+    
+                dispatch(({
+                    type    : 'ERROR',
+                    payload : error
+                }))
+    
+                // HIDE LOADER
+                dispatch(loading(false, "header-loader"));
+            })
+        }else{
+            setUserId(USER_PROFILE.id);
+            setUserName(USER_PROFILE.username);
+            setUserEmail(USER_PROFILE.email);
+            setFirstName(USER_PROFILE.first_name);
+            setLastName(USER_PROFILE.last_name);
+            setUserUrl(USER_PROFILE.url);
+            setIsLoaded(true);
+        }
     },[])
+   
 
     function updateProfile(property){   
         
-        // IF THE EMAIL IS NOT VALID GO AWAY
-        if( (property === 'userEmail') && !validEmail ) return;
-
-        // IF THE VALUE DOESN'T CHANGED GO AWAY
-        if( USER_PROFILE[property] === this.state[property] ) return;
+        if( (property === 'email') && !validEmail ) return;
 
         // SHOW LOADER
         dispatch(loading(true, "header-loader"));
 
         let data = { 
-            ...USER_PROFILE,
-            [property] : this.state[property]
+            id              : userID,
+            email           : userEmail,
+            first_name      : firstName,
+            last_name       : lastName,
+            url             : userUrl,
         };
-
-        API.WCV_updateProfileInfo(USER.token, data )
+        let dataStore = {...USER_PROFILE , ...data };
+        API.WP_updateProfileInfo(USER.token, data )
             .then((result)=>{
-
-                storeUserProfile({
-                    ...USER_PROFILE,
-                    ...result
-                });
-        
                 // HIDE LOADER
                 dispatch(loading(false, "header-loader"));
-
+                dispatch(storeUserData(dataStore));
             })
             .catch((error)=>{
                 dispatch(({
                     type    : 'ERROR',
                     payload : error
                 }))
-
                 // HIDE LOADER
                 dispatch(loading(false, "header-loader"));
             })
@@ -148,21 +123,20 @@ const UserSettings = ({ dispatch , USER , USER_PROFILE}) => {
         dispatch(loading(true, "header-loader"));
 
         let payload = {
-            id              : USER.id,
+            id              : userID,
             old_password    : oldPassword,
             new_password    : newPassword
         }
-        API.WCV_change_password(USER.token, payload)
+ 
+        API.WP_change_password(USER.token, payload)
             .then((result)=>{
                 dispatch(loading(false, "header-loader"));
-
-                this.setState({
-                    successPasswordChange   : true,
-                    oldPassword             : "",
-                    newPassword             : "",
-                    confirmationNewPassword  : "",
-                    showOldPasswordField    : false 
-                });
+                setOldPassword('');
+                setNewPassword('');
+                setConfirmationNewPassword('');
+                setSuccessPasswordChange(true);
+                setShowOldPasswordField(false);
+                 
             })
             .catch((error)=>{
 
@@ -170,38 +144,16 @@ const UserSettings = ({ dispatch , USER , USER_PROFILE}) => {
                     type    : 'ERROR',
                     payload : error
                 }))
-
                 // HIDE LOADER
                 dispatch(loading(false, "header-loader"));
             })
     }
-    
-    function renderShopHeader(){
-        let  
-            croppedImageUrlProfile,
-            shop_cover,
-            shop_logo ;
-         
-
-        return (
-            <Fragment  >
-                <Paper id="shop-header-container" className="container-inner shop shop-header"  elevation={1}>
-                    <div className="shop-brand" style={{ backgroundImage: `url(${userAvatar})`}} >
-                        <div className="shop-brand-edit" onClick={() => console.log('Go To Gravatar.com')}>
-                            {t('EDIT')}
-                        </div>
-                    </div>
-                </Paper>
-            </Fragment> 
-        );
-    }
 
     function renderContent(){
-        
         return (
             <Fragment>
                 <Paper className="container-inner user"  elevation={1}>
-                    <Typography variant="h5" component="h4">{t('USER')}</Typography>
+                    <Typography variant="h5" component="h4">User Name</Typography>
                     <TextField
                         label="User Name"
                         value={userName}
@@ -220,8 +172,8 @@ const UserSettings = ({ dispatch , USER , USER_PROFILE}) => {
                         onError={errors => console.log(errors)}
                     >   
                         <TextValidator
-                            label={t('EMAIL')}
-                            onBlur={(e)=>updateProfile('userEmail')}
+                            label="Email"
+                            onBlur={(e)=>updateProfile('email')}
                             onKeyDown={(e)=>keyPressHandler(e)}
                             onChange={(e) => setUserEmail(e.target.value)}
                             name="email"
@@ -232,8 +184,8 @@ const UserSettings = ({ dispatch , USER , USER_PROFILE}) => {
                                 'isCustomEmail'
                             ]}
                             errorMessages={[ 
-                                t('FIELD_REQUIRED'), 
-                                t('EMAIL_NOT_CORRECT')
+                                "This field is required", 
+                                "Email id incorrect"
                             ]}
                             className="field"
                             type="text"
@@ -246,6 +198,7 @@ const UserSettings = ({ dispatch , USER , USER_PROFILE}) => {
                             label="First Name"
                             onKeyDown={(e)=>keyPressHandler(e)}
                             onChange={(e) => setFirstName(e.target.value)}
+                            onBlur={(e)=>updateProfile('firstName')}
                             name="first-name"
                             value={firstName}
                             className="field"
@@ -255,12 +208,13 @@ const UserSettings = ({ dispatch , USER , USER_PROFILE}) => {
                             variant="outlined"
                             fullWidth
                             validators={['required']}
-                            errorMessages={['this field is required']}
+                            errorMessages={['This field is required']}
                         />
                         <TextValidator
                             label="Last Name"
                             onKeyDown={(e)=>keyPressHandler(e)}
                             onChange={(e) => setLastName(e.target.value)}
+                            onBlur={(e)=>updateProfile('lastName')}
                             name="last-name"
                             value={lastName}
                             className="field"
@@ -270,12 +224,13 @@ const UserSettings = ({ dispatch , USER , USER_PROFILE}) => {
                             variant="outlined"
                             fullWidth
                             validators={['required']}
-                            errorMessages={['this field is required']}
+                            errorMessages={['This field is required']}
                         />
                         <TextValidator
                             label="Website"
                             onKeyDown={(e)=>keyPressHandler(e)}
                             onChange={(e) => setUserUrl(e.target.value)}
+                            onBlur={(e)=>updateProfile('userUrl')}
                             name="last-name"
                             value={userUrl}
                             className="field"
@@ -285,7 +240,7 @@ const UserSettings = ({ dispatch , USER , USER_PROFILE}) => {
                             variant="outlined"
                             fullWidth
                             validators={['required']}
-                            errorMessages={['this field is required']}
+                            errorMessages={['This field is required']}
                         />
                     </ValidatorForm>
                     <ValidatorForm
@@ -301,13 +256,13 @@ const UserSettings = ({ dispatch , USER , USER_PROFILE}) => {
                             { !showOldPasswordField ? "CHANGE PASSWORD" : "CANCEL" }
                         </Button>
                         
-                        {successPasswordChange ? <p id="success-password-change">{t('PASSWORD_HAS_CHANGED')} </p> : null}
+                        {successPasswordChange ? <p id="success-password-change">Your password has been changed</p> : null}
 
                         <ToggleDisplay show={showOldPasswordField}>
-                            <p id="helper-text">{t('MANDATORY_PASSWORD_FIELD')}</p>
+                            <p id="helper-text">Mandatory Password Field</p>
 
                             <TextValidator
-                                label={t('YOUR_OLD_PASSWORD')}
+                                label="Current Password"
                                 value={oldPassword}
                                 className="field"
                                 onChange={(e)=>setOldPassword(e.target.value)}
@@ -317,7 +272,7 @@ const UserSettings = ({ dispatch , USER , USER_PROFILE}) => {
                                     'required'
                                 ]}
                                 errorMessages={[
-                                    t('FIELD_REQUIRED')
+                                    'This field is required'
                                 ]}
                                 InputLabelProps={{ shrink: true }}
                                 margin="normal"
@@ -326,7 +281,7 @@ const UserSettings = ({ dispatch , USER , USER_PROFILE}) => {
                             />
                         
                             <TextValidator
-                                label={t('YOUR_NEW_PASSWORD')}
+                                label="New Password"
                                 value={newPassword}
                                 className="field"
                                 onChange={(e)=>setNewPassword(e.target.value)}
@@ -338,9 +293,7 @@ const UserSettings = ({ dispatch , USER , USER_PROFILE}) => {
                                     'maxChars'
                                 ]}
                                 errorMessages={[
-                                    t('FIELD_REQUIRED'),
-                                    t('CHAR_MIN_LIMIT'),
-                                    t('CHAR_MAX_LIMIT')
+                                    "this field is required"
                                 ]}
                                 InputLabelProps={{ shrink: true }}
                                 margin="normal"
@@ -348,7 +301,7 @@ const UserSettings = ({ dispatch , USER , USER_PROFILE}) => {
                                 fullWidth
                             />
                             <TextValidator
-                                label={t('CONFIRME_PASSWORD')}
+                                label="Confirm Your Password"
                                 value={confirmationNewPassword}
                                 className="field"
                                 type="password"
@@ -361,10 +314,8 @@ const UserSettings = ({ dispatch , USER , USER_PROFILE}) => {
                                     'maxChars'
                                 ]}
                                 errorMessages={[
-                                    t('PASSWORD_NOT_MATCH'),
-                                    t('FIELD_REQUIRED'),
-                                    t('CHAR_MIN_LIMIT'),
-                                    t('CHAR_MAX_LIMIT')
+                                    "Password not match",
+                                    "This field is required"
                                 ]}
                                 validatorListener={(valid)=>setShowSubmitButton(valid)}
                                 InputLabelProps={{ shrink: true }}
@@ -372,14 +323,13 @@ const UserSettings = ({ dispatch , USER , USER_PROFILE}) => {
                                 variant="outlined"
                                 fullWidth
                             />
-                            <Button id="submit-change-password" disabled={!(showSubmitButton && oldPassword.length)} type="submit" variant="contained"  color="primary" >{t('CHANGE_PASSWORD')}</Button>                             
+                            <Button id="submit-change-password" disabled={!(showSubmitButton && oldPassword.length)} type="submit" variant="contained"  color="primary" >
+                                Change Password
+                            </Button>                             
 
                         </ToggleDisplay>
-
                     </ValidatorForm>
-
                 </Paper>
-
             </Fragment>
         )
     }
@@ -388,14 +338,13 @@ const UserSettings = ({ dispatch , USER , USER_PROFILE}) => {
         <div id="profile-page">
             <Header />
             <div id="container">
-                { isLoaded && renderShopHeader() }
                 { isLoaded && renderContent() }
             </div>
+            <Footer />
         </div>
         
     );
 }
-
 
 const mapStateToProps = ({ USER , USER_PROFILE  }) => ({ USER , USER_PROFILE });
 
