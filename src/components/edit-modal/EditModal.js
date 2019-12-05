@@ -2,10 +2,9 @@ import React , {useState , useEffect} from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import {connect} from 'react-redux';
-import { loading , editWooProduct, updateWooProudct , deleteWooProudct} from '../../store/actions/';
+import { loading , editWooProduct, updateWooProudct } from '../../store/actions/';
 import {    
     Grid , 
-    TextField , 
     FormControlLabel , 
     Switch } from '@material-ui/core';
 

@@ -12,30 +12,38 @@ const DEFAULT_PER_PAGE          = 18;
 
 const Products = ({dispatch , USER , WOO_PRODUCTS  }) => {
 
-    const [pagesTotal,setPagesTotal]    = useState(0);
-    const [pager,setPager]              = useState(1);
-    const [perPage,setPerPage]          = useState(DEFAULT_PER_PAGE);
+    const [productsCount,setProductsCount]      = useState(0);
+    const [pager,setPager]                      = useState(1);
+    const [perPage,setPerPage]                  = useState(DEFAULT_PER_PAGE);
+    const [wooProducts,setWooProducts]          = useState([]);
 
     useEffect(() => {
-        if(WOO_PRODUCTS.length <= 0){ 
+        if(!('products' in WOO_PRODUCTS)){ 
             dispatch(loading(true, "header-loader"));
             getWooProducts();
         }
     }, []); 
     
     useEffect(() => {
-        if(WOO_PRODUCTS.length > 0){
+        if(productsCount > 0){
             getWooProducts(pager);
         }
     }, [pager]);
 
-    const getWooProducts = (page) => {
+    useEffect(() => {
+        if( ('products' in WOO_PRODUCTS) && WOO_PRODUCTS.products.length > 0){
+            setWooProducts(WOO_PRODUCTS.products)
+            setProductsCount(WOO_PRODUCTS.productsCount)
+            setPager(WOO_PRODUCTS.selectedPage);
+        }
+    }, [WOO_PRODUCTS]);
+
+    const getWooProducts = () => {
         dispatch(loading(true, "header-loader"));
         API.WC_getWooProducts( USER.token , perPage ,pager )
         .then((result)=>{
             if( result !== undefined ){
-                dispatch(storeWooProducts(result.data));
-                setPagesTotal(result.headers['x-wp-totalpages'])
+                dispatch(storeWooProducts({ products : result.data , productsCount : result.headers['x-wp-total'] , selectedPage : pager }));
                 // HIDE LOADER
                 dispatch(loading(false, "header-loader"));
             }
@@ -51,12 +59,12 @@ const Products = ({dispatch , USER , WOO_PRODUCTS  }) => {
     }
 
     const renderProducts = () => {
-        return WOO_PRODUCTS.map((product, i)=> (<ProductItem key={i} data={product} deleteFunc={(id)=>deleteProduct(id)} openModalEdit={(data)=>dispatch(editWooProduct(true,data))}/>) );
+        return wooProducts.map((product, i)=> (<ProductItem key={i} data={product} deleteFunc={(id)=>deleteProduct(id)} openModalEdit={(data)=>dispatch(editWooProduct(true,data))}/>) );
     }
     
     const renderProductsContainer = () => {
         return(
-            <ul id="products-list" className={WOO_PRODUCTS.length < 3 ? 'few-products' : ''}>
+            <ul id="products-list" className={wooProducts.length < 3 ? 'few-products' : ''}>
                 { renderProducts() }
             </ul>
         )
@@ -90,14 +98,14 @@ const Products = ({dispatch , USER , WOO_PRODUCTS  }) => {
         <div id="user-products-page" > 
             <Header />
             <div id="container">
-                { WOO_PRODUCTS.length > 0 ? renderProductsContainer() : null}
+                { wooProducts.length > 0 ? renderProductsContainer() : null}
 
-                { pagesTotal > 0 ? 
+                { productsCount > 0 ? 
                 <Pagination 
                     pageSize={DEFAULT_PER_PAGE}
                     onChange={pageChangeHandler} 
                     current={pager} 
-                    total={DEFAULT_PER_PAGE *  pagesTotal}
+                    total={ parseInt(productsCount) }
                     showLessItems
                     locale={{
                         prev_page   : "PREV_PAGE",

@@ -58,9 +58,9 @@ const ProductForm = ({dispatch , USER ,  toEdit=false , productData=null , saveP
 
     useEffect(()=>{
         ValidatorForm.addValidationRule('isSalePriceValide', (value) => {
-            return (parseInt(salePrice) >= parseInt(regularPrice)) ? false : true;
+            return (parseInt(value) > parseInt(regularPrice)) ? false : true;
         });
-    })
+    },[regularPrice])
 
     useEffect(()=>{
         if(toEdit === true){
@@ -189,11 +189,12 @@ const ProductForm = ({dispatch , USER ,  toEdit=false , productData=null , saveP
     }
 
     return (
-        <ValidatorForm onSubmit={() => { productPayLoadData() } }>
+        
         <Container maxWidth="lg" id="product-form-container">
                 {isProductDeleted && toEdit && <Redirect to={`/mes-produits`} />}
                 <Grid container spacing={3}>
                     <Grid item xs={12} sm={8}>
+                        <ValidatorForm onSubmit={() => { productPayLoadData() } }>
                         <Paper className="product-form">
                             { toEdit && <Button variant="outlined" color="secondary" className="delete-product-btn" onClick={ deleteProduct }> Delete Product </Button> }
                             <Typography variant="subtitle2" className="paper-title" gutterBottom> 
@@ -343,6 +344,7 @@ const ProductForm = ({dispatch , USER ,  toEdit=false , productData=null , saveP
                                 { (toEdit === true)  ? 'Save Porduct' : 'Add Porduct' }
                             </Button>
                         </Paper>
+                    </ValidatorForm>
                     </Grid>
                     <Grid item xs={12} sm={4}>
                         <Paper className="product-form">
@@ -378,13 +380,13 @@ const ProductForm = ({dispatch , USER ,  toEdit=false , productData=null , saveP
                     </Grid>
                 </Grid>
             </Container>
-        </ValidatorForm>
+        
     ); 
 }
 
 ProductForm.propTypes = {
     toEdit : PropTypes.bool,
-    productData : PropTypes.array,
+    productData : PropTypes.object,
     saveProductAction : PropTypes.func
 }
 

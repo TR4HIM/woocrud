@@ -9,7 +9,6 @@ export const WC         = `${APP_API_URL}/wp-json/wc/v3`;
 // JWT API
 export const AUTH       = `${APP_API_URL}/wp-json/jwt-auth/v1`;
 
-
 const LOGIN = (formData)=>{
 
     return axios.post( `${AUTH}/token`, formData)
@@ -203,7 +202,6 @@ const WP_updateProfileInfo = (token, data)=>{
 
 const WP_change_password = (token, payload)=>{
 
-    // /current-user/${payload.id}/change_password/
     return axios.put( `${WP}/current-user/${payload.id}/change_password`, payload , {
         headers : {
             "Authorization" : `Bearer ${token}`

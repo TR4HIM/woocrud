@@ -2,3 +2,10 @@
 - Filter Menu Icon
 - Filter product
 - SideBar Categories
+
+- Clean up - Done
+- Store Paginations - Done
+- Fix Product store/add/Edit/Delete - Done
+- #Upload image need to change
+- Sweet Alert
+- Product Preview (Edit Modal)

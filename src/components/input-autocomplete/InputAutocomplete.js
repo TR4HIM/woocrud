@@ -6,11 +6,9 @@ import {
         TextField ,Chip} from '@material-ui/core';
 import deburr from 'lodash/deburr';
 import Downshift from 'downshift';
-import { makeStyles } from '@material-ui/core/styles';
 import MenuItem from '@material-ui/core/MenuItem';
-import { loading , editWooProduct, updateWooProudct} from '../../store/actions/';
+import { loading } from '../../store/actions/';
 import API from '../../API/'; 
-import Loader from '../loader/loader';
 
   // API Search with Cancel
   const SEARCH  = API.WC_getWooProductByName();

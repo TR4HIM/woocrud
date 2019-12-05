@@ -56,10 +56,16 @@ export const WOO_PRODUCTS = (state = [], action)=>{
         return [];
     }
 
-    else if( action.type === TYPES.UPDATE_WOO_PRODUCT )
-        return state.map((product)=> (product.id === action.payload.id) ? { ...product, ...action.payload } :  product );
-    else if(action.type === TYPES.DELETE_WOO_PRODUCT)
-        return state.filter((product)=>product.id !== action.payload)
+    else if( action.type === TYPES.UPDATE_WOO_PRODUCT ){
+        let storeProducts = [...state.products];
+        let updatedProducts = storeProducts.map((product)=> (product.id === action.payload.id) ? { ...product, ...action.payload } :  product );
+        return { ...state , products : [...updatedProducts] };
+    }
+    else if(action.type === TYPES.DELETE_WOO_PRODUCT){
+        let storeProducts = [...state.products];
+        let updatedProducts = storeProducts.filter((product)=>product.id !== action.payload);
+        return { ...state , products : [...updatedProducts] ,  productsCount : parseInt(state.productsCount) - 1 };
+    }
 
     return state;
 }
