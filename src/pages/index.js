@@ -6,6 +6,9 @@ import Snackbar from '@material-ui/core/Snackbar';
 import Slide from '@material-ui/core/Slide';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
+import ReactNotification from 'react-notifications-component';
+import 'react-notifications-component/dist/theme.css'
+
 
 const Layout = ( { dispatch , ERROR }) => {
 
@@ -19,6 +22,8 @@ const Layout = ( { dispatch , ERROR }) => {
 
     return (
         <div id="layout"> 
+            {/* Notifivation */}
+            <ReactNotification />
             {/* LOADER */}
             <Loader id="root-loader" />             
             

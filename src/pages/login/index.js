@@ -7,6 +7,7 @@ import {loading , login , storeUserData} from '../../store/actions/';
 import { APP_ROUTES } from '../../config';
 import Loader from '../../components/loader/loader';
 import API from '../../API/';
+import { store as notifStore} from 'react-notifications-component';
 
 const Login = ({dispatch, AUTHORIZED , history }) => {
      
@@ -52,9 +53,22 @@ const Login = ({dispatch, AUTHORIZED , history }) => {
                 })
             })
             .catch((error)=>{
-                dispatch({
-                    type : 'ERROR',
-                    payload : 'Wrong Username or Password'
+                // dispatch({
+                //     type : 'ERROR',
+                //     payload : 'Wrong Username or Password'
+                // });
+                notifStore.addNotification({
+                    title: "Error!",
+                    message: "Wrong Username or Password",
+                    type: "danger",
+                    insert: "top",
+                    container: "top-center",
+                    animationIn: ["animated", "fadeIn"],
+                    animationOut: ["animated", "fadeOut"],
+                    dismiss: {
+                      duration: 5000,
+                      onScreen: true
+                    }
                 });
                 // HIDE LOADING
                 dispatch(loading( false, 'login-loader' ));

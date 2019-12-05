@@ -7,6 +7,7 @@ import EditProductModal from '../../components/edit-modal/EditModal';
 import {loading , storeWooProducts , deleteWooProudct , editWooProduct} from '../../store/actions/';
 import API from '../../API/'; 
 import Pagination from 'rc-pagination';
+import { store as notifStore} from 'react-notifications-component';
 
 const DEFAULT_PER_PAGE          = 18;
 
@@ -71,20 +72,38 @@ const Products = ({dispatch , USER , WOO_PRODUCTS  }) => {
     }
 
     const pageChangeHandler = (pg) => {
+        
         setPager(pg);
     }
 
     const deleteProduct = (productId) => {
         dispatch(loading(true, "header-loading"));
         API.WC_deleteProduct(USER.token, productId).then((data)=>{ 
-            console.log(data);
             dispatch(deleteWooProudct(data.id));
             dispatch(loading(false, "header-loading"));
+            notifStore.addNotification({
+                title: "Success",
+                message:  "Product has been deleted" ,
+                type: "success",
+                container: "top-right",
+                dismiss: {
+                  duration: 5000,
+                  onScreen: true
+                }
+            });
         })
         .catch((error)=>{
-            dispatch({
-                type : "ERROR",
-                payload : error
+            notifStore.addNotification({
+                title: "Error!",
+                message:  "Network error please try again !" ,
+                type: "danger",
+                container: "top-center",
+                animationIn: ["animated", "fadeIn"],
+                animationOut: ["animated", "fadeOut"],
+                dismiss: {
+                  duration: 5000,
+                  onScreen: true
+                }
             });
 
             // HIDE LOADING
