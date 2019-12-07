@@ -278,6 +278,7 @@ const WP_deleteImage = (token, id)=>{
 }
 
 export default {
+    APP_API_URL,
     LOGIN,
     TOKEN_VALIDATE,
     WC_getWooProducts,

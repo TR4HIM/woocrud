@@ -17,7 +17,7 @@ const Products = ({dispatch , USER , WOO_PRODUCTS  }) => {
     const [pager,setPager]                      = useState(1);
     const [perPage,setPerPage]                  = useState(DEFAULT_PER_PAGE);
     const [wooProducts,setWooProducts]          = useState([]);
-
+    
     useEffect(() => {
         if(!('products' in WOO_PRODUCTS)){ 
             dispatch(loading(true, "header-loader"));
@@ -60,7 +60,7 @@ const Products = ({dispatch , USER , WOO_PRODUCTS  }) => {
     }
 
     const renderProducts = () => {
-        return wooProducts.map((product, i)=> (<ProductItem key={i} data={product} deleteFunc={(id)=>deleteProduct(id)} openModalEdit={(data)=>dispatch(editWooProduct(true,data))}/>) );
+        return wooProducts.map((product, i)=> (<ProductItem key={i} liveUrl={API.APP_API_URL} data={product} deleteFunc={(id)=>deleteProduct(id)} openModalEdit={(data)=>dispatch(editWooProduct(true,data))}/>) );
     }
     
     const renderProductsContainer = () => {

@@ -11,8 +11,9 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import EditIcon from '@material-ui/icons/Edit';
 
-const WooProduct = ({data , deleteFunc , openModalEdit}) => {
+const WooProduct = ({data , deleteFunc , openModalEdit , liveUrl}) => {
 
     const [anchorEl, setAnchorEl]               =  useState(null);
     const [isImageLoading, setIsImageLoading]   = useState(false);
@@ -94,8 +95,8 @@ const WooProduct = ({data , deleteFunc , openModalEdit}) => {
                     >   
                     <ul className="popover-links">
                         <li>
-                            <a onClick={()=>openModal(data)}>
-                                Quick Edit
+                            <a href={`${liveUrl}/?post_type=product&p=${data.id}`} target="_blank">
+                                View Product ...
                             </a>
                         </li>
                         <li>
@@ -112,15 +113,20 @@ const WooProduct = ({data , deleteFunc , openModalEdit}) => {
                     </Popover>
                 </div>
             </div>
-            {(data.images.length>0 && data.images[0].src !== false) ?
-                <div className="thumbnail" style={{backgroundImage: `url(${data.images[0].src})`}}>
-                { !isImageLoading && <div className="loading-animation"></div> }
-                    <img className="visual" src={data.images[0].src} alt="" onLoad={()=>setIsImageLoading(true)} /> 
-                </div> :
-                <div className="no-thumbnail">
-                    <span>No Image</span>
-                </div> 
-            }
+            <div className="product-img-container" onClick={()=>openModal(data)}>
+                {(data.images.length>0 && data.images[0].src !== false) ?
+                    <div className="thumbnail" style={{backgroundImage: `url(${data.images[0].src})`}}>
+                    { !isImageLoading && <div className="loading-animation"></div> }
+                        <img className="visual" src={data.images[0].src} alt="" onLoad={()=>setIsImageLoading(true)} /> 
+                    </div> :
+                    <div className="no-thumbnail">
+                        <span>No Image</span>
+                    </div> 
+                }
+                <Button className="btn-edit-modal">
+                        <EditIcon />
+                </Button>
+            </div>
         </li>
     );
 }
