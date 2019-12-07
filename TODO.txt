@@ -1,4 +1,7 @@
 - Search products
 - Filter Menu Icon
 - Filter product
+- #Upload image need to change
+- Sweet Alert
+- Product Preview (Edit Modal)
 - SideBar Categories

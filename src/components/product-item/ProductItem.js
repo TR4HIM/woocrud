@@ -5,15 +5,21 @@ import MoreVert from '@material-ui/icons/MoreVert';
 import Popover from '@material-ui/core/Popover';
 import Button from '@material-ui/core/Button';
 import ToggleDisplay from 'react-toggle-display';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import EditIcon from '@material-ui/icons/Edit';
 
-const WooProduct = ({data , deleteFunc , openModalEdit}) => {
+const WooProduct = ({data , deleteFunc , openModalEdit , liveUrl}) => {
 
-    const [anchorEl, setAnchorEl]               =  useState(null);
-    const [isImageLoading, setIsImageLoading]   = useState(false);
- 
+    const [anchorEl, setAnchorEl]                       =  useState(null);
+    const [isImageLoading, setIsImageLoading]           = useState(false);
+    const [showConfirmation,setShowConfirmation]        = useState(false);
     
     const openModal = () => {
-        handleClose();
+        setAnchorEl(null);
         openModalEdit(data)
     }
 
@@ -26,14 +32,40 @@ const WooProduct = ({data , deleteFunc , openModalEdit}) => {
     }
 
     const deleteProduct = () => {
-        deleteFunc(data.id)
+        setShowConfirmation(false)
+        setAnchorEl(null)
+        deleteFunc(data.id);
     }
 
     return (
         <li 
             className={`product ${(data.isUpdated) ? 'product-item-updated' : ''}`} 
             id={data.id} 
-        >
+        >   
+            <Dialog
+                open={showConfirmation}
+                onClose={() => setShowConfirmation(false)}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+                id="delete-modal-confirmation"
+            >
+                <DialogTitle id="alert-dialog-title">
+                    Warning
+                </DialogTitle>
+                <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                    Are you sure you want to delete <strong> { data.name } </strong>  ?
+                </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                <Button onClick={() => setShowConfirmation(false)} color="primary">
+                    Cancel
+                </Button>
+                <Button onClick={deleteProduct} color="primary" autoFocus>
+                    Yes
+                </Button>
+                </DialogActions>
+            </Dialog>
             <div className="product-info">
                 <h3 className="title">
                     {data.name}
@@ -62,8 +94,8 @@ const WooProduct = ({data , deleteFunc , openModalEdit}) => {
                     >   
                     <ul className="popover-links">
                         <li>
-                            <a onClick={()=>openModal(data)}>
-                                Quick Edit
+                            <a href={`${liveUrl}/?post_type=product&p=${data.id}`} target="_blank">
+                                View Product ...
                             </a>
                         </li>
                         <li>
@@ -72,7 +104,7 @@ const WooProduct = ({data , deleteFunc , openModalEdit}) => {
                             </Link>
                         </li>
                         <li>
-                            <a onClick={deleteProduct} className="danger">
+                            <a onClick={() => setShowConfirmation(true)} className="danger">
                                 Delete Product
                             </a>
                         </li>
@@ -80,15 +112,20 @@ const WooProduct = ({data , deleteFunc , openModalEdit}) => {
                     </Popover>
                 </div>
             </div>
-            {(data.images.length>0 && data.images[0].src !== false) ?
-                <div className="thumbnail" style={{backgroundImage: `url(${data.images[0].src})`}}>
-                { !isImageLoading && <div className="loading-animation"></div> }
-                    <img className="visual" src={data.images[0].src} alt="" onLoad={()=>setIsImageLoading(true)} /> 
-                </div> :
-                <div className="no-thumbnail">
-                    <span>No Image</span>
-                </div> 
-            }
+            <div className="product-img-container" onClick={()=>openModal(data)}>
+                {(data.images.length>0 && data.images[0].src !== false) ?
+                    <div className="thumbnail" style={{backgroundImage: `url(${data.images[0].src})`}}>
+                    { !isImageLoading && <div className="loading-animation"></div> }
+                        <img className="visual" src={data.images[0].src} alt="" onLoad={()=>setIsImageLoading(true)} /> 
+                    </div> :
+                    <div className="no-thumbnail">
+                        <span>No Image</span>
+                    </div> 
+                }
+                <Button className="btn-edit-modal">
+                        <EditIcon />
+                </Button>
+            </div>
         </li>
     );
 }

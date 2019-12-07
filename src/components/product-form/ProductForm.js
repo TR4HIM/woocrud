@@ -20,14 +20,18 @@ import EditableImage        from '../../components/editable-image/EditableImage'
 import FormTags             from '../../components/form-tags/FormTags';
 import FormCategories       from '../../components/form-categories/FormCategories';
 import FormGallery          from '../../components/form-gallery/FormGallery';
-
 import { EditorState , convertToRaw, ContentState  } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import draftToHtml from 'draftjs-to-html'; 
 import htmlToDraft from 'html-to-draftjs';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import { store as notifStore} from 'react-notifications-component';
 
 const ProductForm = ({dispatch , USER ,  toEdit=false , productData=null , saveProductAction}) =>  {
 
@@ -55,12 +59,13 @@ const ProductForm = ({dispatch , USER ,  toEdit=false , productData=null , saveP
     const [productDeletedImages,setProductDeletedImages]                    = useState([]);
     const [isProductDeleted,setIsProductDeleted]                            = useState(false);
     const [ isEditedProductLoaded,setIsEditedProductLoaded]                 = useState(false);
+    const [showConfirmation,setShowConfirmation]          = useState(false);
 
     useEffect(()=>{
         ValidatorForm.addValidationRule('isSalePriceValide', (value) => {
-            return (parseInt(salePrice) >= parseInt(regularPrice)) ? false : true;
+            return (parseInt(value) > parseInt(regularPrice)) ? false : true;
         });
-    })
+    },[regularPrice])
 
     useEffect(()=>{
         if(toEdit === true){
@@ -173,29 +178,79 @@ const ProductForm = ({dispatch , USER ,  toEdit=false , productData=null , saveP
     }
 
     const deleteProduct = () => {
+        setShowConfirmation(false);
         dispatch(loading(true, "header-loading"));
         API.WC_deleteProduct(USER.token, productID).then((data)=>{ 
             setIsProductDeleted(true)
-            dispatch(deleteWooProudct(productID));
+            dispatch(deleteWooProudct(data.id));
             dispatch(loading(false, "header-loading"));
+            notifStore.addNotification({
+                title: "Success",
+                message: "The product has been deleted." ,
+                type: "success",
+                container: "top-right",
+                width: 400,
+                dismiss: {
+                  duration: 2000,
+                  onScreen: true
+                }
+            });
         })
         .catch((error)=>{
-            dispatch({
-                type : "ERROR",
-                payload : error
+            // dispatch({
+            //     type : "ERROR",
+            //     payload : error
+            // });
+            notifStore.addNotification({
+                title: "Error!",
+                message:  "Delete Error : please try again !" ,
+                type: "danger",
+                container: "top-center",
+                animationIn: ["animated", "fadeIn"],
+                animationOut: ["animated", "fadeOut"],
+                width: 400,
+                dismiss: {
+                  duration: 5000,
+                  onScreen: true
+                }
             });
             dispatch(loading(false, "header-loading"));
         })
     }
 
     return (
-        <ValidatorForm onSubmit={() => { productPayLoadData() } }>
+        
         <Container maxWidth="lg" id="product-form-container">
                 {isProductDeleted && toEdit && <Redirect to={`/mes-produits`} />}
+                <Dialog
+                    open={showConfirmation}
+                    onClose={() => setShowConfirmation(false)}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                    id="delete-modal-confirmation"
+                >
+                    <DialogTitle id="alert-dialog-title">
+                        Warning
+                    </DialogTitle>
+                    <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        Are you sure you want to delete <strong> { productName } </strong>  ?
+                    </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                    <Button onClick={() => setShowConfirmation(false)} color="primary">
+                        Cancel
+                    </Button>
+                    <Button onClick={deleteProduct} color="primary" autoFocus>
+                        Yes
+                    </Button>
+                    </DialogActions>
+                </Dialog>
                 <Grid container spacing={3}>
                     <Grid item xs={12} sm={8}>
+                        <ValidatorForm onSubmit={() => { productPayLoadData() } }>
                         <Paper className="product-form">
-                            { toEdit && <Button variant="outlined" color="secondary" className="delete-product-btn" onClick={ deleteProduct }> Delete Product </Button> }
+                            { toEdit && <Button variant="outlined" color="secondary" className="delete-product-btn" onClick={() => setShowConfirmation(true)}> Delete Product </Button> }
                             <Typography variant="subtitle2" className="paper-title" gutterBottom> 
                                 Product Informations 
                             </Typography>
@@ -343,6 +398,7 @@ const ProductForm = ({dispatch , USER ,  toEdit=false , productData=null , saveP
                                 { (toEdit === true)  ? 'Save Porduct' : 'Add Porduct' }
                             </Button>
                         </Paper>
+                    </ValidatorForm>
                     </Grid>
                     <Grid item xs={12} sm={4}>
                         <Paper className="product-form">
@@ -378,13 +434,13 @@ const ProductForm = ({dispatch , USER ,  toEdit=false , productData=null , saveP
                     </Grid>
                 </Grid>
             </Container>
-        </ValidatorForm>
+        
     ); 
 }
 
 ProductForm.propTypes = {
     toEdit : PropTypes.bool,
-    productData : PropTypes.array,
+    productData : PropTypes.object,
     saveProductAction : PropTypes.func
 }
 

@@ -4,14 +4,43 @@ import Header from '../../components/header/Header';
 import Footer from '../../components/footer/Footer';
 import ProductForm from '../../components/product-form/ProductForm';
 import API from '../../API/'; 
-import {loading , updateWooProudct } from '../../store/actions/';
-  
-const EditProductPage = ({dispatch , USER , WOO_CATEGORIES , match}) =>  {
+import {loading , updateWooProudct , storeWooProducts } from '../../store/actions/';
+import { store as notifStore} from 'react-notifications-component';
+
+const DEFAULT_PER_PAGE          = 18;
+
+const EditProductPage = ({dispatch , USER , WOO_PRODUCTS , match}) =>  {
     
     const { params }            = match;
     const [ product,setProduct] = useState(null);
 
-    dispatch(loading(true, "header-loader"));
+    
+    useEffect(() => {
+        if(!('products' in WOO_PRODUCTS)){ 
+            dispatch(loading(true, "header-loader"));
+            getWooProducts();
+        }
+    }, []); 
+
+    const getWooProducts = () => {
+        dispatch(loading(true, "header-loader"));
+        API.WC_getWooProducts( USER.token , DEFAULT_PER_PAGE , 1 )
+        .then((result)=>{
+            if( result !== undefined ){
+                dispatch(storeWooProducts({ products : result.data , productsCount : result.headers['x-wp-total'] , selectedPage : 1 }));
+                // HIDE LOADER
+                dispatch(loading(false, "header-loader"));
+            }
+        })
+        .catch((error)=>{
+            dispatch({
+                type : 'ERROR',
+                payload : error
+            })
+            // HIDE LOADING
+            dispatch(loading(false, "header-loader"));
+        })
+    }
 
     useEffect(()=>{
         API.WC_getWooProductById(USER.token, params.productId)
@@ -33,11 +62,25 @@ const EditProductPage = ({dispatch , USER , WOO_CATEGORIES , match}) =>  {
 
     },[]);
 
-    const saveEditedProduct = (payload) => {
-        API.WC_updateProduct(USER.token,  payload.productId , payload.payload ).then((data)=>{ 
-            let currentProduct  = payload.payload;
+    const saveEditedProduct = (payloadData) => {
+        let id      = payloadData.productId;
+        let payload = {...payloadData.payload};
+        console.log({id , ...payload});
+        API.WC_updateProduct(USER.token, id , payload ).then((data)=>{ 
             dispatch(loading(false, "header-loader"));
-            dispatch(updateWooProudct({id : payload.productId , ...currentProduct}));
+
+            dispatch(updateWooProudct({id , ...payload}));
+            notifStore.addNotification({
+                title: "Success",
+                message: ` Product ${payload.name}  has been updated ` ,
+                type: "success",
+                container: "top-right",
+                width: 400,
+                dismiss: {
+                  duration: 2000,
+                  onScreen: true
+                }
+            });
         })
         .catch((error)=>{
             dispatch({
@@ -58,6 +101,6 @@ const EditProductPage = ({dispatch , USER , WOO_CATEGORIES , match}) =>  {
     ); 
 }
 
-const mapStateToProps = ({ USER }) => ({ USER });
+const mapStateToProps = ({ USER , WOO_PRODUCTS }) => ({ USER , WOO_PRODUCTS });
 
 export default connect(mapStateToProps)(EditProductPage) ;

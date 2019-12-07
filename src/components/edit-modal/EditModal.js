@@ -2,10 +2,9 @@ import React , {useState , useEffect} from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import {connect} from 'react-redux';
-import { loading , editWooProduct, updateWooProudct , deleteWooProudct} from '../../store/actions/';
+import { loading , editWooProduct, updateWooProudct } from '../../store/actions/';
 import {    
     Grid , 
-    TextField , 
     FormControlLabel , 
     Switch } from '@material-ui/core';
 
@@ -22,7 +21,9 @@ import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
-
+import { store as notifStore} from 'react-notifications-component';
+import CloseIcon from '@material-ui/icons/Close';
+import Button from '@material-ui/core/Button';
 
 const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
 
@@ -217,16 +218,29 @@ const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
 
         dispatch(loading(true, "edit-modal-loading"));
 
+        
         API.WC_updateProduct(USER.token, id, payload).then(()=>{ 
             dispatch(loading(false, "edit-modal-loading"));
+            console.log({id , ...payload})
             dispatch(updateWooProudct({id , ...payload}));
+            notifStore.addNotification({
+                title: "Success",
+                message: ` Product field ${field.replace('_',' ')}  has been updated ` ,
+                type: "success",
+                container: "top-right",
+                width: 400,
+                dismiss: {
+                  duration: 2000,
+                  onScreen: true
+                }
+            });
         })
         .catch((error)=>{
             dispatch({
                 type : "ERROR",
                 payload : error
             });
-
+            
             // HIDE LOADING
             dispatch(loading(false, "edit-modal-loading"));
 
@@ -249,6 +263,9 @@ const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
                 <Typography variant="h6">
                     Edit [ { productName } ]
                 </Typography>
+                <Button className="btn-close-modal" onClick={handleClose}>
+                        <CloseIcon />
+                </Button>
                 <Loader id="edit-modal-loading"  type="linear" />
             </MuiDialogTitle>
             <DialogContent dividers>
