@@ -10,12 +10,8 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import List from '@material-ui/core/List';
 
-const SideBarCategories = ( {open = false , categories , handleClose}) => {
+const SideBarCategories = ( {open = false , categories , handleClose , selectedCategory}) => {
 
-	const getProducts = (prp) => {
-		console.log(prp)
-	}
-	
 	return (
 		<div>
 			<Drawer
@@ -28,8 +24,11 @@ const SideBarCategories = ( {open = false , categories , handleClose}) => {
 					<ListItem button id="sidebar-categories-title">
 						<ListItemText primary="Filter By Category" />
 					</ListItem>
+					<ListItem button onClick={() => selectedCategory("all")}>
+						<ListItemText primary="All" />
+					</ListItem>
 					{categories.map((cat) => (
-						<ListItem button key={cat.id} onClick={() => getProducts(cat.id)}>
+						<ListItem button key={cat.id} onClick={() => selectedCategory(cat.id)}>
 							<ListItemText primary={cat.name} />
 						</ListItem>
 					))}
@@ -43,7 +42,8 @@ SideBarCategories.propTypes = {
     open : PropTypes.bool,
     user : PropTypes.object,
     logout : PropTypes.func,
-    handleClose: PropTypes.func
+    handleClose: PropTypes.func,
+    selectedCategory: PropTypes.func,
 }
 
 export default SideBarCategories;

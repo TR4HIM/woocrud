@@ -31,8 +31,14 @@ const TOKEN_VALIDATE = (token)=>{
 
 }
 
-const WC_getWooProducts = (token,perpage,pager)=>{
-    return axios.get( `${WC}/products?per_page=${perpage}&page=${pager}`, {
+const WC_getWooProducts = (token,perpage,pager,category=null)=>{
+    let url;
+    if(category !== null || category !== 'all'){
+        url = `${WC}/products?per_page=${perpage}&page=${pager}&category=${category}`;
+    }else{
+        url = `${WC}/products?per_page=${perpage}&page=${pager}`;
+    }
+    return axios.get( url , {
         headers : {
             "Authorization" : `Bearer ${token}`
         }

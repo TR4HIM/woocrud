@@ -8,7 +8,10 @@ import MainMenu from '../main-menu/MainMenu';
 import SideBarCategories from '../sidebar-categories/SideBarCategories';
 import FilterListIcon from '@material-ui/icons/FilterList'; 
 import API from '../../API/'; 
-import { loading  , storeWooCategories } from '../../store/actions/';
+import { loading  , storeWooCategories , storeWooProducts } from '../../store/actions/';
+
+
+const DEFAULT_PER_PAGE          = 18;
 
 const Header = ( {dispatch , USER , WOO_CATEGORIES }) => {
 
@@ -49,7 +52,27 @@ const Header = ( {dispatch , USER , WOO_CATEGORIES }) => {
         }
     }, []);
 	
-
+	const getWooProducts = (cat) => {
+		let catId = (cat === 'all') ? null : cat;
+        dispatch(loading(true, "header-loader"));
+        API.WC_getWooProducts( USER.token , DEFAULT_PER_PAGE , 1 , catId )
+        .then((result)=>{ 
+            if( result !== undefined ){
+                dispatch(storeWooProducts({ products : result.data , productsCount : result.headers['x-wp-total'] , selectedPage : 1 }));
+                // HIDE LOADER
+                dispatch(loading(false, "header-loader"));
+            }
+        })
+        .catch((error)=>{
+            dispatch({
+                type : 'ERROR',
+                payload : error
+            })
+            // HIDE LOADING
+            dispatch(loading(false, "header-loader"));
+        })
+	}
+	
 	const handleClickMenu = () => {
 		setOpenMenuDrawer(true);
 		document.body.classList.add('overflow-hidden');
@@ -86,7 +109,7 @@ const Header = ( {dispatch , USER , WOO_CATEGORIES }) => {
 				</div>
 			</header>
 			<MainMenu open={openMenuDrawer} user={USER} logout={()=>logout()} handleClose={()=>setOpenMenuDrawer(false)}/>
-			<SideBarCategories open={openCategoriesDrawer} categories={wooStoreCategories} handleClose={()=>setOpenCategoriesDrawer(false)}/>
+			<SideBarCategories open={openCategoriesDrawer} selectedCategory={(cat) => getWooProducts(cat)} categories={wooStoreCategories} handleClose={()=>setOpenCategoriesDrawer(false)}/>
 		</>
 	)
 };
