@@ -7,12 +7,14 @@ import Loader from '../loader/loader';
 import MainMenu from '../main-menu/MainMenu';
 import SideBarCategories from '../sidebar-categories/SideBarCategories';
 import FilterListIcon from '@material-ui/icons/FilterList'; 
+import API from '../../API/'; 
+import { loading  , storeWooCategories } from '../../store/actions/';
 
-const Header = ( {dispatch , USER }) => {
+const Header = ( {dispatch , USER , WOO_CATEGORIES }) => {
 
 	const [openMenuDrawer,setOpenMenuDrawer] 				= useState(false);
 	const [openCategoriesDrawer,setOpenCategoriesDrawer] 	= useState(false);
-
+	const [wooStoreCategories, setWooStoreCategories]       = useState([]);
 
 	useEffect(() => {
         if(!openMenuDrawer && !openCategoriesDrawer){
@@ -21,6 +23,31 @@ const Header = ( {dispatch , USER }) => {
     }, [openMenuDrawer,openCategoriesDrawer]);
 
 
+	useEffect(()=>{
+        if(WOO_CATEGORIES.length > 0)
+            setWooStoreCategories(JSON.parse(JSON.stringify(WOO_CATEGORIES)));
+	},[WOO_CATEGORIES])
+	
+	useEffect(() => {
+        if(WOO_CATEGORIES.length <= 0){
+            API.WC_getWooCategories(USER.token)
+            .then((result)=>{
+                if( result !== undefined ){
+                    const productCategories = result.map(category => ({
+                        ...category,
+                        selected: false
+                    }));
+                    dispatch(storeWooCategories(productCategories));
+                }
+            })
+            .catch((error)=>{
+                dispatch({
+                    type : 'ERROR',
+                    payload : error 
+                })
+            })
+        }
+    }, []);
 	
 
 	const handleClickMenu = () => {
@@ -59,11 +86,11 @@ const Header = ( {dispatch , USER }) => {
 				</div>
 			</header>
 			<MainMenu open={openMenuDrawer} user={USER} logout={()=>logout()} handleClose={()=>setOpenMenuDrawer(false)}/>
-			<SideBarCategories open={openCategoriesDrawer} handleClose={()=>setOpenCategoriesDrawer(false)}/>
+			<SideBarCategories open={openCategoriesDrawer} categories={wooStoreCategories} handleClose={()=>setOpenCategoriesDrawer(false)}/>
 		</>
 	)
 };
 
-const mapStateToProps = ({USER}) => ({USER}); 
+const mapStateToProps = ({USER , WOO_CATEGORIES}) => ({USER , WOO_CATEGORIES}); 
 
 export default connect(mapStateToProps)(Header);

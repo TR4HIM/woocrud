@@ -4,36 +4,36 @@ import { NavLink } from "react-router-dom";
 import { MenuItem, Drawer } from '@material-ui/core';
 import { APP_ROUTES } from '../../config';
 
-const SideBarCategories = ( {open = false , user , logout , handleClose}) => {
 
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import List from '@material-ui/core/List';
+
+const SideBarCategories = ( {open = false , categories , handleClose}) => {
+
+	const getProducts = (prp) => {
+		console.log(prp)
+	}
+	
 	return (
-		<div id="sidebar-categories">
+		<div>
 			<Drawer
-				id="categories-menu" 
+				id="sidebar-categories" 
 				open={open}
 				anchor="left" 
 				onClose={handleClose}
 			>
-				<MenuItem>
-					<span id="connected-user">
-						Categories
-					</span>
-				</MenuItem>
-				<MenuItem>
-					<NavLink activeClassName='selected' to={APP_ROUTES.MY_PRODUCTS}>
-						MY PRODUCTS 
-					</NavLink>
-				</MenuItem>
-				<MenuItem>
-					<NavLink activeClassName='selected' to={APP_ROUTES.ADD_PRODUCTS}>
-						ADD PRODUCT
-					</NavLink>
-				</MenuItem>
-				<MenuItem>
-					<NavLink activeClassName='selected' to={APP_ROUTES.PARAMETERS}>
-						USER PROFILE
-					</NavLink>
-				</MenuItem>
+				<List>
+					<ListItem button id="sidebar-categories-title">
+						<ListItemText primary="Filter By Category" />
+					</ListItem>
+					{categories.map((cat) => (
+						<ListItem button key={cat.id} onClick={() => getProducts(cat.id)}>
+							<ListItemText primary={cat.name} />
+						</ListItem>
+					))}
+				</List>
 			</Drawer>
 		</div>
 	)

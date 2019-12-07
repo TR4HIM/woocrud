@@ -1074,6 +1074,104 @@ button.btn {
   font-weight: bold;
   color: #f44336; }
 
+#sidebar-categories > div:last-child {
+  width: 100%;
+  max-width: 250px; }
+
+#sidebar-categories ul {
+  padding: 0 !important;
+  min-width: 250px; }
+
+#sidebar-categories #sidebar-categories-title {
+  padding: 6px 15px !important;
+  display: block;
+  background: #333;
+  text-align: cneter;
+  cursor: default;
+  font-size: 13px;
+  color: white;
+  width: 100%;
+  font-weight: bold; }
+  .kibo-lang-ar #sidebar-categories #sidebar-categories-title {
+    text-align: right;
+    font-family: "Cairo", sans-serif; }
+
+#sidebar-categories li {
+  padding: 0 !important;
+  height: auto !important; }
+  #sidebar-categories li a {
+    color: #333;
+    display: block;
+    width: 100%;
+    padding: 5px 40px;
+    font-weight: 500;
+    font-size: 14px;
+    position: relative; }
+    #sidebar-categories li a.selected {
+      color: #333;
+      background: #27ae60;
+      cursor: default; }
+  #sidebar-categories li.logout {
+    border-top: 1px solid #ccc;
+    font-size: 15px; }
+    #sidebar-categories li.logout button {
+      display: block;
+      width: 100%;
+      padding: 12px 40px;
+      background: none;
+      border: none;
+      color: #f44336;
+      text-align: left;
+      font-weight: 500;
+      cursor: pointer;
+      font-size: 14px;
+      text-transform: uppercase; }
+      .kibo-lang-ar #sidebar-categories li.logout button {
+        text-align: right;
+        font-family: "Cairo", sans-serif; }
+  #sidebar-categories li.language {
+    font-size: 15px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0; }
+    #sidebar-categories li.language button {
+      display: block;
+      width: 100%;
+      padding: 12px 15px;
+      border: none;
+      color: #333;
+      font-weight: 500;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: bold;
+      text-align: center;
+      background: #ddd; }
+  #sidebar-categories li #goto-shop {
+    position: relative; }
+    #sidebar-categories li #goto-shop svg {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 21px;
+      fill: #333;
+      right: 10px; }
+
+@media screen and (max-width: 680px) {
+  #header {
+    height: 54px;
+    text-align: left; }
+    #header #logo {
+      padding: 5px 0;
+      max-width: 60px;
+      margin-left: 40px; }
+    #header #menu-icon, #header #search-icon, #header #category-icon {
+      padding: 6px; } }
+
+@media screen and (max-width: 480px) {
+  #header {
+    margin-bottom: 10px; } }
+
 #login-page {
   position: relative;
   min-height: 100vh; }
