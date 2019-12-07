@@ -394,7 +394,7 @@ button.btn {
     top: 50%;
     left: 10px;
     transform: translateY(-50%); }
-  #header #search-icon {
+  #header #filter-icon {
     color: #333;
     position: absolute;
     top: 50%;
