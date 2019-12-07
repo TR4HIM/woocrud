@@ -9,6 +9,7 @@ import { loading , storeWooTags} from '../../store/actions/';
 import API from '../../API/'; 
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
+import { store as notifStore} from 'react-notifications-component';
 
 const FormTags = ({dispatch , USER , WOO_TAGS ,  toEdit=false , currentTags , updateSelectedTags }) =>  {
 
@@ -79,6 +80,17 @@ const FormTags = ({dispatch , USER , WOO_TAGS ,  toEdit=false , currentTags , up
             setWooStoreTags([...wooStoreTags,data]);
             dispatch(storeWooTags([...WOO_TAGS, data]));
             dispatch(loading(false, "header-loader"));
+            notifStore.addNotification({
+                title: "Success",
+                message: "New tag has been added" ,
+                type: "success",
+                container: "top-right",
+                width: 400,
+                dismiss: {
+                  duration: 2000,
+                  onScreen: true
+                }
+            });
         })
         .catch((error)=>{
             dispatch({

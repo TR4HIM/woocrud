@@ -23,4 +23,16 @@
             }
         }
     }
+    .btn-close-modal {
+        position: absolute;
+        right: 15px;
+        top:14px;
+        min-width: auto;
+        width: 30px;
+        height: 30px;
+        border-radius: 100%;
+        line-height: 20px;
+        padding: 0;
+        text-align: center;
+    }
 }

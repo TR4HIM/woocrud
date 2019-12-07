@@ -5,7 +5,6 @@ import MoreVert from '@material-ui/icons/MoreVert';
 import Popover from '@material-ui/core/Popover';
 import Button from '@material-ui/core/Button';
 import ToggleDisplay from 'react-toggle-display';
-
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -15,10 +14,9 @@ import EditIcon from '@material-ui/icons/Edit';
 
 const WooProduct = ({data , deleteFunc , openModalEdit , liveUrl}) => {
 
-    const [anchorEl, setAnchorEl]               =  useState(null);
-    const [isImageLoading, setIsImageLoading]   = useState(false);
-    const [isConfirmed,setIsConfirmed]          = useState(false);
-    const [showConfirmation,setShowConfirmation]          = useState(false);
+    const [anchorEl, setAnchorEl]                       =  useState(null);
+    const [isImageLoading, setIsImageLoading]           = useState(false);
+    const [showConfirmation,setShowConfirmation]        = useState(false);
     
     const openModal = () => {
         setAnchorEl(null);
@@ -49,6 +47,7 @@ const WooProduct = ({data , deleteFunc , openModalEdit , liveUrl}) => {
                 onClose={() => setShowConfirmation(false)}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
+                id="delete-modal-confirmation"
             >
                 <DialogTitle id="alert-dialog-title">
                     Warning

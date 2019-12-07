@@ -8,6 +8,7 @@ import {
         Typography , Checkbox ,
         Divider , Button } from '@material-ui/core';
 import { loading  , storeWooCategories } from '../../store/actions/';
+import { store as notifStore} from 'react-notifications-component';
 import API from '../../API/'; 
 
 const FormCategories = ({dispatch , USER , WOO_CATEGORIES  ,  toEdit=false , currentCategories=null , updateSelectedCategories}) =>  {
@@ -78,6 +79,17 @@ const FormCategories = ({dispatch , USER , WOO_CATEGORIES  ,  toEdit=false , cur
             dispatch(storeWooCategories([...wooStoreCategories, {...data,selected:false}]));
             dispatch(loading(false, "header-loader"));
             categoryInput.current.value = "";
+            notifStore.addNotification({
+                title: "Success",
+                message: "New category has been added" ,
+                type: "success",
+                container: "top-right",
+                width: 400,
+                dismiss: {
+                  duration: 2000,
+                  onScreen: true
+                }
+            });
         })
         .catch((error)=>{
             dispatch({

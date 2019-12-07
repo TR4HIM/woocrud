@@ -160,6 +160,10 @@ a {
     top: 0;
     right: 8px; }
 
+#delete-modal-confirmation #alert-dialog-description strong {
+  font-weight: bold;
+  color: #f44336; }
+
 .rc-pagination {
   text-align: center; }
   .rc-pagination li {
@@ -737,6 +741,18 @@ button.btn {
     color: black; }
     #edit-modal-container .modal-button button a {
       color: black; }
+
+#edit-modal-container .btn-close-modal {
+  position: absolute;
+  right: 15px;
+  top: 14px;
+  min-width: auto;
+  width: 30px;
+  height: 30px;
+  border-radius: 100%;
+  line-height: 20px;
+  padding: 0;
+  text-align: center; }
 
 #products-list {
   -ms-box-orient: horizontal;

@@ -83,11 +83,12 @@ const Products = ({dispatch , USER , WOO_PRODUCTS  }) => {
             dispatch(loading(false, "header-loading"));
             notifStore.addNotification({
                 title: "Success",
-                message:  "Product has been deleted" ,
+                message: "The product has been deleted." ,
                 type: "success",
                 container: "top-right",
+                width: 400,
                 dismiss: {
-                  duration: 5000,
+                  duration: 2000,
                   onScreen: true
                 }
             });
