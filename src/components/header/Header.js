@@ -18,7 +18,7 @@ const Header = ( {dispatch , USER , WOO_CATEGORIES }) => {
 	const [openMenuDrawer,setOpenMenuDrawer] 				= useState(false);
 	const [openCategoriesDrawer,setOpenCategoriesDrawer] 	= useState(false);
 	const [wooStoreCategories, setWooStoreCategories]       = useState([]);
-
+	const [selectedCategory,setSelectedCategory]  			= useState(false);
 	useEffect(() => {
         if(!openMenuDrawer && !openCategoriesDrawer){
             document.body.classList.remove('overflow-hidden');
@@ -27,8 +27,11 @@ const Header = ( {dispatch , USER , WOO_CATEGORIES }) => {
 
 
 	useEffect(()=>{
-        if(WOO_CATEGORIES.length > 0)
-            setWooStoreCategories(JSON.parse(JSON.stringify(WOO_CATEGORIES)));
+        if(WOO_CATEGORIES.length > 0){
+			let allCategories = JSON.parse(JSON.stringify(WOO_CATEGORIES));
+			let categoriesNotEmpty = allCategories.filter(cat => cat.count > 0);
+            setWooStoreCategories(categoriesNotEmpty);
+		}
 	},[WOO_CATEGORIES])
 	
 	useEffect(() => {
@@ -53,9 +56,9 @@ const Header = ( {dispatch , USER , WOO_CATEGORIES }) => {
     }, []);
 	
 	const getWooProducts = (cat) => {
-		let catId = (cat === 'all') ? null : cat;
-        dispatch(loading(true, "header-loader"));
-        API.WC_getWooProducts( USER.token , DEFAULT_PER_PAGE , 1 , catId )
+		setSelectedCategory(cat);
+		dispatch(loading(true, "header-loader"));
+        API.WC_getWooProducts( USER.token , DEFAULT_PER_PAGE , 1 , cat )
         .then((result)=>{ 
             if( result !== undefined ){
                 dispatch(storeWooProducts({ products : result.data , productsCount : result.headers['x-wp-total'] , selectedPage : 1 }));
@@ -109,7 +112,7 @@ const Header = ( {dispatch , USER , WOO_CATEGORIES }) => {
 				</div>
 			</header>
 			<MainMenu open={openMenuDrawer} user={USER} logout={()=>logout()} handleClose={()=>setOpenMenuDrawer(false)}/>
-			<SideBarCategories open={openCategoriesDrawer} selectedCategory={(cat) => getWooProducts(cat)} categories={wooStoreCategories} handleClose={()=>setOpenCategoriesDrawer(false)}/>
+			<SideBarCategories currentCat={selectedCategory} open={openCategoriesDrawer} selectedCategory={(cat) => getWooProducts(cat)} categories={wooStoreCategories} handleClose={()=>setOpenCategoriesDrawer(false)}/>
 		</>
 	)
 };

@@ -10,7 +10,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import List from '@material-ui/core/List';
 
-const SideBarCategories = ( {open = false , categories , handleClose , selectedCategory}) => {
+const SideBarCategories = ( {open = false ,currentCat , categories , handleClose , selectedCategory}) => {
 
 	return (
 		<div>
@@ -24,11 +24,11 @@ const SideBarCategories = ( {open = false , categories , handleClose , selectedC
 					<ListItem button id="sidebar-categories-title">
 						<ListItemText primary="Filter By Category" />
 					</ListItem>
-					<ListItem button onClick={() => selectedCategory("all")}>
+					<ListItem selected={currentCat === 'all'} button onClick={() => selectedCategory("all")}>
 						<ListItemText primary="All" />
 					</ListItem>
 					{categories.map((cat) => (
-						<ListItem button key={cat.id} onClick={() => selectedCategory(cat.id)}>
+						<ListItem selected={currentCat === cat.id} button key={cat.id} onClick={() => selectedCategory(cat.id)}>
 							<ListItemText primary={cat.name} />
 						</ListItem>
 					))}
