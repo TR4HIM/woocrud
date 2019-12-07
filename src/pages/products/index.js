@@ -26,7 +26,7 @@ const Products = ({dispatch , USER , WOO_PRODUCTS  }) => {
     }, []); 
     
     useEffect(() => {
-        if(productsCount > 0){
+        if(productsCount > 0 && pager !== WOO_PRODUCTS.selectedPage){
             getWooProducts(pager);
         }
     }, [pager]);
