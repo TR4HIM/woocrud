@@ -26,13 +26,9 @@ import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import { store as notifStore} from 'react-notifications-component';
-
+import ModalConfirmation from '../../components/modal-confirmation/ModalConfirmation';
+import {APP_PATHS} from '../../config';
 const ProductForm = ({dispatch , USER ,  toEdit=false , productData=null , saveProductAction}) =>  {
 
     const [productID,setProductID]                                          = useState(false);
@@ -56,7 +52,7 @@ const ProductForm = ({dispatch , USER ,  toEdit=false , productData=null , saveP
     const [getProductCategories,setGetProductCategories]                    = useState([]);
     const [isThumbnailUploade,setIsThumbnailUploade]                        = useState(false);
     const [tmpUploadedImageUrl,setTmpUploadedImageUrl]                      = useState("");
-    const [productDeletedImages,setProductDeletedImages]                    = useState([]);
+    // const [productDeletedImages,setProductDeletedImages]                    = useState([]);
     const [isProductDeleted,setIsProductDeleted]                            = useState(false);
     const [ isEditedProductLoaded,setIsEditedProductLoaded]                 = useState(false);
     const [showConfirmation,setShowConfirmation]          = useState(false);
@@ -138,9 +134,9 @@ const ProductForm = ({dispatch , USER ,  toEdit=false , productData=null , saveP
     
     const deleteThumbnailImage = (imgObject) => {
         setProductImage(false);
-        if(typeof imgObject !== "string"){
-            setProductDeletedImages(currentDeletedImages => [...currentDeletedImages, imgObject])
-        }
+        // if(typeof imgObject !== "string"){
+        //     setProductDeletedImages(currentDeletedImages => [...currentDeletedImages, imgObject])
+        // }
     }
     
     const productPayLoadData = () => {
@@ -177,75 +173,50 @@ const ProductForm = ({dispatch , USER ,  toEdit=false , productData=null , saveP
         (toEdit === true) ? saveProductAction({ productId : productID , payload }) : saveProductAction(payload);
     }
 
-    const deleteProduct = () => {
+    const deleteProduct = (action) => {
         setShowConfirmation(false);
-        dispatch(loading(true, "header-loading"));
-        API.WC_deleteProduct(USER.token, productID).then((data)=>{ 
-            setIsProductDeleted(true)
-            dispatch(deleteWooProudct(data.id));
-            dispatch(loading(false, "header-loading"));
-            notifStore.addNotification({
-                title: "Success",
-                message: "The product has been deleted." ,
-                type: "success",
-                container: "top-right",
-                width: 400,
-                dismiss: {
-                  duration: 2000,
-                  onScreen: true
-                }
-            });
-        })
-        .catch((error)=>{
-            // dispatch({
-            //     type : "ERROR",
-            //     payload : error
-            // });
-            notifStore.addNotification({
-                title: "Error!",
-                message:  "Delete Error : please try again !" ,
-                type: "danger",
-                container: "top-center",
-                animationIn: ["animated", "fadeIn"],
-                animationOut: ["animated", "fadeOut"],
-                width: 400,
-                dismiss: {
-                  duration: 5000,
-                  onScreen: true
-                }
-            });
-            dispatch(loading(false, "header-loading"));
-        })
+        if(action === true) {
+            dispatch(loading(true, "header-loading"));
+            API.WC_deleteProduct(USER.token, productID).then((data)=>{ 
+                setIsProductDeleted(true)
+                dispatch(deleteWooProudct(data.id));
+                dispatch(loading(false, "header-loading"));
+                notifStore.addNotification({
+                    title: "Success",
+                    message: "The product has been deleted." ,
+                    type: "success",
+                    container: "top-right",
+                    width: 400,
+                    dismiss: {
+                        duration: 2000,
+                        onScreen: true
+                    }
+                });
+            })
+            .catch((error)=>{
+                notifStore.addNotification({
+                    title: "Error!",
+                    message:  "Delete Error : please try again !" ,
+                    type: "danger",
+                    container: "top-center",
+                    animationIn: ["animated", "fadeIn"],
+                    animationOut: ["animated", "fadeOut"],
+                    width: 400,
+                    dismiss: {
+                        duration: 5000,
+                        onScreen: true
+                    }
+                });
+                dispatch(loading(false, "header-loading"));
+            })
+        }
     }
 
     return (
         
         <Container maxWidth="lg" id="product-form-container">
-                {isProductDeleted && toEdit && <Redirect to={`/mes-produits`} />}
-                <Dialog
-                    open={showConfirmation}
-                    onClose={() => setShowConfirmation(false)}
-                    aria-labelledby="alert-dialog-title"
-                    aria-describedby="alert-dialog-description"
-                    id="delete-modal-confirmation"
-                >
-                    <DialogTitle id="alert-dialog-title">
-                        Warning
-                    </DialogTitle>
-                    <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                        Are you sure you want to delete <strong> { productName } </strong>  ?
-                    </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                    <Button onClick={() => setShowConfirmation(false)} color="primary">
-                        Cancel
-                    </Button>
-                    <Button onClick={deleteProduct} color="primary" autoFocus>
-                        Yes
-                    </Button>
-                    </DialogActions>
-                </Dialog>
+                {isProductDeleted && toEdit && <Redirect to={APP_PATHS.MY_PRODUCTS} />}
+                <ModalConfirmation product={productName} openModalConfirmation={showConfirmation} validateAction={(val)=>deleteProduct(val)}/>
                 <Grid container spacing={3}>
                     <Grid item xs={12} sm={8}>
                         <ValidatorForm onSubmit={() => { productPayLoadData() } }>

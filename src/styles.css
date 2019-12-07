@@ -160,10 +160,6 @@ a {
     top: 0;
     right: 8px; }
 
-#delete-modal-confirmation #alert-dialog-description strong {
-  font-weight: bold;
-  color: #f44336; }
-
 .rc-pagination {
   text-align: center; }
   .rc-pagination li {
@@ -1073,6 +1069,10 @@ button.btn {
     background-color: #3eb99a; }
   100% {
     background-color: #fff; } }
+
+#delete-modal-confirmation #alert-dialog-description strong {
+  font-weight: bold;
+  color: #f44336; }
 
 #login-page {
   position: relative;

@@ -5,12 +5,8 @@ import MoreVert from '@material-ui/icons/MoreVert';
 import Popover from '@material-ui/core/Popover';
 import Button from '@material-ui/core/Button';
 import ToggleDisplay from 'react-toggle-display';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import EditIcon from '@material-ui/icons/Edit';
+import ModalConfirmation from '../../components/modal-confirmation/ModalConfirmation';
 
 const WooProduct = ({data , deleteFunc , openModalEdit , liveUrl}) => {
 
@@ -31,10 +27,14 @@ const WooProduct = ({data , deleteFunc , openModalEdit , liveUrl}) => {
         setAnchorEl(null);
     }
 
-    const deleteProduct = () => {
-        setShowConfirmation(false)
+    const deleteProduct = (action) => {
         setAnchorEl(null)
-        deleteFunc(data.id);
+        if(action === true) {
+            setShowConfirmation(false);
+            deleteFunc(data.id);
+        }
+        else
+            setShowConfirmation(false);
     }
 
     return (
@@ -42,30 +42,7 @@ const WooProduct = ({data , deleteFunc , openModalEdit , liveUrl}) => {
             className={`product ${(data.isUpdated) ? 'product-item-updated' : ''}`} 
             id={data.id} 
         >   
-            <Dialog
-                open={showConfirmation}
-                onClose={() => setShowConfirmation(false)}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-                id="delete-modal-confirmation"
-            >
-                <DialogTitle id="alert-dialog-title">
-                    Warning
-                </DialogTitle>
-                <DialogContent>
-                <DialogContentText id="alert-dialog-description">
-                    Are you sure you want to delete <strong> { data.name } </strong>  ?
-                </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                <Button onClick={() => setShowConfirmation(false)} color="primary">
-                    Cancel
-                </Button>
-                <Button onClick={deleteProduct} color="primary" autoFocus>
-                    Yes
-                </Button>
-                </DialogActions>
-            </Dialog>
+            <ModalConfirmation product={data.name} openModalConfirmation={showConfirmation} validateAction={(val)=>deleteProduct(val)}/>
             <div className="product-info">
                 <h3 className="title">
                     {data.name}
@@ -94,7 +71,7 @@ const WooProduct = ({data , deleteFunc , openModalEdit , liveUrl}) => {
                     >   
                     <ul className="popover-links">
                         <li>
-                            <a href={`${liveUrl}/?post_type=product&p=${data.id}`} target="_blank">
+                            <a href={`${liveUrl}/?post_type=product&p=${data.id}`} target="_blank" rel="noopener noreferrer">
                                 View Product ...
                             </a>
                         </li>

@@ -1,5 +1,3 @@
-import { protocol, endPoint } from "./API/";
-
 export const USE_REDUX_CONSOLE = false;
 
 export const APP_ROUTES = {

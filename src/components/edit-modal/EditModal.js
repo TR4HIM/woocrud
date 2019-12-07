@@ -221,7 +221,6 @@ const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
         
         API.WC_updateProduct(USER.token, id, payload).then(()=>{ 
             dispatch(loading(false, "edit-modal-loading"));
-            console.log({id , ...payload})
             dispatch(updateWooProudct({id , ...payload}));
             notifStore.addNotification({
                 title: "Success",

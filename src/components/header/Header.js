@@ -1,10 +1,8 @@
 import React, { useState ,useEffect} from 'react';
 import {connect} from 'react-redux';
-import { NavLink } from "react-router-dom";
-import { IconButton, MenuItem, Drawer } from '@material-ui/core';
+import { IconButton } from '@material-ui/core';
 import {login} from '../../store/actions/';
 import MenuIcon from '@material-ui/icons/Menu';
-import { APP_ROUTES } from '../../config';
 import Loader from '../loader/loader';
 import MainMenu from '../main-menu/MainMenu';
 
