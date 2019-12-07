@@ -24,6 +24,7 @@ const Layout = ( { dispatch , ERROR }) => {
         <div id="layout"> 
             {/* Notifivation */}
             <ReactNotification />
+             
             {/* LOADER */}
             <Loader id="root-loader" />             
             

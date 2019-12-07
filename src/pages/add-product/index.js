@@ -6,6 +6,7 @@ import ProductForm from '../../components/product-form/ProductForm';
 import API from '../../API/'; 
 import {loading , storeWooProducts} from '../../store/actions/';
 import { Redirect } from 'react-router';
+import { store as notifStore} from 'react-notifications-component';
 
 const DEFAULT_PER_PAGE          = 18;
 
@@ -50,6 +51,17 @@ const AddProduct = ({dispatch , USER , WOO_PRODUCTS }) =>  {
             // remove one product to fix the grid :)
             storeProducts.pop();
             dispatch(storeWooProducts({ products : [data , ...storeProducts]  , productsCount : parseInt(WOO_PRODUCTS.productsCount) + 1 , selectedPage : WOO_PRODUCTS.selectedPage  }));
+            notifStore.addNotification({
+                title: "Success",
+                message:  "Product has been added" ,
+                type: "success",
+                container: "top-right",
+                width: 400,
+                dismiss: {
+                  duration: 2000,
+                  onScreen: true
+                }
+            });
         })
         .catch((error)=>{
             dispatch({
