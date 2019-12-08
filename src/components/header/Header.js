@@ -7,24 +7,24 @@ import Loader from '../loader/loader';
 import MainMenu from '../main-menu/MainMenu';
 import SideBarCategories from '../sidebar-categories/SideBarCategories';
 import FilterListIcon from '@material-ui/icons/FilterList'; 
-import API from '../../API/'; 
 import { loading  , storeWooCategories , storeWooProducts } from '../../store/actions/';
-
+import API from '../../API/'; 
+import {APP_PATHS} from '../../config';
 
 const DEFAULT_PER_PAGE          = 18;
 
-const Header = ( {dispatch , USER , WOO_CATEGORIES }) => {
+const Header = ( { dispatch , USER , WOO_CATEGORIES }) => {
 
 	const [openMenuDrawer,setOpenMenuDrawer] 				= useState(false);
 	const [openCategoriesDrawer,setOpenCategoriesDrawer] 	= useState(false);
 	const [wooStoreCategories, setWooStoreCategories]       = useState([]);
 	const [selectedCategory,setSelectedCategory]  			= useState(false);
+
 	useEffect(() => {
         if(!openMenuDrawer && !openCategoriesDrawer){
             document.body.classList.remove('overflow-hidden');
         }
     }, [openMenuDrawer,openCategoriesDrawer]);
-
 
 	useEffect(()=>{
         if(WOO_CATEGORIES.length > 0){
@@ -105,14 +105,22 @@ const Header = ( {dispatch , USER , WOO_CATEGORIES }) => {
 					<span id="logo" >
 						<img src={`${process.env.PUBLIC_URL}/img/logo.png`} alt="kibo.ma" />
 					</span>
-					<IconButton onClick={handleClickFilter} id="filter-icon" color="inherit" aria-label="Menu">
-						<FilterListIcon />
-					</IconButton>
+					{
+						(APP_PATHS.MY_PRODUCTS === window.location.pathname) ? 
+						(<IconButton onClick={handleClickFilter} id="filter-icon" color="inherit" aria-label="Menu">
+							<FilterListIcon />
+						</IconButton>) : null
+						 
+					}
 					<Loader type="linear" id="header-loader" />
 				</div>
 			</header>
 			<MainMenu open={openMenuDrawer} user={USER} logout={()=>logout()} handleClose={()=>setOpenMenuDrawer(false)}/>
-			<SideBarCategories currentCat={selectedCategory} open={openCategoriesDrawer} selectedCategory={(cat) => getWooProducts(cat)} categories={wooStoreCategories} handleClose={()=>setOpenCategoriesDrawer(false)}/>
+			{
+				(APP_PATHS.MY_PRODUCTS === window.location.pathname) ?
+				<SideBarCategories currentCat={selectedCategory} open={openCategoriesDrawer} selectedCategory={(cat) => getWooProducts(cat)} categories={wooStoreCategories} handleClose={()=>setOpenCategoriesDrawer(false)}/>
+				: null
+			}
 		</>
 	)
 };
