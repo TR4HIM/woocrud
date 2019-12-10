@@ -28,13 +28,11 @@ const WooProduct = ({data , deleteFunc , openModalEdit , liveUrl}) => {
     }
 
     const deleteProduct = (action) => {
-        setAnchorEl(null)
+        setAnchorEl(null);
+        setShowConfirmation(false);
         if(action === true) {
-            setShowConfirmation(false);
             deleteFunc(data.id);
         }
-        else
-            setShowConfirmation(false);
     }
 
     return (
@@ -69,23 +67,23 @@ const WooProduct = ({data , deleteFunc , openModalEdit , liveUrl}) => {
                             horizontal: 'right',
                           }}
                     >   
-                    <ul className="popover-links">
-                        <li>
-                            <a href={`${liveUrl}/?post_type=product&p=${data.id}`} target="_blank" rel="noopener noreferrer">
-                                View Product ...
-                            </a>
-                        </li>
-                        <li>
-                            <Link to={`/edit-produit/${data.id}`}>
-                                Advanced Edit
-                            </Link>
-                        </li>
-                        <li>
-                            <a onClick={() => setShowConfirmation(true)} className="danger">
-                                Delete Product
-                            </a>
-                        </li>
-                    </ul>
+                        <ul className="popover-links">
+                            <li>
+                                <a href={`${liveUrl}/?post_type=product&p=${data.id}`} target="_blank" rel="noopener noreferrer">
+                                    View Product ...
+                                </a>
+                            </li>
+                            <li>
+                                <Link to={`/edit-produit/${data.id}`}>
+                                    Advanced Edit
+                                </Link>
+                            </li>
+                            <li>
+                                <a id="product-item-delete-button" onClick={() => setShowConfirmation(true)} className="danger">
+                                    Delete Product
+                                </a>
+                            </li>
+                        </ul>
                     </Popover>
                 </div>
             </div>
