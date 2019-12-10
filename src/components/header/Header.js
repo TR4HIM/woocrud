@@ -103,7 +103,7 @@ const Header = ( { dispatch , USER , WOO_CATEGORIES }) => {
 						<MenuIcon />
 					</IconButton>
 					<span id="logo" >
-						<img src={`${process.env.PUBLIC_URL}/img/logo.png`} alt="kibo.ma" />
+						<img src={`${process.env.PUBLIC_URL}/img/logo.png`} alt="WooCrud" />
 					</span>
 					{
 						(APP_PATHS.MY_PRODUCTS === window.location.pathname) ? 

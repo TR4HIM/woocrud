@@ -1,7 +1,6 @@
 import React from 'react';
 import { shallow } from '../../../jest.setup'
 import ProductItem from '../product-item/ProductItem';
-import ModalConfirmation from '../modal-confirmation/ModalConfirmation';
 
 const minData = {id:1 , isUpdated : true , name : 'product1' , regular_price : 10 , sale_price : 15, images : [{src:'urlImg3'},{src:'urlImg2'}] }
 
