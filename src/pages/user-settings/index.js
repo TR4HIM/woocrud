@@ -244,7 +244,6 @@ const UserSettings = ({ dispatch , USER , USER_PROFILE }) => {
                         />
                     </ValidatorForm>
                     <ValidatorForm
-                        // forwardRef="form"
                         onSubmit={submitChangePassword.bind(this)}
                         onError={errors => console.log(errors)}
                     >

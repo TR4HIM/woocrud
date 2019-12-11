@@ -15,7 +15,6 @@ const Products = ({dispatch , USER , WOO_PRODUCTS  }) => {
 
     const [productsCount,setProductsCount]      = useState(0);
     const [pager,setPager]                      = useState(1);
-    const [perPage,setPerPage]                  = useState(DEFAULT_PER_PAGE);
     const [wooProducts,setWooProducts]          = useState([]);
     
     useEffect(() => {
@@ -41,7 +40,7 @@ const Products = ({dispatch , USER , WOO_PRODUCTS  }) => {
 
     const getWooProducts = () => {
         dispatch(loading(true, "header-loader"));
-        API.WC_getWooProducts( USER.token , perPage ,pager )
+        API.WC_getWooProducts( USER.token , DEFAULT_PER_PAGE  ,pager )
         .then((result)=>{
             if( result !== undefined ){
                 dispatch(storeWooProducts({ products : result.data , productsCount : result.headers['x-wp-total'] , selectedPage : pager }));

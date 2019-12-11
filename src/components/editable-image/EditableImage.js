@@ -7,10 +7,10 @@ const EditableImage = ( { imageObject , removeImageFunc } ) => {
     if(typeof imageObject === "string"){
         imagePreview = imageObject;
     }else{
-        if('imageObject' in imageObject) 
-            imagePreview = URL.createObjectURL(imageObject.imageObject);
-        else if('sourceUrl' in imageObject)
+        if('sourceUrl' in imageObject)
             imagePreview = imageObject.sourceUrl;
+        else  if('imageObject' in imageObject) 
+            imagePreview = URL.createObjectURL(imageObject.imageObject);
     }
     let imgUrl = imageObject ? imagePreview : `${process.env.PUBLIC_URL}/img/logo.png`;
     return(

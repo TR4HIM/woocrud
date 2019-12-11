@@ -48,9 +48,7 @@ const FormGallery = ({dispatch , USER ,  toEdit=false , currentGallery=null , sa
     const uploadProductImage = (file) => {
         let imageObject = file.imageObject;
         let formData    = new FormData();
-
         formData.append( 'file', imageObject );
-        
         dispatch(loading(true, "header-loader"));
         return API.WP_uploadImage(USER.token, formData).then((data)=>{ 
             return data;
@@ -71,7 +69,7 @@ const FormGallery = ({dispatch , USER ,  toEdit=false , currentGallery=null , sa
             let id = i+productImage.name;
             let imageObj = {id, name : productImage.name, isUloading : true, imageObject : productImage};
             setIsThumbnailUploade(false);
-            setProductGallery( currentGallery => [...currentGallery,  imageObj]);
+            setProductGallery( currentGallery => [...currentGallery, imageObj ]);
             
             await uploadProductImage(imageObj).then((data)=>{
                 setTmpUploadedImageUrl(data.source_url); 
