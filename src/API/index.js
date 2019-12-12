@@ -44,12 +44,10 @@ const WC_getWooProducts = (token,perpage,pager,category='all')=>{
         }
     })
     .then((result)=>{
-        
         return result;
     })
     .catch((error)=>{
-        if ( !axios.isCancel(error)) 
-            return error;
+        return error;
     })
 }
 
@@ -63,8 +61,7 @@ const WC_getWooProductById = (token, productId)=>{
         return result.data;
     })
     .catch((error)=>{
-        if ( !axios.isCancel(error)) 
-            return error;
+        return error;
     })
 }
 

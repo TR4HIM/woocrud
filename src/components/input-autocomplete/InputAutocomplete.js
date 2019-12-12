@@ -10,40 +10,40 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { loading } from '../../store/actions/';
 import API from '../../API/'; 
 
-  // API Search with Cancel
-  const SEARCH  = API.WC_getWooProductByName();
+// API Search with Cancel
+const SEARCH  = API.WC_getWooProductByName();
 
-  const renderSuggestion = (suggestionProps) => {
-    const { suggestion, index, itemProps, highlightedIndex, selectedItem } = suggestionProps;
+const renderSuggestion = (suggestionProps) => {
+  const { suggestion, itemProps } = suggestionProps;
+  return (
+    <MenuItem
+      {...itemProps}
+      key={suggestion.name}
+      component="div"
+    >
+      {suggestion.name}
+    </MenuItem>
+  );
+}
+
+const renderInput = (inputProps) => {
+    const { InputProps,   ref, ...other } = inputProps;
+  
     return (
-      <MenuItem
-        {...itemProps}
-        key={suggestion.name}
-        component="div"
-      >
-        {suggestion.name}
-      </MenuItem>
+      <TextField
+        InputProps={{
+          inputRef: ref,
+          classes: {
+            root: 'page-root',
+            input: 'auto-complete-input',
+          },
+          ...InputProps,
+        }}
+        {...other}
+        
+      />
     );
-  }
-
-  const renderInput = (inputProps) => {
-      const { InputProps,   ref, ...other } = inputProps;
-    
-      return (
-        <TextField
-          InputProps={{
-            inputRef: ref,
-            classes: {
-              root: 'page-root',
-              input: 'auto-complete-input',
-            },
-            ...InputProps,
-          }}
-          {...other}
-          
-        />
-      );
-  }
+}
 
 const ProductsAutoComplete = ({dispatch , USER , fieldLabel , onChangeAuto , currentProduct = []}) => {
 
@@ -75,12 +75,12 @@ const ProductsAutoComplete = ({dispatch , USER , fieldLabel , onChangeAuto , cur
             let id = relatedProducts[i];
             await API.WC_getWooProductById(USER.token, id)
             .then((result)=>{
-                if( result !== undefined ){
-                    // HIDE LOADER
-                    let productItem = {id:result.id, name:result.name};
-                    listProductsData.push(productItem)
-                    dispatch(loading(false, "header-loader"));
+                if( result !== undefined && !('response' in result) ){
+                  // HIDE LOADER
+                  let productItem = {id:result.id, name:result.name};
+                  listProductsData.push(productItem)
                 }
+                dispatch(loading(false, "header-loader"));
             })
             .catch((error)=>{
                 dispatch({
@@ -218,9 +218,9 @@ const ProductsAutoComplete = ({dispatch , USER , fieldLabel , onChangeAuto , cur
 }
 
 ProductsAutoComplete.propTypes = {
-  fieldLabel : PropTypes.string,
-  onChangeAuto : PropTypes.func,
-  currentProduct : PropTypes.array
+  fieldLabel      : PropTypes.string,
+  onChangeAuto    : PropTypes.func,
+  currentProduct  : PropTypes.array
 }
 
 const mapStateToProps = ({ USER }) => ({ USER });
