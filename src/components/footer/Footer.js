@@ -1,10 +1,10 @@
 import React  from 'react';
+import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 
 const Footer = () => {
     return (
         <footer id="main-footer">
-             
-            &copy; Copyright {(new Date().getFullYear())}
+            {(new Date().getFullYear())} © WooCrud. All Rights Reserved. Crafted with { <FavoriteBorderIcon /> } By <a href="#"> <strong>Us</strong> </a>
         </footer>
     )
 };

@@ -41,15 +41,19 @@
     
 }
 
-
 #main-menu{
     > div:last-child{
         width: 100%;
         max-width: 250px;
     }
+    .MuiDrawer-paper {
+        background-color: #242e3e;
+        color: white;
+        width: 250px;
+    }
     ul{
         padding: 0 !important;
-        min-width: 250px;
+        min-width: 300px;
     }
     #connected-user{
         padding: 6px 15px !important;
@@ -68,15 +72,15 @@
         height: auto !important;
         
         a{
-            color : $black;
             display: block;
             width: 100%;
-            padding: 10px 40px;
+            padding: 10px 40px 10px 10px;
             font-weight: 500;
-            font-size: 14px;
+            font-size: 13px;
             position: relative;
+            color: #b5bdca;
             &.selected{
-                color: $black;
+                color: #fff;
                 background: $primary;
                 cursor: default;
             }
@@ -86,9 +90,10 @@
             border-top: 1px solid #ccc;
             font-size: 15px;
             button{
+                font-weight: bold;
                 display: block;
                 width: 100%;
-                padding: 12px 40px;
+                padding: 10px 40px 10px 10px;
                 background: none;
                 border: none;
                 color: $danger;
@@ -98,39 +103,6 @@
                 font-size: 14px;
                 text-transform: uppercase;
                 @include arabsettings();
-            }
-        }
-        &.language{
-            font-size: 15px;
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            
-            button{
-                display: block;
-                width: 100%;
-                padding: 12px 15px;
-                border: none;
-                color: $black;
-                font-weight: 500;
-                cursor: pointer;
-                font-size: 15px;
-                font-weight: bold;
-                text-align: center;
-                background: #ddd;
-            }
-        }
-
-        #goto-shop{
-            position: relative;
-            svg{
-                position: absolute;
-                top: 50%;
-                transform: translateY(-50%);
-                font-size: 21px;
-                fill : $black;
-                right: 10px;
             }
         }
     }

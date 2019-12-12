@@ -14,11 +14,11 @@ const MainMenu = ( {open = false , user , logout , handleClose}) => {
 				anchor="right" 
 				onClose={handleClose}
 			>
-				<MenuItem>
+				{/* <MenuItem>
 					<span id="connected-user">
 						Welcome , {user.user_display_name || user.user_nicename}
 					</span>
-				</MenuItem>
+				</MenuItem> */}
 				<MenuItem>
 					<NavLink activeClassName='selected' to={APP_ROUTES.MY_PRODUCTS}>
 						MY PRODUCTS 
