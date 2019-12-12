@@ -224,7 +224,7 @@ const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
             dispatch(updateWooProudct({id , ...payload}));
             notifStore.addNotification({
                 title: "Success",
-                message: ` Product field ${field.replace('_',' ')}  has been updated ` ,
+                message: `Product ${field.replace('_',' ')}  has been updated` ,
                 type: "success",
                 container: "top-right",
                 width: 400,
@@ -271,9 +271,7 @@ const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
                 <Grid container spacing={3}>
                     <Grid item xs={12} sm={8}>
                         <ValidatorForm
-                            // forwardRef="form-email"
-                            onSubmit={()=>{console.log('Done')}}
-                            onError={errors => console.log(errors)}
+                            onSubmit={()=>{}}
                         > 
                             <TextValidator
                                 id="product-name"
@@ -298,12 +296,8 @@ const EditProductModal = ({dispatch  , USER ,  EDITING_WOO_PRODUCT}) => {
                                 name="regular-price"
                                 value={regularPrice}
                                 validatorListener={(valid)=>setIsPriceValide(valid)}
-                                validators={[
-                                    'isNumber'
-                                ]}
-                                errorMessages={[ 
-                                    "Invalide number"
-                                ]}
+                                validators={[ 'isNumber' ]}
+                                errorMessages={[ "Invalide number" ]}
                                 className="default-input"
                                 type="text"
                                 InputLabelProps={{ shrink: true }}
