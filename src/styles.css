@@ -62,8 +62,7 @@ a {
   text-decoration: none; }
 
 #layout {
-  height: 100vh;
-  padding-bottom: 100px; }
+  height: 100vh; }
 
 #container {
   padding-bottom: 20px; }
@@ -320,16 +319,14 @@ button.btn {
 #main-footer {
   text-align: center;
   padding: 15px 0;
-  position: relative;
   bottom: 0;
   left: 0;
   right: 0;
   border-bottom: 1px solid #e7e7e7;
   background: white;
   padding: 20px 0;
-  position: sticky;
+  position: fixed;
   text-align: center;
-  margin-bottom: 20px;
   z-index: 10; }
   #main-footer .MuiSvgIcon-root {
     color: #ff5c75;
