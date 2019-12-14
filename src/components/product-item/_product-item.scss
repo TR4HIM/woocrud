@@ -27,7 +27,7 @@
         border: 0px;
         transition: all 0.3s ease;
         letter-spacing: 0.5px;
-        padding: 15px;
+        padding: 5px;
         box-shadow: 0 0.05rem 0.01rem rgba(75,75,90,.075);
         border-radius: .25rem;
         .product-action {
@@ -37,7 +37,7 @@
             position: absolute;
             bottom: 0;
             right: 0;
-            padding: 0;
+            padding: 0 5px;
             transition:all .3s;
             z-index: 100;
             opacity: 0;
@@ -45,16 +45,15 @@
                 opacity: 1;
             }
             .action-icon {
-                display: inline-block;
-                padding: 5px 5px 10px;
-
-                button , a  {
+                padding: 5px 0 10px;
+                float: right;
+                button , a , .text-private   {
                     width: 100%;
                     padding: 0;
                     margin: 0;
                     min-width: auto;
-                    height: 35px;
-                    width: 35px;
+                    height: 30px;
+                    width: 30px;
                     align-items: center;
                     border-radius: 50%;
                     display: flex;
@@ -62,11 +61,31 @@
                     background-color: rgb(255, 255, 255 );
                     color: inherit;
                     text-decoration: none;
-                    border:1px solid rgba(black,.1)
+                    border:1px solid rgba(black,.1);
+                }
+                svg {
+                    font-size: 18px;
                 }
             }
             .action-icon-preview {
                 float: left;
+                svg {
+                    font-size: 14px;
+                }
+            }
+            .action-icon-edit {
+                padding: 5px 5px 10px;
+                svg {
+                    font-size: 14px;
+                }
+            }
+            .action-icon-private {
+                .text-private {
+                    width: auto;
+                    border-radius: 20px;
+                    padding: 5px 8px;
+                    font-size: 13px;
+                }
             }
         }
         &:hover{
@@ -150,7 +169,7 @@
         }
         .product-img-container {
             position: relative;
-            cursor: pointer;
+            // cursor: pointer;
             margin-bottom: 10px;
         }
         .title{

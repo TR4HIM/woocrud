@@ -6,13 +6,14 @@
     right: 0;
     border-bottom: 1px solid #e7e7e7;
     background: white;
-    padding: 20px 0;
+    padding: 10px 0;
     position: fixed;
     text-align: center;
     z-index: 10;
+    font-size: 12px;
     .MuiSvgIcon-root {
         color : #ff5c75;
-        font-size: 14px;
+        font-size: 10px;
     }
     a {
         color: inherit;
