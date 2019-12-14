@@ -85,6 +85,7 @@ const FormTags = ({dispatch , USER , WOO_TAGS ,  toEdit=false , currentTags , up
             notifStore.addNotification({
                 message: "New tag has been added" ,
                 container: "top-right",
+                type: "success",
                 width: 400,
                 dismiss: {
                   duration: 2000,
@@ -93,6 +94,7 @@ const FormTags = ({dispatch , USER , WOO_TAGS ,  toEdit=false , currentTags , up
             });
         })
         .catch((error)=>{
+            console.log(error)
             dispatch({
                 type : "ERROR",
                 payload : error
