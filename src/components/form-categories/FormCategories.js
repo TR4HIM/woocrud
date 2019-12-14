@@ -10,6 +10,7 @@ import {
 import { loading  , storeWooCategories } from '../../store/actions/';
 import { store as notifStore} from 'react-notifications-component';
 import API from '../../API/'; 
+import Loader from '../loader/loader';
 
 const FormCategories = ({dispatch , USER , WOO_CATEGORIES  ,  toEdit=false , currentCategories=null , updateSelectedCategories}) =>  {
 
@@ -74,13 +75,13 @@ const FormCategories = ({dispatch , USER , WOO_CATEGORIES  ,  toEdit=false , cur
     }, []);
 
     const addCategoryToWoo = (payload) => {
+        dispatch(loading(true, "add-category-loading"));
         API.WC_createWooCategories(USER.token,payload).then((data)=>{ 
             setGetProductCategories(currentTags => [...currentTags, {...data,selected:true}]);
             dispatch(storeWooCategories([...wooStoreCategories, {...data,selected:false}]));
-            dispatch(loading(false, "header-loader"));
+            dispatch(loading(false, "add-category-loading"));
             categoryInput.current.value = "";
             notifStore.addNotification({
-                title: "Success",
                 message: "New category has been added" ,
                 type: "success",
                 container: "top-right",
@@ -97,7 +98,7 @@ const FormCategories = ({dispatch , USER , WOO_CATEGORIES  ,  toEdit=false , cur
                 payload : error
             });
             // HIDE LOADING
-            dispatch(loading(false, "header-loader"));
+            dispatch(loading(false, "add-category-loading"));
         })
     }
 
@@ -141,7 +142,8 @@ const FormCategories = ({dispatch , USER , WOO_CATEGORIES  ,  toEdit=false , cur
     }
 
     return (
-        <Paper className="product-form">
+        <Paper id="add-category-form" className="product-form">
+            <Loader id="add-category-loading"  type="linear" />
             <Typography variant="subtitle2" className="paper-title" gutterBottom>
                 Categories
             </Typography>

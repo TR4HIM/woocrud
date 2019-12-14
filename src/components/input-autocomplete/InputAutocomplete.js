@@ -80,7 +80,7 @@ const ProductsAutoComplete = ({dispatch , USER , fieldLabel , onChangeAuto , cur
                   let productItem = {id:result.id, name:result.name};
                   listProductsData.push(productItem)
                 }
-                dispatch(loading(false, "header-loader"));
+                dispatch(loading(false, "auto-complete-loading"));
             })
             .catch((error)=>{
                 dispatch({
@@ -88,7 +88,7 @@ const ProductsAutoComplete = ({dispatch , USER , fieldLabel , onChangeAuto , cur
                     payload : error
                 })
                 // HIDE LOADING
-                dispatch(loading(false, "header-loader"));
+                dispatch(loading(false, "auto-complete-loading"));
             })
         }
 
@@ -98,14 +98,14 @@ const ProductsAutoComplete = ({dispatch , USER , fieldLabel , onChangeAuto , cur
     const getSuggestions = (value) => {
       const inputValue = deburr(value.trim()).toLowerCase();
 
-      dispatch(loading(true, "header-loader"));
+      dispatch(loading(true, "auto-complete-loading"));
 
       // TO ADD : Show only unselected products
       SEARCH(USER.token,inputValue).then((result)=>{ 
         if((result !== undefined)){
           setSuggestionProduct(result);
           // HIDE LOADING
-          dispatch(loading(false, "header-loader"));
+          dispatch(loading(false, "auto-complete-loading"));
         }
       })
       .catch((error)=>{
@@ -114,7 +114,7 @@ const ProductsAutoComplete = ({dispatch , USER , fieldLabel , onChangeAuto , cur
               payload : error
           });
           // HIDE LOADING
-          dispatch(loading(false, "header-loader"));
+          dispatch(loading(false, "auto-complete-loading"));
       })
     }
 

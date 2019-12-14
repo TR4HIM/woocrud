@@ -1,66 +1,21 @@
 #main-footer{
-    background: #f8f8f8;
     text-align: center;
     padding: 15px 0;
-    position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
-    z-index: 99999;
-}
-
-#newsletter{
-    height: 65px;
-    background: $primary;
-    padding: 11px 0;
-    span{
-        line-height: 40px;
-        font-size: 22px;
-        float: left;
-        font-weight: 100;
-        small{
-            font-size: 15px;
-            b{
-                font-weight: 700;
-            }
-        }
+    border-bottom: 1px solid #e7e7e7;
+    background: white;
+    padding: 10px 0;
+    position: fixed;
+    text-align: center;
+    z-index: 10;
+    font-size: 12px;
+    .MuiSvgIcon-root {
+        color : #ff5c75;
+        font-size: 10px;
     }
-}
-
-#newsletter-form{
-    float: right;
-    width: 35%;
-    border-radius : 20px;
-    position: relative;
-    input{
-        background: white;
-        border : 2px solid $primary;
-        border-radius : 20px;
-        height: 42px;
-        width: 100%;
-        padding-left : 20px;
-        padding-right : 20px;
-    }
-    button{
-        border-radius : 0 20px 20px 0;
-        position: absolute;
-        right: 2px;
-        height: 38px;
-        border: none;
-        top: 2px;
-        background: $gray-dark;
-        color: white;
-        font-weight: 700;
-        padding-left : 15px;
-        padding-right : 15px;
-    }
-}
-
-#main-footer{
-    p{
-        line-height: 300px;
-        font-weight: 100;
-        font-size: 60px;
-        text-align: center
+    a {
+        color: inherit;
     }
 }

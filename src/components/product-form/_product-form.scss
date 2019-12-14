@@ -1,6 +1,7 @@
 #product-form-container {
     .product-form {
         position: relative;
+        overflow: hidden;
         .delete-product-btn {
             position: absolute;
             right:15px;
@@ -26,5 +27,16 @@
     .add-tag {
         padding: 15px 10px ;
         text-align: center;
+    }
+
+    #auto-complete-panel {
+        position: relative;
+        overflow: hidden;
+    }
+    #auto-complete-loading , #product-image-loading {
+        width: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
     }
 }

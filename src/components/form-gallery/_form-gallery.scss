@@ -1,0 +1,10 @@
+#product-gallery-container {
+    position: relative;
+    overflow: hidden;
+    #product-gallery-loading {
+        width: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+}

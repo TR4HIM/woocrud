@@ -36,10 +36,10 @@ table {
 
 html {
   min-height: 100%;
-  background: #eee; }
+  background: #f3f4f7; }
 
 body {
-  font-family: "Roboto", sans-serif;
+  font-family: "Mada", sans-serif;
   font-size: 15px;
   line-height: 1;
   color: #333e48;
@@ -54,7 +54,7 @@ body {
     overflow: hidden !important; }
 
 button, input, textarea, select {
-  font-family: "Roboto", sans-serif;
+  font-family: "Mada", sans-serif;
   font-size: 14px;
   outline: none; }
 
@@ -72,7 +72,7 @@ a {
   padding: 10px 10px;
   margin-bottom: 10px;
   margin-top: 3px;
-  font-family: "Roboto", sans-serif;
+  font-family: "Mada", sans-serif;
   color: #606060; }
   #breadcrumb span {
     color: #858d92; }
@@ -153,7 +153,7 @@ a {
   background: #111;
   padding-right: 50px; }
   #snackbar > div #message-id {
-    color: #f44336;
+    color: #f58a01;
     font-style: italic; }
   #snackbar > div button {
     position: absolute;
@@ -266,7 +266,7 @@ p {
   border: none;
   cursor: pointer; }
   .btn:hover {
-    background: #0062bd;
+    background: #ffd800;
     color: white;
     transition: background .3s ease-out, color .3s ease-out; }
   .btn.primary {
@@ -276,7 +276,7 @@ p {
       color: white;
       transition: background .3s ease-out, color .3s ease-out; }
   .btn.secondary {
-    background: #0062bd;
+    background: #ffd800;
     color: white; }
     .btn.secondary:hover {
       background: #333e48;
@@ -317,60 +317,23 @@ button.btn {
     bottom: -3px; }
 
 #main-footer {
-  background: #f8f8f8;
   text-align: center;
   padding: 15px 0;
-  position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  z-index: 99999; }
-
-#newsletter {
-  height: 65px;
-  background: #27ae60;
-  padding: 11px 0; }
-  #newsletter span {
-    line-height: 40px;
-    font-size: 22px;
-    float: left;
-    font-weight: 100; }
-    #newsletter span small {
-      font-size: 15px; }
-      #newsletter span small b {
-        font-weight: 700; }
-
-#newsletter-form {
-  float: right;
-  width: 35%;
-  border-radius: 20px;
-  position: relative; }
-  #newsletter-form input {
-    background: white;
-    border: 2px solid #27ae60;
-    border-radius: 20px;
-    height: 42px;
-    width: 100%;
-    padding-left: 20px;
-    padding-right: 20px; }
-  #newsletter-form button {
-    border-radius: 0 20px 20px 0;
-    position: absolute;
-    right: 2px;
-    height: 38px;
-    border: none;
-    top: 2px;
-    background: #333e48;
-    color: white;
-    font-weight: 700;
-    padding-left: 15px;
-    padding-right: 15px; }
-
-#main-footer p {
-  line-height: 300px;
-  font-weight: 100;
-  font-size: 60px;
-  text-align: center; }
+  border-bottom: 1px solid #e7e7e7;
+  background: white;
+  padding: 10px 0;
+  position: fixed;
+  text-align: center;
+  z-index: 10;
+  font-size: 12px; }
+  #main-footer .MuiSvgIcon-root {
+    color: #ff5c75;
+    font-size: 10px; }
+  #main-footer a {
+    color: inherit; }
 
 #header {
   border-bottom: 1px solid #e7e7e7;
@@ -453,7 +416,7 @@ button.btn {
       padding: 12px 40px;
       background: none;
       border: none;
-      color: #f44336;
+      color: #f58a01;
       text-align: left;
       font-weight: 500;
       cursor: pointer;
@@ -544,14 +507,19 @@ button.btn {
   width: 100%;
   max-width: 250px; }
 
+#main-menu .MuiDrawer-paper {
+  background-color: #242e3e;
+  color: white;
+  width: 250px; }
+
 #main-menu ul {
   padding: 0 !important;
-  min-width: 250px; }
+  min-width: 300px; }
 
 #main-menu #connected-user {
-  padding: 6px 15px !important;
+  padding: 10px 15px !important;
   display: block;
-  background: #333;
+  background: #151965;
   text-align: left;
   font-style: italic;
   cursor: default;
@@ -566,27 +534,28 @@ button.btn {
   padding: 0 !important;
   height: auto !important; }
   #main-menu li a {
-    color: #333;
     display: block;
     width: 100%;
-    padding: 10px 40px;
+    padding: 10px 40px 10px 10px;
     font-weight: 500;
-    font-size: 14px;
-    position: relative; }
+    font-size: 13px;
+    position: relative;
+    color: #b5bdca; }
     #main-menu li a.selected {
-      color: #333;
+      color: #fff;
       background: #27ae60;
       cursor: default; }
   #main-menu li.logout {
     border-top: 1px solid #ccc;
     font-size: 15px; }
     #main-menu li.logout button {
+      font-weight: bold;
       display: block;
       width: 100%;
-      padding: 12px 40px;
+      padding: 10px 40px 10px 10px;
       background: none;
       border: none;
-      color: #f44336;
+      color: #f58a01;
       text-align: left;
       font-weight: 500;
       cursor: pointer;
@@ -595,33 +564,6 @@ button.btn {
       .kibo-lang-ar #main-menu li.logout button {
         text-align: right;
         font-family: "Cairo", sans-serif; }
-  #main-menu li.language {
-    font-size: 15px;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0; }
-    #main-menu li.language button {
-      display: block;
-      width: 100%;
-      padding: 12px 15px;
-      border: none;
-      color: #333;
-      font-weight: 500;
-      cursor: pointer;
-      font-size: 15px;
-      font-weight: bold;
-      text-align: center;
-      background: #ddd; }
-  #main-menu li #goto-shop {
-    position: relative; }
-    #main-menu li #goto-shop svg {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 21px;
-      fill: #333;
-      right: 10px; }
 
 @media screen and (max-width: 680px) {
   #header {
@@ -695,7 +637,8 @@ button.btn {
       cursor: pointer; }
 
 #product-form-container .product-form {
-  position: relative; }
+  position: relative;
+  overflow: hidden; }
   #product-form-container .product-form .delete-product-btn {
     position: absolute;
     right: 15px;
@@ -720,6 +663,16 @@ button.btn {
 #product-form-container .add-tag {
   padding: 15px 10px;
   text-align: center; }
+
+#product-form-container #auto-complete-panel {
+  position: relative;
+  overflow: hidden; }
+
+#product-form-container #auto-complete-loading, #product-form-container #product-image-loading {
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0; }
 
 #edit-modal-container .edit-modal-title {
   position: relative; }
@@ -755,24 +708,77 @@ button.btn {
   display: flex;
   flex-flow: row wrap;
   align-items: stretch;
-  padding: 0 10px 10px;
   margin-bottom: 10px;
+  padding: 0 5px;
   /* blue bar */ }
-  #products-list.few-products .product {
-    max-width: 200px; }
+  #products-list .product-item {
+    width: 100%;
+    max-width: 16.66667%;
+    padding: 10px; }
   #products-list .product {
     background: white;
-    width: 200px;
-    max-width: 300px;
-    padding: 10px;
-    margin: 2px;
     text-align: center;
     position: relative;
-    flex-grow: 1; }
+    flex-grow: 1;
+    padding: 5px;
+    border-radius: 5px;
+    border: 0px;
+    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
+    padding: 5px;
+    box-shadow: 0 0.05rem 0.01rem rgba(75, 75, 90, 0.075);
+    border-radius: .25rem; }
+    #products-list .product .product-action {
+      width: 100%;
+      overflow: hidden;
+      text-align: right;
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      padding: 0 5px;
+      transition: all .3s;
+      z-index: 100;
+      opacity: 0; }
+      #products-list .product .product-action.active {
+        opacity: 1; }
+      #products-list .product .product-action .action-icon {
+        padding: 5px 0 10px;
+        float: right; }
+        #products-list .product .product-action .action-icon button, #products-list .product .product-action .action-icon a, #products-list .product .product-action .action-icon .text-private {
+          width: 100%;
+          padding: 0;
+          margin: 0;
+          min-width: auto;
+          height: 30px;
+          width: 30px;
+          align-items: center;
+          border-radius: 50%;
+          display: flex;
+          justify-content: center;
+          background-color: white;
+          color: inherit;
+          text-decoration: none;
+          border: 1px solid rgba(0, 0, 0, 0.1); }
+        #products-list .product .product-action .action-icon svg {
+          font-size: 18px; }
+      #products-list .product .product-action .action-icon-preview {
+        float: left; }
+        #products-list .product .product-action .action-icon-preview svg {
+          font-size: 14px; }
+      #products-list .product .product-action .action-icon-edit {
+        padding: 5px 5px 10px; }
+        #products-list .product .product-action .action-icon-edit svg {
+          font-size: 14px; }
+      #products-list .product .product-action .action-icon-private .text-private {
+        width: auto;
+        border-radius: 20px;
+        padding: 5px 8px;
+        font-size: 13px; }
+    #products-list .product:hover .product-action {
+      opacity: 1;
+      background-color: rgba(0, 0, 0, 0.01); }
     #products-list .product .product-info {
-      margin-bottom: 10px;
-      position: relative;
-      padding-right: 20px; }
+      min-height: 55px; }
     #products-list .product .no-thumbnail {
       text-align: center;
       padding: 100% 0  0 0;
@@ -830,128 +836,40 @@ button.btn {
         display: none; }
     #products-list .product .product-img-container {
       position: relative;
-      cursor: pointer; }
-    #products-list .product .btn-edit-modal {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      min-width: auto;
-      border-radius: 100%;
-      text-align: center;
-      width: 40px;
-      height: 40px;
-      transform: translate(-50%, -50%);
-      z-index: 100;
-      color: #fff;
-      background-color: rgba(39, 174, 96, 0.9);
-      display: block;
-      font-size: 16px;
-      opacity: 0; }
+      margin-bottom: 10px; }
     #products-list .product .title {
-      font-size: 12px;
-      font-weight: 500;
       text-align: left;
       line-height: 15px;
-      padding-top: 2px;
-      height: 35px; }
-    #products-list .product .product-edit-btns {
-      position: absolute;
-      z-index: 5;
-      left: 0;
-      top: 50%;
-      width: 100%;
-      transform: translateY(-50%); }
-    #products-list .product .edit-btn {
-      display: block;
-      padding: 10px 10px;
-      border: 1px solid #333;
-      margin: 5px auto;
-      width: 75%;
-      border-radius: 4px;
-      background: white;
-      transition: .2s opacity ease-out;
-      text-transform: uppercase;
-      font-size: 13px;
-      color: #000;
-      font-weight: bold;
-      z-index: 10;
-      opacity: 0;
-      cursor: pointer; }
-      #products-list .product .edit-btn:hover {
-        background: #CDDC39;
-        border-color: #CDDC39; }
-      #products-list .product .edit-btn a {
-        color: black; }
-    #products-list .product .adv-edit-btn {
-      position: absolute;
-      z-index: 5;
-      right: 0;
-      top: 0;
-      padding: 0;
-      border: 1px solid #CDDC39;
-      margin: auto;
-      height: 30px;
-      width: 30px;
-      border-radius: 100%;
-      background: #CDDC39;
-      transition: .2s opacity ease-out;
-      display: block;
-      line-height: 35px;
-      z-index: 10;
-      transition: .3s all;
-      cursor: pointer; }
-    #products-list .product:hover .thumbnail::before, #products-list .product:hover .no-thumbnail::before {
-      background-color: rgba(0, 0, 0, 0.5); }
-    #products-list .product:hover .thumbnail span, #products-list .product:hover .no-thumbnail span {
-      opacity: .3; }
-    #products-list .product:hover .btn-edit-modal {
-      opacity: 1; }
-    #products-list .product .private-icon {
-      position: absolute;
-      top: 11px;
-      right: 11px;
-      position: absolute;
-      background: rgba(255, 0, 0, 0.9);
-      color: white;
-      z-index: 3;
-      font-size: 11px;
-      padding: 3px 5px;
-      border-radius: 14px;
-      font-weight: bold; }
+      margin-bottom: 5px;
+      color: #111;
+      font-size: 15px;
+      font-weight: 500;
+      text-transform: capitalize; }
     #products-list .product .details {
-      overflow: hidden;
-      text-align: left;
-      display: block; }
+      display: block;
+      text-align: left; }
       #products-list .product .details.in-promo .price.regular {
         text-decoration: line-through;
-        opacity: .5;
-        font-weight: normal;
-        margin-left: 10px; }
+        font-size: 15px;
+        color: #aaaaaa;
+        font-weight: 400; }
       #products-list .product .details.in-promo .price.promo {
         display: inline-block;
-        text-decoration: none; }
-      #products-list .product .details .price {
+        text-decoration: none;
+        font-size: 18px;
+        color: #222222;
         font-weight: 700;
+        margin-right: 10px; }
+      #products-list .product .details .price {
+        font-weight: 600;
         font-size: 15px;
-        display: inline-block; }
-        #products-list .product .details .price small {
-          font-size: 14px;
-          margin-left: -2px; }
+        display: inline-block;
+        letter-spacing: 0.03em; }
   #products-list .product-item-updated {
     animation-name: productUpdatedAnimation;
     animation-duration: 2s;
     animation-iteration-count: 1;
     animation-timing-function: ease-in-out; }
-  #products-list .product-popover {
-    display: block;
-    width: 100%; }
-    #products-list .product-popover .btn-popover {
-      position: absolute;
-      right: -8px;
-      top: -3px;
-      width: 25px;
-      min-width: auto;
-      padding: 0; }
   #products-list .loading-animation {
     height: 100%;
     width: 100%;
@@ -996,7 +914,7 @@ button.btn {
       font-weight: 400;
       border-radius: 5px; }
       .popover-links li a:hover {
-        background-color: rgba(0, 98, 189, 0.1); }
+        background-color: rgba(255, 216, 0, 0.1); }
       .popover-links li a.danger {
         color: #cc0514; }
 
@@ -1005,6 +923,32 @@ button.btn {
     background-color: #3eb99a; }
   100% {
     background-color: #fff; } }
+
+#product-gallery-container {
+  position: relative;
+  overflow: hidden; }
+  #product-gallery-container #product-gallery-loading {
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0; }
+
+#product-tags {
+  position: relative;
+  overflow: hidden; }
+  #product-tags #add-tag-loading {
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0; }
+
+#add-category-form {
+  overflow: hidden; }
+  #add-category-form #add-category-loading {
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0; }
 
 #product-editable-image .product-image {
   background-color: #fff;
@@ -1072,7 +1016,7 @@ button.btn {
 
 #delete-modal-confirmation #alert-dialog-description strong {
   font-weight: bold;
-  color: #f44336; }
+  color: #f58a01; }
 
 #sidebar-categories > div:last-child {
   width: 100%;
@@ -1085,11 +1029,11 @@ button.btn {
 #sidebar-categories #sidebar-categories-title {
   padding: 6px 15px !important;
   display: block;
-  background: #333;
+  background: #ffd800;
   text-align: cneter;
   cursor: default;
   font-size: 13px;
-  color: white;
+  color: black;
   width: 100%;
   font-weight: bold; }
   .kibo-lang-ar #sidebar-categories #sidebar-categories-title {
@@ -1120,7 +1064,7 @@ button.btn {
       padding: 12px 40px;
       background: none;
       border: none;
-      color: #f44336;
+      color: #f58a01;
       text-align: left;
       font-weight: 500;
       cursor: pointer;
@@ -1129,33 +1073,6 @@ button.btn {
       .kibo-lang-ar #sidebar-categories li.logout button {
         text-align: right;
         font-family: "Cairo", sans-serif; }
-  #sidebar-categories li.language {
-    font-size: 15px;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0; }
-    #sidebar-categories li.language button {
-      display: block;
-      width: 100%;
-      padding: 12px 15px;
-      border: none;
-      color: #333;
-      font-weight: 500;
-      cursor: pointer;
-      font-size: 15px;
-      font-weight: bold;
-      text-align: center;
-      background: #ddd; }
-  #sidebar-categories li #goto-shop {
-    position: relative; }
-    #sidebar-categories li #goto-shop svg {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 21px;
-      fill: #333;
-      right: 10px; }
 
 @media screen and (max-width: 680px) {
   #header {
@@ -1370,7 +1287,7 @@ label.Mui-focused {
     #menu-categories li:hover {
       background: #f5f5f5; }
     #menu-categories li.lvl1 {
-      color: #0062bd !important;
+      color: #ffd800 !important;
       font-weight: 500; }
     #menu-categories li.lvl2 {
       padding-left: 40px !important;
@@ -1552,7 +1469,7 @@ label.Mui-focused {
   #user-products-page #shop-products-count small {
     display: inline-block;
     margin-left: 5px;
-    color: #0062bd;
+    color: #ffd800;
     vertical-align: middle;
     position: relative;
     top: -3px; }
@@ -1961,7 +1878,7 @@ label.Mui-focused {
   text-align: center; }
 
 #profile-page #email-not-valid {
-  color: #f44336;
+  color: #f58a01;
   font-style: italic;
   display: block; }
 
@@ -1969,7 +1886,7 @@ label.Mui-focused {
   clear: both;
   font-size: 13px;
   font-style: italic;
-  color: #0062bd; }
+  color: #ffd800; }
   .kibo-lang-ar #profile-page #helper-text {
     text-align: right;
     font-family: "Cairo", sans-serif; }

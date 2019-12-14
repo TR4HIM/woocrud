@@ -1,0 +1,10 @@
+#product-tags {
+    position: relative;
+    overflow: hidden;
+    #add-tag-loading {
+        width: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+}
