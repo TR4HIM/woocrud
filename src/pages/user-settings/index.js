@@ -2,11 +2,12 @@ import React, { useState, useEffect , Fragment } from 'react';
 import {connect} from 'react-redux';
 import Header from '../../components/header/Header';
 import Footer from '../../components/footer/Footer';
-import {  Paper, Typography, TextField, Button} from '@material-ui/core';
+import {  Paper, Typography, TextField, Button, ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails} from '@material-ui/core';
 import API from '../../API/'; 
 import {loading , storeUserData} from '../../store/actions/';
 import ToggleDisplay from 'react-toggle-display';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
+import Icon from '@material-ui/core/Icon';
 
 const UserSettings = ({ dispatch , USER , USER_PROFILE }) => {
         
@@ -83,10 +84,13 @@ const UserSettings = ({ dispatch , USER , USER_PROFILE }) => {
 
     function updateProfile(property){   
         
+        
         if( (property === 'email') && !validEmail ) return;
 
-        // SHOW LOADER
-        dispatch(loading(true, "header-loader"));
+        if((property === 'email') && userEmail === USER_PROFILE.email) return;
+        if((property === 'firstName') && firstName === USER_PROFILE.first_name) return;
+        if((property === 'lastName') && lastName === USER_PROFILE.last_name) return;
+        if((property === 'userUrl') && userUrl === USER_PROFILE.url) return;
 
         let data = { 
             id              : userID,
@@ -96,6 +100,7 @@ const UserSettings = ({ dispatch , USER , USER_PROFILE }) => {
             url             : userUrl,
         };
         let dataStore = {...USER_PROFILE , ...data };
+        dispatch(loading(true, "header-loader"));
         API.WP_updateProfileInfo(USER.token, data )
             .then((result)=>{
                 // HIDE LOADER
@@ -243,92 +248,95 @@ const UserSettings = ({ dispatch , USER , USER_PROFILE }) => {
                             errorMessages={['This field is required']}
                         />
                     </ValidatorForm>
-                    <ValidatorForm
-                        onSubmit={submitChangePassword.bind(this)}
-                        onError={errors => console.log(errors)}
-                    >
-                        <Button 
-                            id="change-password" 
-                            color="primary" 
-                            onClick={()=> setShowOldPasswordField(!showOldPasswordField)}
-                        >
-                            { !showOldPasswordField ? "CHANGE PASSWORD" : "CANCEL" }
-                        </Button>
-                        
-                        {successPasswordChange ? <p id="success-password-change">Your password has been changed</p> : null}
-
-                        <ToggleDisplay show={showOldPasswordField}>
-                            <p id="helper-text">Mandatory Password Field</p>
-
-                            <TextValidator
-                                label="Current Password"
-                                value={oldPassword}
-                                className="field"
-                                onChange={(e)=>setOldPassword(e.target.value)}
-                                type="password"
-                                name="oldPassword"
-                                validators={[
-                                    'required'
-                                ]}
-                                errorMessages={[
-                                    'This field is required'
-                                ]}
-                                InputLabelProps={{ shrink: true }}
-                                margin="normal"
-                                variant="outlined"
-                                fullWidth
-                            />
-                        
-                            <TextValidator
-                                label="New Password"
-                                value={newPassword}
-                                className="field"
-                                onChange={(e)=>setNewPassword(e.target.value)}
-                                type="password"
-                                name="password"
-                                validators={[
-                                    'required', 
-                                    'minChars', 
-                                    'maxChars'
-                                ]}
-                                errorMessages={[
-                                    "this field is required"
-                                ]}
-                                InputLabelProps={{ shrink: true }}
-                                margin="normal"
-                                variant="outlined"
-                                fullWidth
-                            />
-                            <TextValidator
-                                label="Confirm Your Password"
-                                value={confirmationNewPassword}
-                                className="field"
-                                type="password"
-                                name="repeatPassword"
-                                onChange={(e)=>setConfirmationNewPassword(e.target.value)}
-                                validators={[
-                                    'isPasswordMatch', 
-                                    'required', 
-                                    'minChars', 
-                                    'maxChars'
-                                ]}
-                                errorMessages={[
-                                    "Password not match",
-                                    "This field is required"
-                                ]}
-                                validatorListener={(valid)=>setShowSubmitButton(valid)}
-                                InputLabelProps={{ shrink: true }}
-                                margin="normal"
-                                variant="outlined"
-                                fullWidth
-                            />
-                            <Button id="submit-change-password" disabled={!(showSubmitButton && oldPassword.length)} type="submit" variant="contained"  color="primary" >
-                                Change Password
-                            </Button>                             
-
-                        </ToggleDisplay>
-                    </ValidatorForm>
+                    
                 </Paper>
+                <ExpansionPanel id="change-password-panel">
+                    <ExpansionPanelSummary
+                        expandIcon={<Icon>expand_more</Icon>}
+                    >
+                        <Typography className="product-panel">
+                            Change Password
+                        </Typography>
+                    </ExpansionPanelSummary>
+                    <ExpansionPanelDetails>
+                        <ValidatorForm
+                            onSubmit={submitChangePassword.bind(this)}
+                            onError={errors => console.log(errors)}
+                        >
+                            {successPasswordChange ? <p id="success-password-change">Your password has been changed</p> : null}
+                            <>
+                                
+                                <TextValidator
+                                    label="Current Password"
+                                    value={oldPassword}
+                                    className="field"
+                                    onChange={(e)=>setOldPassword(e.target.value)}
+                                    type="password"
+                                    name="oldPassword"
+                                    validators={[
+                                        'required'
+                                    ]}
+                                    errorMessages={[
+                                        'This field is required'
+                                    ]}
+                                    InputLabelProps={{ shrink: true }}
+                                    margin="normal"
+                                    variant="outlined"
+                                    fullWidth
+                                />
+                            
+                                <TextValidator
+                                    label="New Password"
+                                    value={newPassword}
+                                    className="field"
+                                    onChange={(e)=>setNewPassword(e.target.value)}
+                                    type="password"
+                                    name="password"
+                                    validators={[
+                                        'required', 
+                                        'minChars', 
+                                        'maxChars'
+                                    ]}
+                                    errorMessages={[
+                                        "this field is required"
+                                    ]}
+                                    InputLabelProps={{ shrink: true }}
+                                    margin="normal"
+                                    variant="outlined"
+                                    fullWidth
+                                />
+                                <TextValidator
+                                    label="Confirm Your Password"
+                                    value={confirmationNewPassword}
+                                    className="field"
+                                    type="password"
+                                    name="repeatPassword"
+                                    onChange={(e)=>setConfirmationNewPassword(e.target.value)}
+                                    validators={[
+                                        'isPasswordMatch', 
+                                        'required', 
+                                        'minChars', 
+                                        'maxChars'
+                                    ]}
+                                    errorMessages={[
+                                        "Password not match",
+                                        "This field is required"
+                                    ]}
+                                    validatorListener={(valid)=>setShowSubmitButton(valid)}
+                                    InputLabelProps={{ shrink: true }}
+                                    margin="normal"
+                                    variant="outlined"
+                                    fullWidth
+                                />
+                                <p id="helper-text"> * All fields are required</p>
+                                <Button id="submit-change-password" disabled={!(showSubmitButton && oldPassword.length)} type="submit" variant="contained"  color="primary" >
+                                    Change Password
+                                </Button>                             
+
+                            </>
+                        </ValidatorForm>
+                    </ExpansionPanelDetails>
+                </ExpansionPanel>
             </Fragment>
         )
     }

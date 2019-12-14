@@ -22,12 +22,11 @@
         text-align: center;
         position: relative;
         flex-grow: 1;
-        padding: 5px;
         border-radius: 5px;
         border: 0px;
         transition: all 0.3s ease;
         letter-spacing: 0.5px;
-        padding: 5px;
+        padding: 10px;
         box-shadow: 0 0.05rem 0.01rem rgba(75,75,90,.075);
         border-radius: .25rem;
         .product-action {
@@ -37,10 +36,10 @@
             position: absolute;
             bottom: 0;
             right: 0;
-            padding: 0 5px;
+            padding: 0 10px;
             transition:all .3s;
             z-index: 100;
-            opacity: 0;
+            // opacity: 0;
             &.active {
                 opacity: 1;
             }
@@ -52,8 +51,8 @@
                     padding: 0;
                     margin: 0;
                     min-width: auto;
-                    height: 30px;
-                    width: 30px;
+                    height: 35px;
+                    width: 35px;
                     align-items: center;
                     border-radius: 50%;
                     display: flex;
@@ -64,19 +63,19 @@
                     border:1px solid rgba(black,.1);
                 }
                 svg {
-                    font-size: 18px;
+                    font-size: 23px;
                 }
             }
             .action-icon-preview {
                 float: left;
                 svg {
-                    font-size: 14px;
+                    font-size: 18px;
                 }
             }
             .action-icon-edit {
-                padding: 5px 5px 10px;
+                padding: 5px 10px 10px;
                 svg {
-                    font-size: 14px;
+                    font-size: 18px;
                 }
             }
             .action-icon-private {
@@ -169,8 +168,10 @@
         }
         .product-img-container {
             position: relative;
-            // cursor: pointer;
             margin-bottom: 10px;
+            border: 1px solid #eaecf1;
+            border-radius: 5px;
+            overflow: hidden;
         }
         .title{
             text-align: left;

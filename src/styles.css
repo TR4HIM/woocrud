@@ -517,15 +517,16 @@ button.btn {
   min-width: 300px; }
 
 #main-menu #connected-user {
-  padding: 10px 15px !important;
+  padding: 10px 20px !important;
   display: block;
   background: #151965;
   text-align: left;
   font-style: italic;
   cursor: default;
-  font-size: 13px;
+  font-size: 15px;
   color: white;
-  width: 100%; }
+  width: 100%;
+  height: 60px; }
   .kibo-lang-ar #main-menu #connected-user {
     text-align: right;
     font-family: "Cairo", sans-serif; }
@@ -536,15 +537,17 @@ button.btn {
   #main-menu li a {
     display: block;
     width: 100%;
-    padding: 10px 40px 10px 10px;
-    font-weight: 500;
-    font-size: 13px;
+    padding: 15px 40px 15px 20px;
+    font-weight: 400;
+    font-size: 15px;
     position: relative;
     color: #b5bdca; }
     #main-menu li a.selected {
       color: #fff;
       background: #27ae60;
       cursor: default; }
+    #main-menu li a:hover {
+      color: white; }
   #main-menu li.logout {
     border-top: 1px solid #ccc;
     font-size: 15px; }
@@ -552,14 +555,14 @@ button.btn {
       font-weight: bold;
       display: block;
       width: 100%;
-      padding: 10px 40px 10px 10px;
+      padding: 15px 40px 15px 20px;
       background: none;
       border: none;
       color: #f58a01;
       text-align: left;
       font-weight: 500;
       cursor: pointer;
-      font-size: 14px;
+      font-size: 15px;
       text-transform: uppercase; }
       .kibo-lang-ar #main-menu li.logout button {
         text-align: right;
@@ -720,12 +723,11 @@ button.btn {
     text-align: center;
     position: relative;
     flex-grow: 1;
-    padding: 5px;
     border-radius: 5px;
     border: 0px;
     transition: all 0.3s ease;
     letter-spacing: 0.5px;
-    padding: 5px;
+    padding: 10px;
     box-shadow: 0 0.05rem 0.01rem rgba(75, 75, 90, 0.075);
     border-radius: .25rem; }
     #products-list .product .product-action {
@@ -735,10 +737,9 @@ button.btn {
       position: absolute;
       bottom: 0;
       right: 0;
-      padding: 0 5px;
+      padding: 0 10px;
       transition: all .3s;
-      z-index: 100;
-      opacity: 0; }
+      z-index: 100; }
       #products-list .product .product-action.active {
         opacity: 1; }
       #products-list .product .product-action .action-icon {
@@ -749,8 +750,8 @@ button.btn {
           padding: 0;
           margin: 0;
           min-width: auto;
-          height: 30px;
-          width: 30px;
+          height: 35px;
+          width: 35px;
           align-items: center;
           border-radius: 50%;
           display: flex;
@@ -760,15 +761,15 @@ button.btn {
           text-decoration: none;
           border: 1px solid rgba(0, 0, 0, 0.1); }
         #products-list .product .product-action .action-icon svg {
-          font-size: 18px; }
+          font-size: 23px; }
       #products-list .product .product-action .action-icon-preview {
         float: left; }
         #products-list .product .product-action .action-icon-preview svg {
-          font-size: 14px; }
+          font-size: 18px; }
       #products-list .product .product-action .action-icon-edit {
-        padding: 5px 5px 10px; }
+        padding: 5px 10px 10px; }
         #products-list .product .product-action .action-icon-edit svg {
-          font-size: 14px; }
+          font-size: 18px; }
       #products-list .product .product-action .action-icon-private .text-private {
         width: auto;
         border-radius: 20px;
@@ -836,7 +837,10 @@ button.btn {
         display: none; }
     #products-list .product .product-img-container {
       position: relative;
-      margin-bottom: 10px; }
+      margin-bottom: 10px;
+      border: 1px solid #eaecf1;
+      border-radius: 5px;
+      overflow: hidden; }
     #products-list .product .title {
       text-align: left;
       line-height: 15px;
@@ -1030,12 +1034,13 @@ button.btn {
   padding: 6px 15px !important;
   display: block;
   background: #ffd800;
-  text-align: cneter;
   cursor: default;
   font-size: 13px;
   color: black;
   width: 100%;
-  font-weight: bold; }
+  font-weight: bold;
+  height: 60px;
+  line-height: 40px; }
   .kibo-lang-ar #sidebar-categories #sidebar-categories-title {
     text-align: right;
     font-family: "Cairo", sans-serif; }
@@ -1836,7 +1841,7 @@ label.Mui-focused {
 
 #profile-page .container-inner {
   padding: 20px;
-  margin: 0 10px; }
+  margin-bottom: 30px; }
   #profile-page .container-inner.shop, #profile-page .container-inner.authorizations, #profile-page .container-inner.shop-categories {
     margin-bottom: 40px; }
     .kibo-lang-ar #profile-page .container-inner.shop span, .kibo-lang-ar #profile-page .container-inner.authorizations span, .kibo-lang-ar #profile-page .container-inner.shop-categories span {
@@ -1886,10 +1891,15 @@ label.Mui-focused {
   clear: both;
   font-size: 13px;
   font-style: italic;
-  color: #ffd800; }
+  color: #ff2f00; }
   .kibo-lang-ar #profile-page #helper-text {
     text-align: right;
     font-family: "Cairo", sans-serif; }
+
+#profile-page #change-password-panel {
+  overflow: hidden;
+  border-radius: 5px;
+  margin-bottom: 60px; }
 
 .MuiInputLabel-outlined.MuiInputLabel-shrink {
   padding: 0 15px;
