@@ -5,26 +5,24 @@ import Footer from '../../components/footer/Footer';
 import {  Paper, Typography, TextField, Button, ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails} from '@material-ui/core';
 import API from '../../API/'; 
 import {loading , storeUserData} from '../../store/actions/';
-import ToggleDisplay from 'react-toggle-display';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import Icon from '@material-ui/core/Icon';
 
 const UserSettings = ({ dispatch , USER , USER_PROFILE }) => {
         
-    const [showOldPasswordField,setShowOldPasswordField]             = useState( false)
-    const [oldPassword,setOldPassword]                               = useState( "")
-    const [newPassword,setNewPassword]                               = useState("")
-    const [confirmationNewPassword,setConfirmationNewPassword]       = useState("")
-    const [showSubmitButton,setShowSubmitButton]                     = useState( false)
-    const [validEmail,setValidEmail]                                 = useState( false)
+    const [oldPassword,setOldPassword]                               = useState("");
+    const [newPassword,setNewPassword]                               = useState("");
+    const [confirmationNewPassword,setConfirmationNewPassword]       = useState("");
+    const [showSubmitButton,setShowSubmitButton]                     = useState(false);
+    const [validEmail,setValidEmail]                                 = useState(false);
     const [userID,setUserId]                                         = useState("");
-    const [userName,setUserName]                                     = useState("")
-    const [userEmail,setUserEmail]                                   = useState("")
-    const [firstName,setFirstName]                                   = useState("")
-    const [lastName,setLastName]                                     = useState("")
-    const [userUrl,setUserUrl]                                       = useState("")
-    const [successPasswordChange,setSuccessPasswordChange]           = useState( false)
-    const [isLoaded,setIsLoaded]                                     = useState(false)
+    const [userName,setUserName]                                     = useState("");
+    const [userEmail,setUserEmail]                                   = useState("");
+    const [firstName,setFirstName]                                   = useState("");
+    const [lastName,setLastName]                                     = useState("");
+    const [userUrl,setUserUrl]                                       = useState("");
+    const [successPasswordChange,setSuccessPasswordChange]           = useState(false);
+    const [isLoaded,setIsLoaded]                                     = useState(false);
 
     ValidatorForm.addValidationRule('isPasswordMatch', (value) => {
         return (value !== newPassword) ? false : true;
@@ -140,8 +138,6 @@ const UserSettings = ({ dispatch , USER , USER_PROFILE }) => {
                 setNewPassword('');
                 setConfirmationNewPassword('');
                 setSuccessPasswordChange(true);
-                setShowOldPasswordField(false);
-                 
             })
             .catch((error)=>{
 

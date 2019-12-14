@@ -1,0 +1,31 @@
+#page-404{
+    min-height: 100vh;
+    #logo{
+        position: absolute;
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        max-width: 90px;
+    }
+    .not-found-inner{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translateX(-50%) translateY(-50%);
+        text-align: center;
+        > span{
+            display: block;
+            font-size: 200px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: $primary;
+            text-shadow: 3px 3px 0 #000;
+        }
+        p{
+            font-size: 22px;
+            margin-bottom: 30px;
+            font-weight: 600;
+            color: $black;
+        }
+    }
+}

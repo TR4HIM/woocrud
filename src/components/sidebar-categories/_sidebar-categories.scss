@@ -63,24 +63,9 @@
 }
 
 @media screen and (max-width : 680px){
-    #header {
-        height: 54px;
-        text-align: left;
-        #logo {
-            padding: 5px 0;
-            max-width: 60px;
-            margin-left: 40px;
-        }
-        #menu-icon , #search-icon, #category-icon{
-            padding: 6px;
-        }
-    }
 }
 
 @media screen and (max-width : 480px){
-    #header{
-        margin-bottom: 10px;
-    }
 }
 
 

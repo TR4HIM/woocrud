@@ -122,33 +122,6 @@ a {
       font-size: 23px;
       min-width: 350px; }
 
-#page-404 {
-  min-height: 100vh; }
-  #page-404 #logo {
-    position: absolute;
-    top: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    max-width: 90px; }
-  #page-404 .not-found-inner {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translateX(-50%) translateY(-50%);
-    text-align: center; }
-    #page-404 .not-found-inner > span {
-      display: block;
-      font-size: 200px;
-      font-weight: 600;
-      margin-bottom: 10px;
-      color: #27ae60;
-      text-shadow: 3px 3px 0 #000; }
-    #page-404 .not-found-inner p {
-      font-size: 22px;
-      margin-bottom: 30px;
-      font-weight: 600;
-      color: #333; }
-
 #snackbar > div {
   background: #111;
   padding-right: 50px; }
@@ -344,7 +317,7 @@ button.btn {
   top: 0;
   text-align: center;
   margin-bottom: 20px;
-  z-index: 10; }
+  z-index: 11; }
   #header #logo {
     display: inline-block;
     max-width: 45px;
@@ -430,51 +403,12 @@ button.btn {
   #header {
     height: 54px;
     text-align: left; }
-    #header #logo {
-      padding: 5px 0;
-      max-width: 60px;
-      margin-left: 40px; }
     #header #menu-icon, #header #search-icon, #header #category-icon {
       padding: 6px; } }
 
 @media screen and (max-width: 480px) {
   #header {
     margin-bottom: 10px; } }
-
-#header {
-  border-bottom: 1px solid #e7e7e7;
-  height: 60px;
-  background: white;
-  padding: 7px 0;
-  position: sticky;
-  top: 0;
-  text-align: center;
-  margin-bottom: 20px;
-  z-index: 10; }
-  #header #logo {
-    display: inline-block;
-    max-width: 45px;
-    padding: 1px 0; }
-    #header #logo img {
-      width: 100%; }
-  #header #menu-icon {
-    color: #333;
-    position: absolute;
-    top: 50%;
-    left: 10px;
-    transform: translateY(-50%); }
-  #header #search-icon {
-    color: #333;
-    position: absolute;
-    top: 50%;
-    right: 10px;
-    transform: translateY(-50%); }
-  #header #category-icon {
-    color: #333;
-    position: absolute;
-    top: 50%;
-    right: 60px;
-    transform: translateY(-50%); }
 
 #main-menu > div:last-child {
   width: 100%;
@@ -540,21 +474,6 @@ button.btn {
       .kibo-lang-ar #main-menu li.logout button {
         text-align: right;
         font-family: "Cairo", sans-serif; }
-
-@media screen and (max-width: 680px) {
-  #header {
-    height: 54px;
-    text-align: left; }
-    #header #logo {
-      padding: 5px 0;
-      max-width: 60px;
-      margin-left: 40px; }
-    #header #menu-icon, #header #search-icon, #header #category-icon {
-      padding: 6px; } }
-
-@media screen and (max-width: 480px) {
-  #header {
-    margin-bottom: 10px; } }
 
 .autocomplete-container {
   width: 100%;
@@ -1052,21 +971,6 @@ button.btn {
       .kibo-lang-ar #sidebar-categories li.logout button {
         text-align: right;
         font-family: "Cairo", sans-serif; }
-
-@media screen and (max-width: 680px) {
-  #header {
-    height: 54px;
-    text-align: left; }
-    #header #logo {
-      padding: 5px 0;
-      max-width: 60px;
-      margin-left: 40px; }
-    #header #menu-icon, #header #search-icon, #header #category-icon {
-      padding: 6px; } }
-
-@media screen and (max-width: 480px) {
-  #header {
-    margin-bottom: 10px; } }
 
 #login-page {
   position: relative;
@@ -1917,3 +1821,30 @@ label.Mui-focused {
     padding-bottom: 15px;
     margin: 0;
     text-align: center; } }
+
+#page-404 {
+  min-height: 100vh; }
+  #page-404 #logo {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: 90px; }
+  #page-404 .not-found-inner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    text-align: center; }
+    #page-404 .not-found-inner > span {
+      display: block;
+      font-size: 200px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: #27ae60;
+      text-shadow: 3px 3px 0 #000; }
+    #page-404 .not-found-inner p {
+      font-size: 22px;
+      margin-bottom: 30px;
+      font-weight: 600;
+      color: #333; }
