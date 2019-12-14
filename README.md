@@ -30,16 +30,27 @@ The application have an easy to use interface for you shop managers to **Show**,
 GIF and Images
 
 ## Features
-- Easy to use
+- Unique woocommerce dashboard.
+- List all products.
+- Quick update products.
+- Filter products by categories.
+- Create categories.
+- Create tags.
+- Easy to use interface.
+
 ## Testing
 
     npm run test
 
 ## To Do
 
- - [ ] Add more features
+ - [ ] Translation
  - [ ] Finish testing
- - [ ] More permission
+ - [ ] Search Products
+ - [ ] Wordpress Media Manager
+ - [ ] More Features
+
+
 
 ## License
 All the code available under the MIT + Apache 2.0. licenses. See [LICENSE](https://github.com/apiko-dev/GitterMobile/blob/master/LICENSE).

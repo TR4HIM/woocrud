@@ -1,12 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { NavLink } from "react-router-dom";
-import { MenuItem, Drawer } from '@material-ui/core';
-import { APP_ROUTES } from '../../config';
-
-
+import { Drawer } from '@material-ui/core';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import List from '@material-ui/core/List';
 

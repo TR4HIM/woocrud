@@ -31,7 +31,7 @@ const MainMenu = ( {open = false , user , logout , handleClose}) => {
 				</MenuItem>
 				<MenuItem>
 					<NavLink activeClassName='selected' to={APP_ROUTES.PARAMETERS}>
-						USER PROFILE
+						USER SETTINGS
 					</NavLink>
 				</MenuItem>
 				<MenuItem className="logout" >

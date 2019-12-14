@@ -7,7 +7,7 @@
     top: 0;
     text-align: center;
     margin-bottom: 20px;
-    z-index: 10;
+    z-index: 11; 
     #logo{
         display: inline-block;
         max-width: 45px;
@@ -100,52 +100,13 @@
                 @include arabsettings();
             }
         }
-        &.language{
-            font-size: 15px;
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            
-            button{
-                display: block;
-                width: 100%;
-                padding: 12px 15px;
-                border: none;
-                color: $black;
-                font-weight: 500;
-                cursor: pointer;
-                font-size: 15px;
-                font-weight: bold;
-                text-align: center;
-                background: #ddd;
-            }
-        }
-
-        #goto-shop{
-            position: relative;
-            svg{
-                position: absolute;
-                top: 50%;
-                transform: translateY(-50%);
-                font-size: 21px;
-                fill : $black;
-                right: 10px;
-            }
-        }
     }
-    
 }
 
 @media screen and (max-width : 680px){
     #header {
         height: 54px;
         text-align: left;
-        #logo {
-            padding: 5px 0;
-            max-width: 60px;
-            margin-left: 40px;
-        }
         #menu-icon , #search-icon, #category-icon{
             padding: 6px;
         }
