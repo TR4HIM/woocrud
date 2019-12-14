@@ -16,7 +16,7 @@ const MainMenu = ( {open = false , user , logout , handleClose}) => {
 			>
 				<MenuItem>
 					<span id="connected-user">
-						Welcome, <br /> {username}
+						Welcome, <br /> { user.user_nicename }
 					</span>
 				</MenuItem>
 				<MenuItem>
