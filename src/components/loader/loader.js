@@ -53,7 +53,7 @@ const styles = (theme)=> ({
         backgroundColor: '#27ae60',
     },
     linearBarColorPrimary: {
-        backgroundColor: '#d35400',
+        backgroundColor: '#ffd800',
     }
 });
 

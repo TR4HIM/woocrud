@@ -75,13 +75,13 @@ const FormTags = ({dispatch , USER , WOO_TAGS ,  toEdit=false , currentTags , up
     },[wooStoreTags,productTags])
 
     const addTagToWoo = (payload) => {
+        dispatch(loading(true, "header-loader"));
         API.WC_createWooTags(USER.token,payload).then((data)=>{ 
             setProductTags(currentTags => [...currentTags, data.id]);
             setWooStoreTags([...wooStoreTags,data]);
             dispatch(storeWooTags([...WOO_TAGS, data]));
             dispatch(loading(false, "header-loader"));
             notifStore.addNotification({
-                title: "Success",
                 message: "New tag has been added" ,
                 type: "success",
                 container: "top-right",

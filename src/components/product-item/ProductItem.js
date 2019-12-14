@@ -13,8 +13,7 @@ const WooProduct = ({data , deleteFunc , openModalEdit , liveUrl}) => {
 
     const [anchorEl, setAnchorEl]                       =  useState(null);
     const [isImageLoading, setIsImageLoading]           = useState(false);
-    const [showConfirmation,setShowConfirmation]        = useState(false);
-    
+    const [showConfirmation, setShowConfirmation]        = useState(false);
     const openModal = () => {
         setAnchorEl(null);
         openModalEdit(data)
@@ -57,21 +56,29 @@ const WooProduct = ({data , deleteFunc , openModalEdit , liveUrl}) => {
                             <EditIcon />
                     </Button> */} 
                     <div className={`product-action ${(anchorEl !== null) ? 'active' : ''} `}>
-                        <div className="action-icon action-icon-edit">
-                            <Button aria-describedby={Boolean(anchorEl) ? 'simple-popover' : undefined}  onClick={()=>openModal(data)} className="btn-popover">
-                                <EditIcon />
-                            </Button>
-                        </div>
                         <div className="action-icon action-icon-more">
                             <Button aria-describedby={Boolean(anchorEl) ? 'simple-popover' : undefined} onClick={handleClick} className="btn-popover">
                                 <MoreHoriz />
                             </Button>
                         </div>
-                        
-                        <div className="action-icon action-icon-preview">
-                            <a href={`${liveUrl}/?post_type=product&p=${data.id}`} target="_blank" rel="noopener noreferrer">
-                                <OpenInNewIcon />
-                            </a>
+                        <div className="action-icon action-icon-edit">
+                            <Button aria-describedby={Boolean(anchorEl) ? 'simple-popover' : undefined}  onClick={()=>openModal(data)} className="btn-popover">
+                                <EditIcon />
+                            </Button>
+                        </div>
+                        <div className={`action-icon action-icon-preview action-icon-private`}>
+                            {
+                                (data.status === 'publish') ? (
+                                    <a href={`${liveUrl}/?post_type=product&p=${data.id}`} 
+                                    target="_blank" rel="noopener noreferrer">
+                                        <OpenInNewIcon />
+                                    </a>
+                                ) : (
+                                    <span className="text-private">
+                                        Private
+                                    </span>
+                                )
+                            }
                         </div>
                     </div>
                 </div>

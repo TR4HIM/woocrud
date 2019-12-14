@@ -74,6 +74,7 @@ const FormCategories = ({dispatch , USER , WOO_CATEGORIES  ,  toEdit=false , cur
     }, []);
 
     const addCategoryToWoo = (payload) => {
+        dispatch(loading(true, "header-loader"));
         API.WC_createWooCategories(USER.token,payload).then((data)=>{ 
             setGetProductCategories(currentTags => [...currentTags, {...data,selected:true}]);
             dispatch(storeWooCategories([...wooStoreCategories, {...data,selected:false}]));
