@@ -11,6 +11,7 @@ import ButtonUploadImage from '../../components/button-upload/ButtonUpload';
 import EditableImage from '../../components/editable-image/EditableImage';
 import { loading } from '../../store/actions/';
 import API from '../../API/'; 
+import Loader from '../loader/loader';
 
 const FormGallery = ({dispatch , USER ,  toEdit=false , currentGallery=null , saveProductGallery}) =>  {
 
@@ -49,7 +50,7 @@ const FormGallery = ({dispatch , USER ,  toEdit=false , currentGallery=null , sa
         let imageObject = file.imageObject;
         let formData    = new FormData();
         formData.append( 'file', imageObject );
-        dispatch(loading(true, "header-loader"));
+        dispatch(loading(true, "product-gallery-loading"));
         return API.WP_uploadImage(USER.token, formData).then((data)=>{ 
             return data;
         })
@@ -58,7 +59,7 @@ const FormGallery = ({dispatch , USER ,  toEdit=false , currentGallery=null , sa
                 type : "ERROR",
                 payload : error
             });
-            dispatch(loading(false, "header-loader"));
+            dispatch(loading(false, "product-gallery-loading"));
         })
     }
 
@@ -76,7 +77,7 @@ const FormGallery = ({dispatch , USER ,  toEdit=false , currentGallery=null , sa
                 setIsThumbnailUploade(true);
             })
         }
-        dispatch(loading(false, "header-loader"));
+        dispatch(loading(false, "product-gallery-loading"));
     }
 
     const removeGallery = (imageToDelete) => {
@@ -84,7 +85,8 @@ const FormGallery = ({dispatch , USER ,  toEdit=false , currentGallery=null , sa
     }
 
     return (
-        <Paper className="product-form" elevation={2}>
+        <Paper id="product-gallery-container" className="product-form" elevation={2}>
+            <Loader id="product-gallery-loading"  type="linear" />
             <Typography variant="subtitle2" className="paper-title" gutterBottom>
                 Product Gallery 
             </Typography>

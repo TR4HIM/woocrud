@@ -637,7 +637,8 @@ button.btn {
       cursor: pointer; }
 
 #product-form-container .product-form {
-  position: relative; }
+  position: relative;
+  overflow: hidden; }
   #product-form-container .product-form .delete-product-btn {
     position: absolute;
     right: 15px;
@@ -662,6 +663,16 @@ button.btn {
 #product-form-container .add-tag {
   padding: 15px 10px;
   text-align: center; }
+
+#product-form-container #auto-complete-panel {
+  position: relative;
+  overflow: hidden; }
+
+#product-form-container #auto-complete-loading, #product-form-container #product-image-loading {
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0; }
 
 #edit-modal-container .edit-modal-title {
   position: relative; }
@@ -912,6 +923,32 @@ button.btn {
     background-color: #3eb99a; }
   100% {
     background-color: #fff; } }
+
+#product-gallery-container {
+  position: relative;
+  overflow: hidden; }
+  #product-gallery-container #product-gallery-loading {
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0; }
+
+#product-tags {
+  position: relative;
+  overflow: hidden; }
+  #product-tags #add-tag-loading {
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0; }
+
+#add-category-form {
+  overflow: hidden; }
+  #add-category-form #add-category-loading {
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0; }
 
 #product-editable-image .product-image {
   background-color: #fff;

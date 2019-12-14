@@ -10,6 +10,7 @@ import API from '../../API/';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import { store as notifStore} from 'react-notifications-component';
+import Loader from '../loader/loader';
 
 const FormTags = ({dispatch , USER , WOO_TAGS ,  toEdit=false , currentTags , updateSelectedTags }) =>  {
 
@@ -47,7 +48,7 @@ const FormTags = ({dispatch , USER , WOO_TAGS ,  toEdit=false , currentTags , up
                     dispatch(storeWooTags(result));
                     setWooStoreTags(JSON.parse(JSON.stringify(result)));
                 }
-                dispatch(loading(false, "header-loader"));
+                dispatch(loading(false, "add-tag-loading"));
 
             })
             .catch((error)=>{
@@ -55,7 +56,7 @@ const FormTags = ({dispatch , USER , WOO_TAGS ,  toEdit=false , currentTags , up
                     type : 'ERROR',
                     payload : error 
                 })
-                dispatch(loading(false, "header-loader"));
+                dispatch(loading(false, "add-tag-loading"));
             })
         }
     }, []);
@@ -75,15 +76,14 @@ const FormTags = ({dispatch , USER , WOO_TAGS ,  toEdit=false , currentTags , up
     },[wooStoreTags,productTags])
 
     const addTagToWoo = (payload) => {
-        dispatch(loading(true, "header-loader"));
+        dispatch(loading(true, "add-tag-loading"));
         API.WC_createWooTags(USER.token,payload).then((data)=>{ 
             setProductTags(currentTags => [...currentTags, data.id]);
             setWooStoreTags([...wooStoreTags,data]);
             dispatch(storeWooTags([...WOO_TAGS, data]));
-            dispatch(loading(false, "header-loader"));
+            dispatch(loading(false, "add-tag-loading"));
             notifStore.addNotification({
                 message: "New tag has been added" ,
-                type: "success",
                 container: "top-right",
                 width: 400,
                 dismiss: {
@@ -97,7 +97,7 @@ const FormTags = ({dispatch , USER , WOO_TAGS ,  toEdit=false , currentTags , up
                 type : "ERROR",
                 payload : error
             });
-            dispatch(loading(false, "header-loader"));
+            dispatch(loading(false, "add-tag-loading"));
         })
     }
 
@@ -128,6 +128,7 @@ const FormTags = ({dispatch , USER , WOO_TAGS ,  toEdit=false , currentTags , up
     }
     return (
         <Paper id="product-tags" className="product-form">
+            <Loader id="add-tag-loading"  type="linear" />
             <Typography variant="subtitle2" className="paper-title" gutterBottom>
                 Product Tags
             </Typography>

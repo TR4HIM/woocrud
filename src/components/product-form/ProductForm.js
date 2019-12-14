@@ -29,6 +29,8 @@ import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import { store as notifStore} from 'react-notifications-component';
 import ModalConfirmation from '../../components/modal-confirmation/ModalConfirmation';
 import {APP_PATHS} from '../../config';
+import Loader from '../loader/loader';
+
 const ProductForm = ({dispatch , USER ,  toEdit=false , productData=null , saveProductAction}) =>  {
 
     const [productID,setProductID]                                          = useState(false);
@@ -115,19 +117,19 @@ const ProductForm = ({dispatch , USER ,  toEdit=false , productData=null , saveP
 
         formData.append( 'file', file );
         
-        dispatch(loading(true, "header-loader"));
+        dispatch(loading(true, "product-image-loading"));
 
         API.WP_uploadImage(USER.token, formData).then((data)=>{ 
             setProductImage(data.source_url);
             setIsThumbnailUploade(true);
-            dispatch(loading(false, "header-loader"));
+            dispatch(loading(false, "product-image-loading"));
         })
         .catch((error)=>{
             dispatch({
                 type : "ERROR",
                 payload : error
             });
-            dispatch(loading(false, "header-loader"));
+            dispatch(loading(false, "product-image-loading"));
         })
     }
     
@@ -339,8 +341,9 @@ const ProductForm = ({dispatch , USER ,  toEdit=false , productData=null , saveP
                         <ExpansionPanelSummary
                             expandIcon={<Icon>expand_more</Icon>}
                             aria-controls="panel1a-content3"
-                            id="panel1a-header3"
+                            id="auto-complete-panel"
                         >
+                            <Loader id="auto-complete-loading"  type="linear" />
                             <Typography className="product-panel">
                                 Linked Proudcts
                             </Typography>
@@ -381,6 +384,7 @@ const ProductForm = ({dispatch , USER ,  toEdit=false , productData=null , saveP
                     />
                 </Paper>
                 <Paper className="product-form" elevation={2}>
+                    <Loader id="product-image-loading"  type="linear" />
                     <Typography variant="subtitle2" className="paper-title" gutterBottom>
                         Product Image 
                     </Typography>
