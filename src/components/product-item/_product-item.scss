@@ -5,11 +5,6 @@
     align-items: stretch;
     margin-bottom: 10px;
     padding: 0 5px;
-    &.few-products{
-        .product{
-            // max-width: 250px;
-        }
-    }
     .product-item {
         width: 100%;
         max-width: (100 / 6) * 1%;

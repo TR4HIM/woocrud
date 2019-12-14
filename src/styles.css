@@ -425,33 +425,6 @@ button.btn {
       .kibo-lang-ar #main-menu li.logout button {
         text-align: right;
         font-family: "Cairo", sans-serif; }
-  #main-menu li.language {
-    font-size: 15px;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0; }
-    #main-menu li.language button {
-      display: block;
-      width: 100%;
-      padding: 12px 15px;
-      border: none;
-      color: #333;
-      font-weight: 500;
-      cursor: pointer;
-      font-size: 15px;
-      font-weight: bold;
-      text-align: center;
-      background: #ddd; }
-  #main-menu li #goto-shop {
-    position: relative; }
-    #main-menu li #goto-shop svg {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 21px;
-      fill: #333;
-      right: 10px; }
 
 @media screen and (max-width: 680px) {
   #header {

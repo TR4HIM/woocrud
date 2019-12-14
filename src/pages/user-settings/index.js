@@ -158,7 +158,7 @@ const UserSettings = ({ dispatch , USER , USER_PROFILE }) => {
         return (
             <Fragment>
                 <Paper className="container-inner user"  elevation={1}>
-                    <Typography variant="h5" component="h4">User Name</Typography>
+                    <Typography variant="h5" component="h4">User Settings</Typography>
                     <TextField
                         label="User Name"
                         value={userName}

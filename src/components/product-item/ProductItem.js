@@ -52,9 +52,6 @@ const WooProduct = ({data , deleteFunc , openModalEdit , liveUrl}) => {
                             <span>No Image</span>
                         </div> 
                     }
-                    {/* <Button className="btn-edit-modal">
-                            <EditIcon />
-                    </Button> */} 
                     <div className={`product-action ${(anchorEl !== null) ? 'active' : ''} `}>
                         <div className="action-icon action-icon-more">
                             <Button aria-describedby={Boolean(anchorEl) ? 'simple-popover' : undefined} onClick={handleClick} className="btn-popover">
@@ -107,11 +104,6 @@ const WooProduct = ({data , deleteFunc , openModalEdit , liveUrl}) => {
                         }}
                 >   
                     <ul className="popover-links">
-                        {/* <li>
-                            <a href={`${liveUrl}/?post_type=product&p=${data.id}`} target="_blank" rel="noopener noreferrer">
-                                View Product ...
-                            </a>
-                        </li> */}
                         <li>
                             <Link to={`/edit-produit/${data.id}`}>
                                 Advanced Edit
