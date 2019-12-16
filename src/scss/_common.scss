@@ -31,6 +31,9 @@ a{
 
 #layout{
     height: 100vh;
+    .MuiPaper-elevation1, .MuiPaper-elevation2 {
+        box-shadow: 0 0.05rem 0.01rem rgba(75,75,90,.075);
+    }
 }
 
 #container{
@@ -216,6 +219,8 @@ a{
     padding: 0 10px;
     height: auto;
 }
+
+
 @media screen and (max-width : 959px){
     #snackbar{
         top: 0 !important;

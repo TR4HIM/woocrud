@@ -328,7 +328,6 @@ const UserSettings = ({ dispatch , USER , USER_PROFILE }) => {
                                 <Button id="submit-change-password" disabled={!(showSubmitButton && oldPassword.length)} type="submit" variant="contained"  color="primary" >
                                     Change Password
                                 </Button>                             
-
                             </>
                         </ValidatorForm>
                     </ExpansionPanelDetails>

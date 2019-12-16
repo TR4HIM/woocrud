@@ -15,7 +15,7 @@
     #connected-user{
         padding: 10px 20px !important;
         display: block;
-        background: #151965;
+        background: #FF5C4A;
         text-align: left;
         font-style: italic;
         cursor: default;
@@ -39,7 +39,7 @@
             color: #b5bdca;
             &.selected{
                 color: #fff;
-                background: $primary;
+                background: rgba(0, 0, 0, 0.08);
                 cursor: default;
             }
             &:hover {
@@ -57,7 +57,7 @@
                 padding: 15px 40px 15px 20px;
                 background: none;
                 border: none;
-                color: $danger;
+                color: #b5bdca;
                 text-align: left;
                 font-weight: 500;
                 cursor: pointer;
