@@ -10,7 +10,7 @@
     z-index: 11; 
     #logo{
         display: inline-block;
-        max-width: 45px;
+        max-width: 90px;
         padding: 1px 0;
         img{
             width: 100%;
@@ -106,7 +106,6 @@
 @media screen and (max-width : 680px){
     #header {
         height: 54px;
-        text-align: left;
         #menu-icon , #search-icon, #category-icon{
             padding: 6px;
         }

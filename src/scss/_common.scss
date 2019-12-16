@@ -31,6 +31,9 @@ a{
 
 #layout{
     height: 100vh;
+    .MuiPaper-elevation1, .MuiPaper-elevation2 {
+        box-shadow: 0 0.05rem 0.01rem rgba(75,75,90,.075);
+    }
 }
 
 #container{
@@ -125,6 +128,7 @@ a{
 
 .rc-pagination{
     text-align: center;
+    margin: 50px auto 70px; 
     li{
         display: inline-block;
         margin: 0 3px;
@@ -140,11 +144,16 @@ a{
             background: white;
             cursor: pointer;
             outline: none !important;
+            transition: all .3s;
+        }
+        a:hover {
+            background-color: #dadada;
         }
         &.rc-pagination-item-active{
             a{
                 font-weight: 600;
-                background: $primary
+                background: #FF5C4A;
+                color: white;
             }
         }
         &.rc-pagination-prev{
@@ -216,6 +225,8 @@ a{
     padding: 0 10px;
     height: auto;
 }
+
+
 @media screen and (max-width : 959px){
     #snackbar{
         top: 0 !important;

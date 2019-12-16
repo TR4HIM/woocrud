@@ -9,8 +9,6 @@
         width: 100%;
         max-width: (100 / 6) * 1%;
         padding: 10px;
-        // box-shadow: 0 0.05rem 0.01rem rgba(75,75,90,.075);
-        // border-radius: .25rem;
     }
     .product{
         background: white;
@@ -124,7 +122,6 @@
             padding: 100% 0  0 0;
             background-size: cover;
             background-position: center;
-            // height: 250px;
             &::before {
                 content: '';
                 width: 100%;
@@ -144,10 +141,7 @@
                 }
             }
             .visual{
-                // position: absolute;
                 width: 100%;
-                // left: 0;
-                // right: 0;
                 margin: 0 auto;
                 z-index: 2;
                 font-size: 12px;
@@ -205,9 +199,6 @@
                 font-size: 15px;
                 display: inline-block;
                 letter-spacing: 0.03em;
-                // small{
-                //     font-size: 14px;
-                // }
             }
         }
     }
@@ -218,8 +209,6 @@
         animation-iteration-count: 1;
         animation-timing-function: ease-in-out;
     }
-
-    
     /* blue bar */
     .loading-animation {
         height: 100%;
