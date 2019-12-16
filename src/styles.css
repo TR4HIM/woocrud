@@ -136,7 +136,8 @@ a {
     right: 8px; }
 
 .rc-pagination {
-  text-align: center; }
+  text-align: center;
+  margin: 50px auto 70px; }
   .rc-pagination li {
     display: inline-block;
     margin: 0 3px;
@@ -151,10 +152,14 @@ a {
       line-height: 28px;
       background: white;
       cursor: pointer;
-      outline: none !important; }
+      outline: none !important;
+      transition: all .3s; }
+    .rc-pagination li a:hover {
+      background-color: #dadada; }
     .rc-pagination li.rc-pagination-item-active a {
       font-weight: 600;
-      background: #27ae60; }
+      background: #FF5C4A;
+      color: white; }
     .rc-pagination li.rc-pagination-prev a {
       position: relative; }
       .rc-pagination li.rc-pagination-prev a:before {
