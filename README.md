@@ -56,8 +56,18 @@ The application has a responsive easy to use interface for shop managers and can
 ## Examples
 
   
-
-GIF and Images
+### Login - Products List
+![Login - Products List](https://github.com/TR4HIM/woocrud/blob/dev/gif-demo/WooCrud-Login-Listing.gif?raw=true)
+### Add New Product
+![Add New Product](https://github.com/TR4HIM/woocrud/blob/dev/gif-demo/WooCrud-Add-New-Product.gif?raw=true)
+### Quick Edit
+![Quick Edit](https://github.com/TR4HIM/woocrud/blob/dev/gif-demo/WooCrud-Quick-Edit.gif?raw=true)
+### Advanced Edit
+![Advanced Edit](https://github.com/TR4HIM/woocrud/blob/dev/gif-demo/WooCrud-Advanced-Edit.gif?raw=true)
+### Delete Product
+![Delete Product](https://github.com/TR4HIM/woocrud/blob/dev/gif-demo/WooCrud-Delete-Product.gif?raw=true)
+### User Settings
+![User Settings](https://github.com/TR4HIM/woocrud/blob/dev/gif-demo/WooCrud-User-Settings.gif?raw=true)
 
   
 
