@@ -5,9 +5,9 @@ The application have an easy to use interface for you shop managers to **Show**,
 
 ## Setup
 ### Install WooCrud Plugin 
-- Download [Latest WooCrud plugin for Wordpress](https://github.com/TR4HIM/woo-crud-plugin/releases)
-- Install plugin and install required plugin
-- Setup JWT plguin
+- Download [Latest WooCrud plugin for Wordpress](https://github.com/TR4HIM/woo-crud-plugin/releases/latest).
+- Install WooCrud Plugin.
+
 
 ### Install WooCrud App
 -   `git clone https://github.com/TR4HIM/woocrud.git`
@@ -46,6 +46,7 @@ GIF and Images
 
  - [ ] Translation
  - [ ] Finish testing
+ - [ ] Add comments
  - [ ] Search Products
  - [ ] Wordpress Media Manager
  - [ ] More Features
