@@ -7,6 +7,7 @@ import API from '../../API/';
 import {loading , storeWooProducts} from '../../store/actions/';
 import { Redirect } from 'react-router';
 import { store as notifStore} from 'react-notifications-component';
+import {APP_PATHS} from '../../config';
 
 const DEFAULT_PER_PAGE          = 18;
 
@@ -76,7 +77,7 @@ const AddProduct = ({dispatch , USER , WOO_PRODUCTS }) =>  {
     return (
         <div id="add-product-page">
             <Header />
-            { isNewProductSaved && productID !== false && <Redirect to={`/edit-produit/${productID}`} /> }
+            { isNewProductSaved && productID !== false && <Redirect to={ APP_PATHS.EDIT_PRODUCT.replace(':productId', productID ) } /> }
             { <ProductForm saveProductAction={(productData) => saveNewProduct(productData)} /> }
             <Footer />
         </div>

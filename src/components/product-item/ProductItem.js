@@ -8,6 +8,7 @@ import ToggleDisplay from 'react-toggle-display';
 import EditIcon from '@material-ui/icons/Edit';
 import ModalConfirmation from '../../components/modal-confirmation/ModalConfirmation';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
+import {APP_PATHS} from '../../config';
 
 const WooProduct = ({data , deleteFunc , openModalEdit , liveUrl}) => {
 
@@ -105,7 +106,7 @@ const WooProduct = ({data , deleteFunc , openModalEdit , liveUrl}) => {
                 >   
                     <ul className="popover-links">
                         <li>
-                            <Link to={`/edit-produit/${data.id}`}>
+                            <Link to={ APP_PATHS.EDIT_PRODUCT.replace(':productId', data.id ) }>
                                 Advanced Edit
                             </Link>
                         </li>
