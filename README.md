@@ -57,17 +57,17 @@ The application has a responsive easy to use interface for shop managers and can
 
   
 ### Login - Products List
-![Login - Products List](https://github.com/TR4HIM/woocrud/blob/dev/gif-demo/WooCrud-Login-Listing.gif?raw=true)
+![Login - Products List](https://store.malab.dev/wp-content/uploads/2019/12/WooCrud-Login-Listing.gif)
 ### Add New Product
-![Add New Product](https://github.com/TR4HIM/woocrud/blob/dev/gif-demo/WooCrud-Add-New-Product.gif?raw=true)
+![Add New Product](https://store.malab.dev/wp-content/uploads/2019/12/WooCrud-Add-New-Product.gif)
 ### Quick Edit
-![Quick Edit](https://github.com/TR4HIM/woocrud/blob/dev/gif-demo/WooCrud-Quick-Edit.gif?raw=true)
+![Quick Edit](https://store.malab.dev/wp-content/uploads/2019/12/WooCrud-Quick-Edit.gif)
 ### Advanced Edit
-![Advanced Edit](https://github.com/TR4HIM/woocrud/blob/dev/gif-demo/WooCrud-Advanced-Edit.gif?raw=true)
+![Advanced Edit](https://store.malab.dev/wp-content/uploads/2019/12/WooCrud-Advanced-Edit.gif)
 ### Delete Product
-![Delete Product](https://github.com/TR4HIM/woocrud/blob/dev/gif-demo/WooCrud-Delete-Product.gif?raw=true)
+![Delete Product](https://store.malab.dev/wp-content/uploads/2019/12/WooCrud-Delete-Product.gif)
 ### User Settings
-![User Settings](https://github.com/TR4HIM/woocrud/blob/dev/gif-demo/WooCrud-User-Settings.gif?raw=true)
+![User Settings](https://store.malab.dev/wp-content/uploads/2019/12/WooCrud-User-Settings.gif)
 
   
 
