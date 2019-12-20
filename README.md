@@ -15,7 +15,7 @@ The application has a responsive easy to use interface for shop managers and can
 
 - Download [Latest WooCrud plugin for WordPress](https://github.com/TR4HIM/woo-crud-plugin/releases/latest).
 - Install WooCrud Plugin.
-
+- Give users the correct roles app support (Administrator or Shop Manager).
   
   
 
