@@ -57,17 +57,17 @@ The application has a responsive easy to use interface for shop managers and can
 
   
 ### Login - Products List
-![Login - Products List](https://store.malab.dev/wp-content/uploads/2019/12/WooCrud-Login-Listing.gif)
+![Login - Products List](http://perfektart.com/woocrud/WooCrud-Login-Listing.gif)
 ### Add New Product
-![Add New Product](https://store.malab.dev/wp-content/uploads/2019/12/WooCrud-Add-New-Product.gif)
+![Add New Product](http://perfektart.com/woocrud/WooCrud-Add-New-Product.gif)
 ### Quick Edit
-![Quick Edit](https://store.malab.dev/wp-content/uploads/2019/12/WooCrud-Quick-Edit.gif)
+![Quick Edit](http://perfektart.com/woocrud/WooCrud-Quick-Edit.gif)
 ### Advanced Edit
-![Advanced Edit](https://store.malab.dev/wp-content/uploads/2019/12/WooCrud-Advanced-Edit.gif)
+![Advanced Edit](http://perfektart.com/woocrud/WooCrud-Advanced-Edit.gif)
 ### Delete Product
-![Delete Product](https://store.malab.dev/wp-content/uploads/2019/12/WooCrud-Delete-Product.gif)
+![Delete Product](http://perfektart.com/woocrud/WooCrud-Delete-Product.gif)
 ### User Settings
-![User Settings](https://store.malab.dev/wp-content/uploads/2019/12/WooCrud-User-Settings.gif)
+![User Settings](http://perfektart.com/woocrud/WooCrud-User-Settings.gif)
 
   
 
