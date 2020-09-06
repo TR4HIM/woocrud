@@ -57,17 +57,17 @@ The application has a responsive easy to use interface for shop managers and can
 
   
 ### Login - Products List
-![Login - Products List](http://perfektart.com/woocrud/WooCrud-Login-Listing.gif)
+![Login - Products List](https://i.ibb.co/0j8FBcN/Woo-Crud-Login-Listing.gif)
 ### Add New Product
-![Add New Product](http://perfektart.com/woocrud/WooCrud-Add-New-Product.gif)
+![Add New Product](https://i.ibb.co/QJf00xC/Woo-Crud-Add-New-Product.gif)
 ### Quick Edit
-![Quick Edit](http://perfektart.com/woocrud/WooCrud-Quick-Edit.gif)
+![Quick Edit](https://i.ibb.co/0JFcJVT/Woo-Crud-Quick-Edit.gif)
 ### Advanced Edit
-![Advanced Edit](http://perfektart.com/woocrud/WooCrud-Advanced-Edit.gif)
+![Advanced Edit](https://i.ibb.co/txWhfxv/Woo-Crud-Advanced-Edit.gif)
 ### Delete Product
-![Delete Product](http://perfektart.com/woocrud/WooCrud-Delete-Product.gif)
+![Delete Product](https://i.ibb.co/GPmNg6D/Woo-Crud-Delete-Product.gif)
 ### User Settings
-![User Settings](http://perfektart.com/woocrud/WooCrud-User-Settings.gif)
+![User Settings](https://i.ibb.co/KW3qH0V/Woo-Crud-User-Settings.gif)
 
   
 
