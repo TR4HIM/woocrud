@@ -1,13 +1,14 @@
 import "@babel/polyfill";
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import { ConnectedRouter  } from 'connected-react-router';
-import Layout from './pages/';
-import configureStore, { history } from './store/';
-import * as serviceWorker from './serviceWorker';
-import './styles.css';
+import React from "react";
+import { createRoot } from "react-dom/client";
+
+import { Provider } from "react-redux";
+import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import { ConnectedRouter } from "connected-react-router";
+import Layout from "./pages/";
+import configureStore, { history } from "./store/";
+import * as serviceWorker from "./serviceWorker";
+import "./styles.css";
 
 const store = configureStore();
 
@@ -17,22 +18,23 @@ const store = configureStore();
 serviceWorker.unregister();
 
 const theme = createMuiTheme({
-    direction: 'rtl',
-    typography: {
-        useNextVariants: true,
-    }
+  direction: "rtl",
+  typography: {
+    useNextVariants: true,
+  },
 });
 
-ReactDOM.render((
-    <MuiThemeProvider theme={theme}>
-        <Provider store={store} >
-            <ConnectedRouter  history={history}>
-                {/* <TranslateProvider> */}
-                <Layout />
-                {/* </TranslateProvider> */}
-            </ConnectedRouter >
-        </Provider>
-    </MuiThemeProvider>
+const container = document.getElementById("root");
 
-), document.getElementById('root'));
-
+const root = createRoot(container);
+root.render(
+  <MuiThemeProvider theme={theme}>
+    <Provider store={store}>
+      <ConnectedRouter history={history}>
+        {/* <TranslateProvider> */}
+        <Layout />
+        {/* </TranslateProvider> */}
+      </ConnectedRouter>
+    </Provider>
+  </MuiThemeProvider>
+);
